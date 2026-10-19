@@ -82,23 +82,16 @@ function ToastContainer({
     >
       {toasts.map(toast => {
         const icons = {
-          success: <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />,
-          error: <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />,
-          warning: <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />,
-          info: <Info className="w-5 h-5 text-blue-600 flex-shrink-0" />,
-        };
-
-        const bgStyles = {
-          success: 'border-emerald-200 bg-white shadow-emerald-100',
-          error: 'border-red-200 bg-white shadow-red-100',
-          warning: 'border-amber-200 bg-white shadow-amber-100',
-          info: 'border-blue-200 bg-white shadow-blue-100',
+          success: <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />,
+          error: <AlertCircle className="w-4 h-4 text-neutral-900 flex-shrink-0" />,
+          warning: <AlertTriangle className="w-4 h-4 text-neutral-900 flex-shrink-0" />,
+          info: <Info className="w-4 h-4 text-[var(--color-primary-600)] flex-shrink-0" />,
         };
 
         return (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-lg transition-all animate-slide-in ${bgStyles[toast.type]}`}
+            className="pointer-events-auto flex items-start gap-3 p-3.5 rounded-lg border border-neutral-200 bg-white shadow-lg transition-all animate-slide-in"
             role="status"
           >
             {icons[toast.type]}

@@ -33,14 +33,14 @@ import {
 } from 'lucide-react';
 
 const TASK_TYPE_ICONS: Record<TaskType, React.ReactNode> = {
-  sowing: <Sprout className="w-3.5 h-3.5 text-emerald-600" />,
-  irrigation: <Droplets className="w-3.5 h-3.5 text-blue-600" />,
-  fertiliser: <Sparkles className="w-3.5 h-3.5 text-amber-600" />,
-  pesticide: <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />,
-  weeding: <Scissors className="w-3.5 h-3.5 text-teal-600" />,
-  harvest: <CalendarDays className="w-3.5 h-3.5 text-purple-600" />,
-  field_prep: <Tractor className="w-3.5 h-3.5 text-amber-700" />,
-  other: <Clock className="w-3.5 h-3.5 text-gray-600" />,
+  sowing: <Sprout className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
+  irrigation: <Droplets className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
+  fertiliser: <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
+  pesticide: <ShieldAlert className="w-3.5 h-3.5 text-neutral-700" />,
+  weeding: <Scissors className="w-3.5 h-3.5 text-neutral-700" />,
+  harvest: <CalendarDays className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
+  field_prep: <Tractor className="w-3.5 h-3.5 text-neutral-700" />,
+  other: <Clock className="w-3.5 h-3.5 text-neutral-700" />,
 };
 
 const TASK_TYPE_LABELS: Record<TaskType, string> = {
@@ -387,15 +387,15 @@ export default function CalendarPage() {
       />
 
       {/* 1-Click Crop Schedule Generator Bar */}
-      <Card className="p-4 bg-emerald-50/50 border-emerald-200">
+      <Card className="p-4 bg-[var(--color-primary-50)] border border-[var(--color-primary-200)]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <Sparkles className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+            <Sparkles className="w-5 h-5 text-[var(--color-primary-700)] flex-shrink-0" />
             <div>
-              <h3 className="text-xs font-bold text-emerald-950 uppercase tracking-wide">
+              <h3 className="text-xs font-bold text-[var(--color-primary-900)] uppercase tracking-wide">
                 Auto-Generate Crop Stage Schedule
               </h3>
-              <p className="text-[11px] text-emerald-800 mt-0.5">
+              <p className="text-[11px] text-[var(--color-primary-800)] mt-0.5">
                 Automatically populates ICAR growth-stage tasks from sowing to harvest.
               </p>
             </div>
@@ -405,7 +405,7 @@ export default function CalendarPage() {
             <select
               value={templateCrop}
               onChange={e => setTemplateCrop(e.target.value)}
-              className="text-xs px-3 py-1.5 rounded-lg border border-emerald-300 bg-white text-emerald-950 outline-none"
+              className="text-xs px-3 py-1.5 rounded-md border border-[var(--color-border)] bg-white text-[var(--color-text-primary)] outline-none"
             >
               <option value="">Select Crop Template…</option>
               {CROPS.map(c => (
@@ -428,7 +428,7 @@ export default function CalendarPage() {
 
       {/* Filters & Status Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-xl w-fit">
+        <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-lg w-fit">
           {[
             { id: 'all', label: 'All Tasks', count: tasks.length },
             { id: 'pending', label: 'Pending', count: tasks.filter(t => t.status === 'pending' && !isOverdue(t.dueDate)).length },
@@ -438,16 +438,14 @@ export default function CalendarPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-3 py-1 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 ${
+              className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1.5 ${
                 activeTab === tab.id
                   ? 'bg-white text-[var(--color-text-primary)] shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
               <span>{tab.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                tab.id === 'overdue' && tab.count > 0 ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'
-              }`}>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--color-surface-3)] text-[var(--color-text-primary)]">
                 {tab.count}
               </span>
             </button>
@@ -487,9 +485,9 @@ export default function CalendarPage() {
       {/* VIEW 1: MONTHLY CALENDAR GRID */}
       {viewMode === 'grid' && (
         <Card className="p-4 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+          <div className="flex items-center justify-between pb-2">
             <h2 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-              <CalendarDays className="w-4 h-4 text-emerald-600" />
+              <CalendarDays className="w-4 h-4 text-[var(--color-text-primary)]" />
               <span>
                 {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
               </span>
@@ -497,20 +495,20 @@ export default function CalendarPage() {
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))}
-                className="p-1 rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface-2)]"
+                className="p-1 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-2)]"
                 aria-label="Previous month"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setCurrentDate(new Date())}
-                className="text-xs px-2.5 py-1 rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface-2)] font-medium"
+                className="text-xs px-2.5 py-1 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-2)] font-medium"
               >
                 Today
               </button>
               <button
                 onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))}
-                className="p-1 rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface-2)]"
+                className="p-1 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-2)]"
                 aria-label="Next month"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -534,22 +532,22 @@ export default function CalendarPage() {
                 <div
                   key={idx}
                   onClick={() => openCreateModal(cell.dateStr)}
-                  className={`min-h-[85px] p-1.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
+                  className={`min-h-[85px] p-1.5 rounded-lg border transition-all cursor-pointer flex flex-col justify-between ${
                     cell.isCurrentMonth
-                      ? 'bg-white border-[var(--color-border)] hover:border-emerald-400 hover:shadow-xs'
+                      ? 'bg-white border-[var(--color-border)] hover:border-neutral-400 hover:shadow-xs'
                       : 'bg-gray-50/50 border-gray-100 opacity-40'
-                  } ${isToday ? 'ring-2 ring-emerald-500 bg-emerald-50/20' : ''}`}
+                  } ${isToday ? 'ring-1 ring-[var(--color-primary-600)] bg-[var(--color-primary-50)]' : ''}`}
                 >
                   <div className="flex items-center justify-between">
                     <span
-                      className={`text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center ${
-                        isToday ? 'bg-emerald-600 text-white' : 'text-[var(--color-text-primary)]'
+                      className={`text-xs font-bold w-5 h-5 rounded flex items-center justify-center ${
+                        isToday ? 'bg-[var(--color-primary-600)] text-white' : 'text-[var(--color-text-primary)]'
                       }`}
                     >
                       {cell.dayNum}
                     </span>
                     {cell.tasks.length > 0 && (
-                      <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1 rounded-full">
+                      <span className="text-[10px] font-semibold text-neutral-800 bg-neutral-200 px-1 rounded">
                         {cell.tasks.length}
                       </span>
                     )}
@@ -565,10 +563,10 @@ export default function CalendarPage() {
                         }}
                         className={`text-[10px] truncate px-1.5 py-0.5 rounded font-medium flex items-center gap-1 ${
                           t.status === 'completed'
-                            ? 'bg-gray-100 text-gray-500 line-through'
+                            ? 'bg-neutral-100 text-neutral-400 line-through'
                             : isOverdue(t.dueDate)
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-emerald-100/70 text-emerald-900'
+                            ? 'bg-neutral-200 text-neutral-900 font-semibold'
+                            : 'bg-neutral-100 text-neutral-800'
                         }`}
                       >
                         {TASK_TYPE_ICONS[t.taskType]}
@@ -620,47 +618,47 @@ export default function CalendarPage() {
                   key={task.id}
                   className={`transition-all ${
                     completed
-                      ? 'bg-gray-50/80 border-gray-200 opacity-75'
+                      ? 'bg-[var(--color-surface-1)] opacity-75'
                       : overdue
-                      ? 'border-red-200 bg-red-50/20'
-                      : 'hover:border-emerald-300'
+                      ? 'bg-[var(--color-surface-2)]'
+                      : 'hover:shadow-xs'
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <button
                       onClick={() => handleToggleStatus(task)}
-                      className="mt-0.5 text-[var(--color-text-muted)] hover:text-emerald-600 transition-colors"
+                      className="mt-0.5 text-[var(--color-text-muted)] hover:text-neutral-900 transition-colors"
                       aria-label={completed ? 'Mark incomplete' : 'Mark completed'}
                     >
                       {completed ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600 fill-emerald-100" />
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                       ) : (
-                        <Circle className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                        <Circle className="w-5 h-5 text-neutral-400 hover:text-[var(--color-primary-600)]" />
                       )}
                     </button>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)]">
+                        <span className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]">
                           {TASK_TYPE_ICONS[task.taskType]}
                           <span>{TASK_TYPE_LABELS[task.taskType]}</span>
                         </span>
 
                         {crop && (
-                          <Badge variant="green">
-                            🌾 {crop.name}
+                          <Badge>
+                            {crop.name}
                           </Badge>
                         )}
 
                         {completed ? (
-                          <Badge variant="gray">✓ Completed</Badge>
+                          <Badge>Completed</Badge>
                         ) : overdue ? (
-                          <Badge variant="red" className="flex items-center gap-1">
-                            <AlertTriangle className="w-3 h-3" />
+                          <Badge className="flex items-center gap-1">
+                            <AlertTriangle className="w-3 h-3 text-[var(--color-text-primary)]" />
                             <span>Overdue</span>
                           </Badge>
                         ) : (
-                          <Badge variant="amber">Upcoming</Badge>
+                          <Badge>Upcoming</Badge>
                         )}
                       </div>
 
@@ -696,7 +694,7 @@ export default function CalendarPage() {
                       </button>
                       <button
                         onClick={() => setDeleteTargetId(task.id)}
-                        className="p-1.5 text-[var(--color-text-muted)] hover:text-red-600 rounded-lg hover:bg-red-50"
+                        className="p-1.5 text-[var(--color-text-muted)] hover:text-neutral-900 rounded-lg hover:bg-[var(--color-surface-2)]"
                         aria-label="Delete task"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -720,7 +718,7 @@ export default function CalendarPage() {
             className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-[var(--color-border)] p-6 space-y-4 animate-scale-up"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+            <div className="flex items-center justify-between pb-2">
               <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
                 {editingTask ? 'Edit Farm Task' : 'Schedule New Farm Task'}
               </h3>
@@ -733,7 +731,7 @@ export default function CalendarPage() {
             </div>
 
             {formError && (
-              <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg">
+              <div className="p-3 bg-[var(--color-surface-2)] text-[var(--color-text-primary)] text-xs rounded-md">
                 {formError}
               </div>
             )}
@@ -797,7 +795,7 @@ export default function CalendarPage() {
                 />
               </FormField>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--color-border)]">
+              <div className="flex justify-end gap-2 pt-3">
                 <Button
                   type="button"
                   variant="outline"

@@ -516,11 +516,11 @@ export function getWeatherForRegion(stateId: string): RegionWeather {
 }
 
 export const WEATHER_CONDITION_ICONS: Record<string, string> = {
-  sunny: '☀️',
-  partly_cloudy: '⛅',
-  cloudy: '☁️',
-  rainy: '🌧️',
-  heavy_rain: '⛈️',
-  thunderstorm: '🌩️',
-  foggy: '🌫️',
+  sunny: 'Sunny',
+  partly_cloudy: 'Partly Cloudy',
+  cloudy: 'Cloudy',
+  rainy: 'Rainy',
+  heavy_rain: 'Heavy Rain',
+  thunderstorm: 'Thunderstorm',
+  foggy: 'Foggy',
 };

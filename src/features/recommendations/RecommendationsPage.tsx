@@ -230,13 +230,13 @@ export default function RecommendationsPage() {
                 const crop = CROPS.find(c => c.id === rec.cropId);
                 if (!crop) return null;
                 return (
-                  <Card key={rec.cropId} className="border-l-4 border-l-[var(--color-primary-500)]">
+                  <Card key={rec.cropId}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold text-[var(--color-text-muted)]">#{idx + 1}</span>
                           <h3 className="text-sm font-bold text-[var(--color-text-primary)]">{crop.name}</h3>
-                          <Badge variant={idx === 0 ? 'green' : idx === 1 ? 'amber' : 'gray'}>
+                          <Badge>
                             Score {rec.score}/100
                           </Badge>
                         </div>
@@ -247,7 +247,7 @@ export default function RecommendationsPage() {
                           <ul className="space-y-1">
                             {rec.reasons.map((r, i) => (
                               <li key={i} className="flex items-start gap-1.5 text-xs text-[var(--color-text-secondary)]">
-                                <CheckCircle className="w-3 h-3 text-[var(--color-success)] flex-shrink-0 mt-0.5" />
+                                <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
                                 {r}
                               </li>
                             ))}
@@ -256,13 +256,13 @@ export default function RecommendationsPage() {
 
                         {/* Assumptions */}
                         {rec.assumptions.length > 0 && (
-                          <div className="mt-3 p-2.5 bg-amber-50 rounded-lg">
-                            <p className="text-xs font-semibold text-amber-800 mb-1 flex items-center gap-1">
-                              <Info className="w-3 h-3" /> Assumptions made:
+                          <div className="mt-3 p-2.5 bg-[var(--color-surface-2)] rounded-md">
+                            <p className="text-xs font-semibold text-[var(--color-text-primary)] mb-1 flex items-center gap-1">
+                              <Info className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" /> Assumptions made:
                             </p>
                             <ul className="space-y-0.5">
                               {rec.assumptions.map((a, i) => (
-                                <li key={i} className="text-xs text-amber-700">• {a}</li>
+                                <li key={i} className="text-xs text-[var(--color-text-secondary)]">{a}</li>
                               ))}
                             </ul>
                           </div>
@@ -275,10 +275,10 @@ export default function RecommendationsPage() {
                           </div>
                         )}
 
-                        {/* Quick stats */}
+                        {/* Quick stats without emojis */}
                         <div className="mt-3 flex gap-4 text-xs text-[var(--color-text-muted)]">
-                          <span>⏱ {rec.estimatedDurationDays[0]}–{rec.estimatedDurationDays[1]} days</span>
-                          <span>💧 {rec.waterNeedsMmPerSeason[0]}–{rec.waterNeedsMmPerSeason[1]} mm/season</span>
+                          <span>{rec.estimatedDurationDays[0]}–{rec.estimatedDurationDays[1]} days</span>
+                          <span>{rec.waterNeedsMmPerSeason[0]}–{rec.waterNeedsMmPerSeason[1]} mm water/season</span>
                         </div>
                       </div>
                     </div>

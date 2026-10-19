@@ -7,11 +7,9 @@ export default function NotFoundPage() {
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 animate-fade-in">
-      <div className="w-16 h-16 rounded-2xl bg-[var(--color-primary-100)] flex items-center justify-center text-[var(--color-primary-600)] mb-4">
-        <Sprout className="w-8 h-8" />
-      </div>
+      <Sprout className="w-12 h-12 text-[var(--color-primary-600)] mb-4" />
 
-      <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary-700)] bg-[var(--color-primary-50)] px-2.5 py-1 rounded-full mb-2">
+      <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-primary-800)] bg-[var(--color-primary-50)] px-2.5 py-1 rounded-full mb-2 border border-[var(--color-primary-200)]">
         Error 404 — Page Not Found
       </span>
 

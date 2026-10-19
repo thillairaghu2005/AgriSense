@@ -41,25 +41,23 @@ export default function TopBar() {
 
   return (
     <>
-      <header className="flex items-center gap-3 px-4 h-16 bg-white border-b border-[var(--color-border)] z-10 flex-shrink-0">
+      <header className="flex items-center gap-3 px-6 h-16 bg-white z-10 flex-shrink-0">
         {/* Mobile menu button */}
         <button
-          className="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
+          className="lg:hidden flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
           onClick={() => setDrawerOpen(true)}
           aria-label="Open navigation menu"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Mobile logo (hidden on desktop) */}
+        {/* Mobile logo without box container */}
         <div className="lg:hidden flex items-center gap-2">
-          <div className="flex items-center justify-center w-7 h-7 bg-[var(--color-primary-600)] rounded-lg">
-            <Sprout className="w-4 h-4 text-white" />
-          </div>
+          <Sprout className="w-5 h-5 text-[var(--color-primary-600)]" />
         </div>
 
         {/* Page title (desktop) */}
-        <h1 className="hidden lg:block text-base font-semibold text-[var(--color-text-primary)] flex-shrink-0">
+        <h1 className="hidden lg:block text-sm font-semibold text-[var(--color-text-primary)] flex-shrink-0">
           {pageTitle}
         </h1>
 
@@ -70,7 +68,7 @@ export default function TopBar() {
           <select
             value={state}
             onChange={e => { setState(e.target.value); setDistrict(''); }}
-            className="text-xs border border-[var(--color-border)] rounded-lg px-2 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+            className="text-xs border border-[var(--color-border)] rounded-md px-2.5 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
             aria-label="Select state"
           >
             {STATES.map(s => (
@@ -80,7 +78,7 @@ export default function TopBar() {
           <select
             value={district}
             onChange={e => setDistrict(e.target.value)}
-            className="text-xs border border-[var(--color-border)] rounded-lg px-2 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+            className="text-xs border border-[var(--color-border)] rounded-md px-2.5 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
             aria-label="Select district"
           >
             <option value="">All Districts</option>
@@ -94,7 +92,7 @@ export default function TopBar() {
         <select
           value={language}
           onChange={e => setLanguage(e.target.value)}
-          className="hidden sm:block text-xs border border-[var(--color-border)] rounded-lg px-2 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          className="hidden sm:block text-xs border border-[var(--color-border)] rounded-md px-2.5 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
           aria-label="Select language"
         >
           {LANGUAGES.map(l => (
@@ -105,29 +103,28 @@ export default function TopBar() {
         {/* Search button */}
         <button
           onClick={() => setSearchOpen(true)}
-          className="flex items-center justify-center w-9 h-9 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
+          className="flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
           aria-label={t('common.search')}
         >
-          <Search className="w-5 h-5" />
+          <Search className="w-4 h-4" />
         </button>
 
-        {/* Notifications */}
+        {/* Notifications without decorative dot */}
         <button
           onClick={() => navigate('/notifications')}
-          className="relative flex items-center justify-center w-9 h-9 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
+          className="flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
           aria-label={t('nav.notifications')}
         >
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--color-primary-600)] rounded-full" aria-hidden="true" />
+          <Bell className="w-4 h-4" />
         </button>
 
         {/* Profile */}
         <button
           onClick={() => navigate('/profile')}
-          className="flex items-center justify-center w-9 h-9 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
+          className="flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
           aria-label={t('nav.profile')}
         >
-          <User className="w-5 h-5" />
+          <User className="w-4 h-4" />
         </button>
       </header>
 
@@ -142,10 +139,10 @@ export default function TopBar() {
           />
           {/* Drawer panel */}
           <div className="relative w-72 bg-white flex flex-col animate-slide-in">
-            <div className="flex items-center justify-end px-3 py-3 border-b border-[var(--color-border)]">
+            <div className="flex items-center justify-end px-3 py-3">
               <button
                 onClick={() => setDrawerOpen(false)}
-                className="flex items-center justify-center w-8 h-8 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)]"
+                className="flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)]"
                 aria-label="Close menu"
               >
                 <X className="w-5 h-5" />

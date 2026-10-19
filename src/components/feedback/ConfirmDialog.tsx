@@ -19,7 +19,6 @@ export default function ConfirmDialog({
   message,
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
-  variant = 'danger',
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -41,24 +40,6 @@ export default function ConfirmDialog({
 
   if (!isOpen) return null;
 
-  const variantStyles = {
-    danger: {
-      icon: <AlertTriangle className="w-5 h-5 text-red-600" />,
-      iconBg: 'bg-red-50 border-red-200',
-      buttonVariant: 'danger' as const,
-    },
-    warning: {
-      icon: <AlertTriangle className="w-5 h-5 text-amber-600" />,
-      iconBg: 'bg-amber-50 border-amber-200',
-      buttonVariant: 'secondary' as const,
-    },
-    primary: {
-      icon: <AlertTriangle className="w-5 h-5 text-emerald-600" />,
-      iconBg: 'bg-emerald-50 border-emerald-200',
-      buttonVariant: 'primary' as const,
-    },
-  }[variant];
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-fade-in"
@@ -69,15 +50,13 @@ export default function ConfirmDialog({
     >
       <div
         ref={dialogRef}
-        className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-[var(--color-border)] p-6 space-y-4 animate-scale-up"
+        className="w-full max-w-md bg-white rounded-xl shadow-xl border border-[var(--color-border)] p-6 space-y-4 animate-scale-up"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-start gap-3.5">
-          <div className={`p-2.5 rounded-xl border flex-shrink-0 ${variantStyles.iconBg}`}>
-            {variantStyles.icon}
-          </div>
+        <div className="flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
-            <h3 id="confirm-dialog-title" className="text-sm font-bold text-[var(--color-text-primary)]">
+            <h3 id="confirm-dialog-title" className="text-sm font-semibold text-[var(--color-text-primary)]">
               {title}
             </h3>
             <p className="text-xs text-[var(--color-text-secondary)] mt-1.5 leading-relaxed">
@@ -86,19 +65,19 @@ export default function ConfirmDialog({
           </div>
           <button
             onClick={onCancel}
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-1 rounded-lg"
+            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-1 rounded"
             aria-label="Close dialog"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-[var(--color-border)]">
+        <div className="flex items-center justify-end gap-2.5 pt-3">
           <Button variant="outline" size="sm" onClick={onCancel}>
             {cancelLabel}
           </Button>
           <Button
-            variant={variantStyles.buttonVariant}
+            variant="primary"
             size="sm"
             onClick={() => {
               onConfirm();

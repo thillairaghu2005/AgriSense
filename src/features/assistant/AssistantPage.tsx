@@ -174,7 +174,7 @@ export default function AssistantPage() {
         />
         <InfoBanner variant="warning">
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 text-neutral-700 flex-shrink-0 mt-0.5" />
             <span>{t('assistant.disclaimer')}</span>
           </div>
         </InfoBanner>
@@ -189,29 +189,23 @@ export default function AssistantPage() {
               msg.role === 'user' ? 'ml-auto flex-row-reverse' : ''
             }`}
           >
-            <div
-              className={`flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 text-white ${
-                msg.role === 'user'
-                  ? 'bg-emerald-700'
-                  : 'bg-[var(--color-primary-600)] shadow-xs'
-              }`}
-            >
-              {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+            <div className="flex-shrink-0 mt-1">
+              {msg.role === 'user' ? <User className="w-5 h-5 text-neutral-700" /> : <Bot className="w-5 h-5 text-[var(--color-primary-600)]" />}
             </div>
 
             <div
               className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-emerald-700 text-white rounded-tr-none'
+                  ? 'bg-[var(--color-primary-700)] text-white rounded-tr-none'
                   : 'bg-white text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs rounded-tl-none'
               }`}
             >
               <p>{msg.content}</p>
               <div
-                className={`flex items-center justify-between gap-2 mt-2 pt-1 border-t text-[10px] ${
+                className={`flex items-center justify-between gap-2 mt-2 pt-1 text-[10px] ${
                   msg.role === 'user'
-                    ? 'border-white/20 text-white/70'
-                    : 'border-[var(--color-border)] text-[var(--color-text-muted)]'
+                    ? 'text-white/80'
+                    : 'text-[var(--color-text-muted)]'
                 }`}
               >
                 <span>
@@ -220,11 +214,11 @@ export default function AssistantPage() {
                 {msg.role === 'assistant' && (
                   <button
                     onClick={() => speakMessage(msg.id, msg.content)}
-                    className="inline-flex items-center gap-1 hover:text-[var(--color-primary-600)] transition-colors p-0.5"
+                    className="inline-flex items-center gap-1 hover:text-[var(--color-primary-700)] transition-colors p-0.5"
                     aria-label="Listen to message audio"
                     title="Listen to response"
                   >
-                    <Volume2 className={`w-3.5 h-3.5 ${speakingId === msg.id ? 'text-emerald-600 animate-pulse' : ''}`} />
+                    <Volume2 className="w-3.5 h-3.5 text-[var(--color-primary-700)]" />
                     <span>{speakingId === msg.id ? 'Playing…' : 'Listen'}</span>
                   </button>
                 )}
@@ -235,14 +229,9 @@ export default function AssistantPage() {
 
         {isTyping && (
           <div className="flex gap-3 max-w-xs">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-primary-600)] text-white">
-              <Bot className="w-4 h-4" />
-            </div>
-            <div className="bg-white border border-[var(--color-border)] p-3 rounded-2xl rounded-tl-none text-xs text-[var(--color-text-muted)] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[var(--color-primary-500)] animate-bounce" />
-              <span className="w-2 h-2 rounded-full bg-[var(--color-primary-500)] animate-bounce [animation-delay:0.2s]" />
-              <span className="w-2 h-2 rounded-full bg-[var(--color-primary-500)] animate-bounce [animation-delay:0.4s]" />
-              <span className="ml-1 text-[11px]">Preparing agricultural guidance…</span>
+            <Bot className="w-5 h-5 text-[var(--color-primary-600)] flex-shrink-0 mt-1" />
+            <div className="bg-white border border-[var(--color-border)] p-3 rounded-2xl rounded-tl-none text-xs text-[var(--color-text-muted)] flex items-center">
+              <span className="text-[11px] text-neutral-600">Preparing agricultural guidance…</span>
             </div>
           </div>
         )}
@@ -255,9 +244,9 @@ export default function AssistantPage() {
           <button
             key={s}
             onClick={() => sendMessage(s)}
-            className="text-[11px] px-3 py-1.5 rounded-full bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-50)] hover:text-[var(--color-primary-700)] hover:border-[var(--color-primary-300)] whitespace-nowrap transition-colors flex items-center gap-1 flex-shrink-0"
+            className="text-[11px] px-3 py-1.5 rounded-full bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-50)] hover:text-[var(--color-primary-800)] hover:border-[var(--color-primary-300)] whitespace-nowrap transition-colors flex items-center gap-1 flex-shrink-0"
           >
-            <Sparkles className="w-3 h-3 text-amber-500" />
+            <Sparkles className="w-3 h-3 text-[var(--color-primary-600)]" />
             <span>{s}</span>
           </button>
         ))}
@@ -270,13 +259,13 @@ export default function AssistantPage() {
           onClick={toggleSpeechRecognition}
           className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all ${
             isListening
-              ? 'bg-red-600 text-white animate-pulse'
+              ? 'bg-[var(--color-primary-600)] text-white'
               : 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-3)]'
           }`}
           aria-label={isListening ? 'Stop listening' : 'Start speaking'}
           title={isListening ? 'Listening… click to stop' : 'Speak your question'}
         >
-          {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 text-emerald-700" />}
+          {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 text-neutral-700" />}
         </button>
 
         <input

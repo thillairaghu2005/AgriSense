@@ -151,16 +151,14 @@ export default function PestsDiseasesPage() {
       />
 
       <InfoBanner variant="warning">
-        ⚠️ <strong>Important Advisory:</strong> Management protocols presented here are for preliminary guidance and educational awareness. 
+        <strong>Important Advisory:</strong> Management protocols presented here are for preliminary guidance and educational awareness. 
         Never apply restricted chemical pesticides or determine dosage without consulting your local <strong>Krishi Vigyan Kendra (KVK)</strong> or State Agricultural Extension Officer.
       </InfoBanner>
 
       {/* Simulated Image Assessment Studio */}
-      <Card className="border-[var(--color-primary-200)] bg-gradient-to-br from-white to-[var(--color-surface-1)]">
+      <Card>
         <div className="flex items-center gap-2 mb-2">
-          <div className="p-1.5 rounded-lg bg-[var(--color-primary-100)] text-[var(--color-primary-700)]">
-            <Activity className="w-4 h-4" />
-          </div>
+          <Activity className="w-4 h-4 text-neutral-800" />
           <h2 className="text-base font-bold text-[var(--color-text-primary)]">
             Simulated Crop Image Assessment Flow
           </h2>
@@ -177,11 +175,9 @@ export default function PestsDiseasesPage() {
             {!uploadedImage ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-[var(--color-border-strong)] rounded-xl p-6 text-center hover:border-[var(--color-primary-500)] hover:bg-[var(--color-primary-50)]/30 transition-all cursor-pointer flex flex-col items-center justify-center min-h-[190px]"
+                className="border-2 border-dashed border-[var(--color-border)] rounded-xl p-6 text-center hover:border-neutral-400 transition-all cursor-pointer flex flex-col items-center justify-center min-h-[190px]"
               >
-                <div className="w-12 h-12 rounded-full bg-[var(--color-surface-2)] flex items-center justify-center mb-3">
-                  <Upload className="w-6 h-6 text-[var(--color-text-muted)]" />
-                </div>
+                <Upload className="w-8 h-8 text-[var(--color-text-muted)] mb-3" />
                 <p className="text-sm font-semibold text-[var(--color-text-primary)]">
                   Click to select crop leaf photo
                 </p>
@@ -191,10 +187,10 @@ export default function PestsDiseasesPage() {
                 <div className="mt-4 flex items-center gap-1.5 flex-wrap justify-center">
                   <span className="text-[11px] text-[var(--color-text-muted)] w-full mb-1">Or test with realistic crop samples:</span>
                   {[
-                    { id: 'rice', label: '🌾 Rice (Blast)' },
-                    { id: 'tomato', label: '🍅 Tomato (Blight)' },
-                    { id: 'cotton', label: '🌱 Cotton (Bollworm)' },
-                    { id: 'maize', label: '🌽 Maize (Armyworm)' },
+                    { id: 'rice', label: 'Rice (Blast)' },
+                    { id: 'tomato', label: 'Tomato (Blight)' },
+                    { id: 'cotton', label: 'Cotton (Bollworm)' },
+                    { id: 'maize', label: 'Maize (Armyworm)' },
                   ].map(sample => (
                     <button
                       key={sample.id}
@@ -203,7 +199,7 @@ export default function PestsDiseasesPage() {
                         e.stopPropagation();
                         handleUseSampleImage(sample.id);
                       }}
-                      className="text-[11px] px-2.5 py-1 rounded-lg bg-[var(--color-surface-3)] text-[var(--color-text-primary)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary-700)] font-medium transition-colors"
+                      className="text-[11px] px-2.5 py-1 rounded-lg bg-[var(--color-surface-3)] text-[var(--color-text-primary)] hover:bg-neutral-200 font-medium transition-colors"
                     >
                       {sample.label}
                     </button>
@@ -214,14 +210,14 @@ export default function PestsDiseasesPage() {
               <div className="border border-[var(--color-border)] rounded-xl p-4 bg-white space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <FileImage className="w-4 h-4 text-[var(--color-primary-600)]" />
+                    <FileImage className="w-4 h-4 text-neutral-700" />
                     <span className="text-xs font-medium text-[var(--color-text-primary)] truncate max-w-[200px]">
                       {imageFileName}
                     </span>
                   </div>
                   <button
                     onClick={clearUploadedImage}
-                    className="text-xs text-red-600 hover:text-red-700 flex items-center gap-0.5"
+                    className="text-xs text-neutral-600 hover:text-neutral-900 flex items-center gap-0.5"
                   >
                     <X className="w-3.5 h-3.5" /> Remove
                   </button>
@@ -231,7 +227,7 @@ export default function PestsDiseasesPage() {
                 <div className="relative w-full h-40 bg-[var(--color-surface-2)] rounded-lg overflow-hidden flex items-center justify-center border border-[var(--color-border)]">
                   {uploadedImage === 'sample-leaf' ? (
                     <div className="text-center p-4">
-                      <div className="text-4xl mb-1">🌿</div>
+                      <FileImage className="w-8 h-8 text-neutral-400 mx-auto mb-1" />
                       <p className="text-xs font-semibold text-[var(--color-text-primary)]">
                         Sample Affected Rice Leaf
                       </p>
@@ -272,7 +268,7 @@ export default function PestsDiseasesPage() {
           <div className="bg-white rounded-xl border border-[var(--color-border)] p-4 flex flex-col justify-center">
             {isAnalyzing ? (
               <div className="text-center py-8 space-y-2">
-                <RefreshCw className="w-8 h-8 text-[var(--color-primary-600)] animate-spin mx-auto" />
+                <RefreshCw className="w-8 h-8 text-neutral-700 animate-spin mx-auto" />
                 <p className="text-sm font-semibold text-[var(--color-text-primary)]">
                   Processing leaf imagery…
                 </p>
@@ -282,14 +278,14 @@ export default function PestsDiseasesPage() {
               </div>
             ) : simulatedResult ? (
               <div className="space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-[var(--color-border)]">
+                <div className="flex items-center justify-between pb-2">
                   <div className="flex items-center gap-1.5">
                     <CheckCircle className="w-4 h-4 text-emerald-600" />
                     <span className="text-xs font-bold text-[var(--color-text-primary)]">
                       Simulated Demonstration Result
                     </span>
                   </div>
-                  <Badge variant="amber">
+                  <Badge>
                     ~{simulatedResult.confidence}% Pattern Match
                   </Badge>
                 </div>
@@ -297,7 +293,7 @@ export default function PestsDiseasesPage() {
                 <div>
                   <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
                     {simulatedResult.match.name}
-                    <Badge variant={simulatedResult.match.type === 'pest' ? 'amber' : 'red'}>
+                    <Badge variant="neutral">
                       {simulatedResult.match.type.toUpperCase()}
                     </Badge>
                   </h3>
@@ -306,9 +302,9 @@ export default function PestsDiseasesPage() {
                   </p>
                 </div>
 
-                <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 text-xs text-amber-900 space-y-1">
-                  <p className="font-semibold">Simulated Observations:</p>
-                  <ul className="list-disc list-inside space-y-0.5 text-[11px] text-amber-800">
+                <div className="bg-neutral-50 p-2.5 rounded-lg border border-neutral-200 text-xs text-neutral-800 space-y-1">
+                  <p className="font-semibold text-neutral-900">Simulated Observations:</p>
+                  <ul className="list-disc list-inside space-y-0.5 text-[11px] text-neutral-700">
                     {simulatedResult.observations.map((obs, i) => (
                       <li key={i}>{obs}</li>
                     ))}
@@ -407,15 +403,15 @@ export default function PestsDiseasesPage() {
             return (
               <Card
                 key={item.id}
-                className="hover:border-[var(--color-primary-400)] transition-all flex flex-col justify-between"
+                className="transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <Badge variant={item.type === 'pest' ? 'amber' : 'red'}>
-                        {item.type === 'pest' ? '🐛 Pest' : '🦠 Disease'}
+                      <Badge variant="neutral">
+                        {item.type === 'pest' ? 'Pest' : 'Disease'}
                       </Badge>
-                      <Badge variant={item.severity === 'high' ? 'red' : 'amber'}>
+                      <Badge variant="neutral">
                         Severity: {item.severity.toUpperCase()}
                       </Badge>
                     </div>
@@ -448,7 +444,6 @@ export default function PestsDiseasesPage() {
                     <ul className="text-xs text-[var(--color-text-secondary)] space-y-1">
                       {item.symptoms.slice(0, 2).map((sym, idx) => (
                         <li key={idx} className="flex items-start gap-1.5">
-                          <span className="text-amber-600 mt-0.5">•</span>
                           <span>{sym}</span>
                         </li>
                       ))}
@@ -456,13 +451,13 @@ export default function PestsDiseasesPage() {
                   </div>
                 </div>
 
-                <div className="pt-4 mt-2 border-t border-[var(--color-border)] flex items-center justify-between">
+                <div className="pt-4 mt-2 flex items-center justify-between">
                   <span className="text-[11px] text-[var(--color-text-muted)]">
                     {item.prevention.length} prevention measures
                   </span>
                   <button
                     onClick={() => setSelectedItem(item)}
-                    className="text-xs text-[var(--color-primary-600)] hover:underline font-semibold flex items-center gap-1"
+                    className="text-xs text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] hover:underline font-semibold flex items-center gap-1"
                   >
                     View Protocols <ChevronRight className="w-3.5 h-3.5" />
                   </button>
@@ -477,13 +472,13 @@ export default function PestsDiseasesPage() {
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+            <div className="flex items-center justify-between pb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <Badge variant={selectedItem.type === 'pest' ? 'amber' : 'red'}>
+                  <Badge variant="neutral">
                     {selectedItem.type.toUpperCase()}
                   </Badge>
-                  <Badge variant={selectedItem.severity === 'high' ? 'red' : 'amber'}>
+                  <Badge variant="neutral">
                     Severity: {selectedItem.severity}
                   </Badge>
                 </div>
@@ -523,10 +518,10 @@ export default function PestsDiseasesPage() {
 
               <div>
                 <h4 className="font-semibold text-sm text-[var(--color-text-primary)] mb-1 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <ShieldCheck className="w-4 h-4 text-neutral-700" />
                   Cultural & Preventive Measures
                 </h4>
-                <ul className="space-y-1.5 list-disc list-inside bg-emerald-50/50 p-3 rounded-lg border border-emerald-200 text-emerald-950">
+                <ul className="space-y-1.5 list-disc list-inside bg-neutral-50 p-3 rounded-lg border border-neutral-200 text-neutral-800">
                   {selectedItem.prevention.map((prev, i) => (
                     <li key={i}>{prev}</li>
                   ))}
@@ -535,16 +530,16 @@ export default function PestsDiseasesPage() {
 
               <div>
                 <h4 className="font-semibold text-sm text-[var(--color-text-primary)] mb-1 flex items-center gap-1.5">
-                  <AlertTriangle className="w-4 h-4 text-amber-600" />
+                  <AlertTriangle className="w-4 h-4 text-neutral-700" />
                   Management Advisory & Caution
                 </h4>
-                <div className="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-950 leading-relaxed">
+                <div className="bg-neutral-50 p-3 rounded-lg border border-neutral-200 text-neutral-800 leading-relaxed">
                   {selectedItem.management}
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-3 border-t border-[var(--color-border)]">
+            <div className="flex items-center justify-between pt-3">
               <span className="text-[11px] text-[var(--color-text-muted)]">
                 General agronomic reference data
               </span>

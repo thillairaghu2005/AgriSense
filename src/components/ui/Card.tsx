@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { AlertTriangle } from 'lucide-react';
 
 // ─── Card ─────────────────────────────────────────────────────────
 interface CardProps {
@@ -7,6 +8,7 @@ interface CardProps {
   onClick?: () => void;
   role?: string;
   tabIndex?: number;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
 export function Card({ children, className = '', onClick, ...rest }: CardProps) {
@@ -15,7 +17,7 @@ export function Card({ children, className = '', onClick, ...rest }: CardProps) 
     <div
       {...rest}
       onClick={onClick}
-      className={`card ${clickable ? 'cursor-pointer hover:shadow-md hover:border-[var(--color-primary-300)] transition-all duration-150' : ''} ${className}`}
+      className={`card ${clickable ? 'cursor-pointer hover:shadow-md transition-shadow' : ''} ${className}`}
     >
       {children}
     </div>
@@ -27,13 +29,13 @@ interface StatCardProps {
   label: string;
   value: string | number;
   icon?: ReactNode;
-  iconBg?: string;
+  iconBg?: string; // Kept for backwards compatibility but not used as a box container
   trend?: { value: string; positive: boolean };
   subtitle?: string;
   className?: string;
 }
 
-export function StatCard({ label, value, icon, iconBg = 'bg-[var(--color-primary-100)]', trend, subtitle, className = '' }: StatCardProps) {
+export function StatCard({ label, value, icon, trend, subtitle, className = '' }: StatCardProps) {
   return (
     <div className={`card ${className}`}>
       <div className="flex items-start justify-between">
@@ -42,13 +44,13 @@ export function StatCard({ label, value, icon, iconBg = 'bg-[var(--color-primary
           <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)] truncate">{value}</p>
           {subtitle && <p className="mt-0.5 text-xs text-[var(--color-text-muted)] truncate">{subtitle}</p>}
           {trend && (
-            <p className={`mt-1 text-xs font-medium ${trend.positive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`}>
+            <p className={`mt-1 text-xs font-medium ${trend.positive ? 'text-[var(--color-primary-700)]' : 'text-[var(--color-text-secondary)]'}`}>
               {trend.positive ? '↑' : '↓'} {trend.value}
             </p>
           )}
         </div>
         {icon && (
-          <div className={`flex items-center justify-center w-10 h-10 rounded-xl flex-shrink-0 ml-3 ${iconBg}`}>
+          <div className="flex-shrink-0 ml-3 text-[var(--color-primary-600)]">
             {icon}
           </div>
         )}
@@ -81,7 +83,7 @@ export function PageHeader({ title, subtitle, actions, badge }: PageHeaderProps)
 }
 
 // ─── Badge ─────────────────────────────────────────────────────────
-type BadgeVariant = 'green' | 'amber' | 'red' | 'blue' | 'gray' | 'purple';
+export type BadgeVariant = 'neutral' | 'green' | 'amber' | 'red' | 'blue' | 'gray' | 'purple';
 
 interface BadgeProps {
   children: ReactNode;
@@ -89,18 +91,9 @@ interface BadgeProps {
   className?: string;
 }
 
-const BADGE_STYLES: Record<BadgeVariant, string> = {
-  green: 'badge-green',
-  amber: 'badge-amber',
-  red: 'badge-red',
-  blue: 'badge-blue',
-  gray: 'badge-gray',
-  purple: 'bg-purple-100 text-purple-700',
-};
-
-export function Badge({ children, variant = 'gray', className = '' }: BadgeProps) {
+export function Badge({ children, className = '' }: BadgeProps) {
   return (
-    <span className={`badge ${BADGE_STYLES[variant]} ${className}`}>
+    <span className={`badge ${className}`}>
       {children}
     </span>
   );
@@ -110,9 +103,6 @@ export function Badge({ children, variant = 'gray', className = '' }: BadgeProps
 export function DemoLabel({ label = 'Illustrative sample data' }: { label?: string }) {
   return (
     <span className="demo-label">
-      <svg className="w-2.5 h-2.5" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
-        <circle cx="5" cy="5" r="4" />
-      </svg>
       {label}
     </span>
   );
@@ -129,7 +119,7 @@ interface EmptyStateProps {
 export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-      {icon && <div className="mb-4 text-[var(--color-text-muted)] opacity-60">{icon}</div>}
+      {icon && <div className="mb-4 text-[var(--color-text-muted)]">{icon}</div>}
       <h3 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h3>
       {description && <p className="mt-1.5 text-sm text-[var(--color-text-muted)] max-w-xs">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
@@ -141,12 +131,10 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
 export function ErrorState({ message = 'Something went wrong.', onRetry }: { message?: string; onRetry?: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-      <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
-        <span className="text-2xl">⚠️</span>
-      </div>
+      <AlertTriangle className="w-8 h-8 text-[var(--color-text-secondary)] mb-3" />
       <p className="text-sm text-[var(--color-text-secondary)]">{message}</p>
       {onRetry && (
-        <button onClick={onRetry} className="mt-4 text-sm text-[var(--color-primary-600)] hover:underline font-medium">
+        <button onClick={onRetry} className="mt-3 text-sm text-[var(--color-text-primary)] hover:underline font-medium">
           Try again
         </button>
       )}
@@ -161,15 +149,13 @@ interface InfoBannerProps {
   className?: string;
 }
 
-const BANNER_STYLES = {
-  info: 'bg-blue-50 border-blue-200 text-blue-800',
-  warning: 'bg-amber-50 border-amber-200 text-amber-800',
-  success: 'bg-[var(--color-primary-50)] border-[var(--color-primary-200)] text-[var(--color-primary-800)]',
-};
-
 export function InfoBanner({ children, variant = 'info', className = '' }: InfoBannerProps) {
+  const variantBg = variant === 'success' || variant === 'info'
+    ? 'bg-[var(--color-primary-50)] text-[var(--color-primary-900)] border border-[var(--color-primary-200)]'
+    : 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]';
+
   return (
-    <div className={`rounded-xl border p-3.5 text-sm ${BANNER_STYLES[variant]} ${className}`}>
+    <div className={`rounded-lg p-3.5 text-xs leading-relaxed ${variantBg} ${className}`}>
       {children}
     </div>
   );
@@ -190,22 +176,22 @@ interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
   return (
-    <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-xl w-fit" role="tablist">
+    <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-lg w-fit" role="tablist">
       {tabs.map(tab => (
         <button
           key={tab.key}
           role="tab"
           aria-selected={activeTab === tab.key}
           onClick={() => onTabChange(tab.key)}
-          className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-1.5 text-xs font-medium rounded transition-colors flex items-center gap-1.5 ${
             activeTab === tab.key
-              ? 'bg-white text-[var(--color-text-primary)] shadow-sm'
+              ? 'bg-white text-[var(--color-text-primary)] shadow-xs'
               : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
           }`}
         >
           {tab.label}
           {tab.count !== undefined && (
-            <span className={`text-xs px-1.5 py-0.5 rounded-full ${activeTab === tab.key ? 'bg-[var(--color-primary-100)] text-[var(--color-primary-700)]' : 'bg-[var(--color-surface-3)] text-[var(--color-text-muted)]'}`}>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded ${activeTab === tab.key ? 'bg-[var(--color-surface-3)] text-[var(--color-text-primary)]' : 'bg-transparent text-[var(--color-text-muted)]'}`}>
               {tab.count}
             </span>
           )}

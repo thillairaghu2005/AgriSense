@@ -128,22 +128,45 @@ export interface MspPrice {
 
 // ─── Government Schemes ──────────────────────────────────────────
 export type SchemeLevel = 'central' | 'state';
-export type SchemeCategory = 'insurance' | 'credit' | 'subsidy' | 'income_support' | 'irrigation' | 'mechanisation' | 'market' | 'organic' | 'other';
+export type SchemeCategory = 'insurance' | 'credit' | 'subsidy' | 'income_support' | 'irrigation' | 'mechanisation' | 'market' | 'organic' | 'seed' | 'other';
+
+export interface SchemeTimeline {
+  activityMonth: string;   // e.g. "June–July"
+  activity: string;
+}
+
+export interface SeedInfo {
+  cropName: string;
+  recommendedVarieties: string[];
+  sowingDepthCm: string;
+  seedRateKgPerHectare: string;
+  spacingCm: string;
+  germinationDays: string;
+  seedTreatment: string;
+}
 
 export interface Scheme {
   id: string;
   name: string;
   level: SchemeLevel;
-  stateApplicability: string[]; // empty = all India
+  stateApplicability: string[];  // empty = all India
   category: SchemeCategory;
+  shortDescription: string;
   eligibilitySummary: string;
   benefits: string;
+  subsidyAmount?: string;        // e.g. "50% of cost, max ₹10,000"
+  fundingBudget?: string;        // e.g. "₹14,000 crore (2023-24)"
+  coverageStates?: string;       // e.g. "All states" or specific list
+  renewalPeriod?: string;        // e.g. "Annual", "One-time", "3 years"
+  targetBeneficiaries?: string;  // e.g. "Small & marginal farmers"
   documents: string[];
   applicationSteps: string[];
+  timeline?: SchemeTimeline[];   // activity calendar
+  seedInfo?: SeedInfo[];         // seed plantation info where applicable
+  keyFeatures?: string[];        // bullet highlights
   officialUrl: string;
   lastVerifiedDate: string;
   isVerified: boolean;
-  shortDescription: string;
 }
 
 // ─── Farm Tasks / Calendar ───────────────────────────────────────

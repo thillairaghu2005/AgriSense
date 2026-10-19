@@ -103,7 +103,7 @@ export default function ProfilePage() {
       />
 
       {savedSuccess && (
-        <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center gap-2">
+        <div className="p-3.5 bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] text-[var(--color-primary-900)] rounded-xl text-xs flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           <span>Profile preferences saved successfully to your browser storage!</span>
         </div>
@@ -112,7 +112,7 @@ export default function ProfilePage() {
       <form onSubmit={handleSaveProfile} className="space-y-6">
         {/* Personal & Farm Location */}
         <Card className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-[var(--color-border)]">
+          <div className="flex items-center gap-2 pb-2">
             <User className="w-5 h-5 text-[var(--color-primary-600)]" />
             <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
               Personal & Farm Details
@@ -180,7 +180,7 @@ export default function ProfilePage() {
 
         {/* Agricultural Holding Characteristics */}
         <Card className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-[var(--color-border)]">
+          <div className="flex items-center gap-2 pb-2">
             <Sprout className="w-5 h-5 text-[var(--color-primary-600)]" />
             <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
               Land Holding & Soil Baseline
@@ -227,7 +227,7 @@ export default function ProfilePage() {
 
         {/* Language & Accessibility */}
         <Card className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-[var(--color-border)]">
+          <div className="flex items-center gap-2 pb-2">
             <Globe className="w-5 h-5 text-[var(--color-primary-600)]" />
             <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
               Language & Accessibility Options
@@ -249,7 +249,7 @@ export default function ProfilePage() {
             </FormField>
           </div>
 
-          <div className="pt-2 border-t border-[var(--color-border)] space-y-3">
+          <div className="pt-2 space-y-3">
             <p className="text-xs font-semibold text-[var(--color-text-primary)]">
               Interface Adaptations:
             </p>
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                 type="checkbox"
                 checked={highContrast}
                 onChange={e => setHighContrast(e.target.checked)}
-                className="w-4 h-4 rounded text-[var(--color-primary-600)] focus:ring-[var(--color-primary-500)]"
+                className="w-4 h-4 rounded text-[var(--color-primary-600)] accent-[var(--color-primary-600)] focus:ring-[var(--color-primary-600)]"
               />
               <span>High Contrast Mode (Enhances visibility under outdoor direct sunlight)</span>
             </label>
@@ -269,7 +269,7 @@ export default function ProfilePage() {
                 type="checkbox"
                 checked={largeText}
                 onChange={e => setLargeText(e.target.checked)}
-                className="w-4 h-4 rounded text-[var(--color-primary-600)] focus:ring-[var(--color-primary-500)]"
+                className="w-4 h-4 rounded text-[var(--color-primary-600)] accent-[var(--color-primary-600)] focus:ring-[var(--color-primary-600)]"
               />
               <span>Larger Text Size (Increased font scale for easy reading)</span>
             </label>
@@ -279,7 +279,7 @@ export default function ProfilePage() {
                 type="checkbox"
                 checked={reducedMotion}
                 onChange={e => setReducedMotion(e.target.checked)}
-                className="w-4 h-4 rounded text-[var(--color-primary-600)] focus:ring-[var(--color-primary-500)]"
+                className="w-4 h-4 rounded text-[var(--color-primary-600)] accent-[var(--color-primary-600)] focus:ring-[var(--color-primary-600)]"
               />
               <span>Reduce Motion & Animations (Optimised for lower-power devices)</span>
             </label>
@@ -291,7 +291,7 @@ export default function ProfilePage() {
           <Button
             type="button"
             variant="outline"
-            leftIcon={<RotateCcw className="w-4 h-4 text-red-600" />}
+            leftIcon={<RotateCcw className="w-4 h-4" />}
             onClick={() => setConfirmResetOpen(true)}
           >
             Reset Demo Data
@@ -311,9 +311,7 @@ export default function ProfilePage() {
       {confirmResetOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
-            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 mx-auto">
-              <AlertTriangle className="w-6 h-6" />
-            </div>
+            <AlertTriangle className="w-10 h-10 text-neutral-800 mx-auto" />
 
             <div className="text-center space-y-2">
               <h3 className="text-base font-bold text-[var(--color-text-primary)]">
@@ -335,7 +333,7 @@ export default function ProfilePage() {
               </Button>
               <Button
                 type="button"
-                variant="danger"
+                variant="primary"
                 size="sm"
                 onClick={handleResetAll}
               >

@@ -15,7 +15,7 @@ export default function MobileNavigation() {
 
   return (
     <nav
-      className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--color-border)] z-20"
+      className="lg:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-1px_3px_rgba(0,0,0,0.05)] z-20"
       aria-label="Mobile navigation"
     >
       <ul className="flex">
@@ -27,7 +27,7 @@ export default function MobileNavigation() {
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-medium transition-colors ${
                   isActive
-                    ? 'text-[var(--color-primary-600)]'
+                    ? 'text-[var(--color-primary-700)] font-semibold'
                     : 'text-[var(--color-text-muted)]'
                 }`
               }
@@ -35,8 +35,8 @@ export default function MobileNavigation() {
               {({ isActive }) => (
                 <>
                   <item.icon
-                    className="w-5 h-5"
-                    strokeWidth={isActive ? 2.5 : 1.8}
+                    className="w-4 h-4"
+                    strokeWidth={isActive ? 2.2 : 1.8}
                   />
                   <span className="truncate max-w-[52px] text-center leading-tight">
                     {t(item.labelKey)}

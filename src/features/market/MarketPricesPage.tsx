@@ -89,7 +89,7 @@ export default function MarketPricesPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-xs" aria-label="Sample market prices">
             <thead>
-              <tr className="border-b border-[var(--color-border)]">
+              <tr>
                 {['Crop', 'State', 'Market', 'Date', 'Unit', 'Min ₹', 'Max ₹', 'Modal ₹'].map(h => (
                   <th key={h} className="text-left py-2.5 px-2 text-[var(--color-text-muted)] font-medium whitespace-nowrap">{h}</th>
                 ))}
@@ -97,7 +97,7 @@ export default function MarketPricesPage() {
             </thead>
             <tbody>
               {filtered.map(price => (
-                <tr key={price.id} className="border-b border-[var(--color-border)] hover:bg-[var(--color-surface-1)] transition-colors">
+                <tr key={price.id} className="hover:bg-[var(--color-surface-1)] transition-colors">
                   <td className="py-2.5 px-2 font-medium text-[var(--color-text-primary)] whitespace-nowrap">{price.cropName}</td>
                   <td className="py-2.5 px-2 text-[var(--color-text-muted)]">{price.state}</td>
                   <td className="py-2.5 px-2 text-[var(--color-text-muted)] whitespace-nowrap">{price.market}</td>
@@ -155,7 +155,7 @@ export default function MarketPricesPage() {
         <div className="mt-3 overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-[var(--color-border)]">
+              <tr>
                 {['Crop', 'Season', 'Year', 'MSP ₹/qtl', 'Announced By'].map(h => (
                   <th key={h} className="text-left py-2 px-2 text-[var(--color-text-muted)] font-medium whitespace-nowrap">{h}</th>
                 ))}
@@ -163,7 +163,7 @@ export default function MarketPricesPage() {
             </thead>
             <tbody>
               {MSP_PRICES.map(p => (
-                <tr key={`${p.cropId}-${p.season}`} className="border-b border-[var(--color-border)]">
+                <tr key={`${p.cropId}-${p.season}`}>
                   <td className="py-2 px-2 font-medium text-[var(--color-text-primary)]">{p.cropName}</td>
                   <td className="py-2 px-2 text-[var(--color-text-muted)] capitalize">{p.season}</td>
                   <td className="py-2 px-2 text-[var(--color-text-muted)]">{p.year}</td>

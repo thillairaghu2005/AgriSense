@@ -60,13 +60,6 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
     article: Library,
   };
 
-  const TypeColor = {
-    crop: 'text-[var(--color-primary-600)]',
-    scheme: 'text-blue-600',
-    pest: 'text-red-600',
-    article: 'text-amber-600',
-  };
-
   function handleSelect(result: SearchResult) {
     navigate(result.route);
     onClose();
@@ -74,10 +67,10 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4" onClick={onClose}>
-      <div className="w-full max-w-xl bg-white rounded-xl shadow-2xl border border-[var(--color-border)]" onClick={e => e.stopPropagation()}>
+      <div className="w-full max-w-xl bg-white rounded-xl shadow-2xl p-2" onClick={e => e.stopPropagation()}>
         {/* Input */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-[var(--color-border)]">
-          <Search className="w-5 h-5 text-[var(--color-text-muted)] flex-shrink-0" />
+        <div className="flex items-center gap-3 px-3 py-2.5">
+          <Search className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -87,7 +80,7 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
             className="flex-1 text-sm bg-transparent outline-none text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)]"
             aria-label="Global search"
           />
-          <button onClick={onClose} className="flex items-center justify-center w-7 h-7 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]">
+          <button onClick={onClose} className="flex items-center justify-center w-6 h-6 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -101,9 +94,9 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
                 <li key={`${r.type}-${r.id}`}>
                   <button
                     onClick={() => handleSelect(r)}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[var(--color-surface-1)] transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3 py-2 hover:bg-[var(--color-surface-1)] rounded-lg transition-colors text-left"
                   >
-                    <Icon className={`w-4 h-4 flex-shrink-0 ${TypeColor[r.type]}`} />
+                    <Icon className="w-4 h-4 flex-shrink-0 text-[var(--color-text-secondary)]" />
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">{r.title}</p>
                       {r.subtitle && <p className="text-xs text-[var(--color-text-muted)] capitalize">{r.subtitle.replace(/_/g, ' ')}</p>}
@@ -114,9 +107,9 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
             })}
           </ul>
         ) : query.trim() ? (
-          <div className="py-8 text-center text-sm text-[var(--color-text-muted)]">No results for "{query}"</div>
+          <div className="py-8 text-center text-xs text-[var(--color-text-muted)]">No results for &quot;{query}&quot;</div>
         ) : (
-          <div className="py-6 text-center text-sm text-[var(--color-text-muted)]">Search across crops, schemes, pests & diseases, and articles.</div>
+          <div className="py-6 text-center text-xs text-[var(--color-text-muted)]">Search across crops, schemes, pests &amp; diseases, and articles.</div>
         )}
       </div>
     </div>

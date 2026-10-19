@@ -28,20 +28,20 @@ import {
 } from 'recharts';
 
 const EXPENSE_CATEGORIES: { id: ExpenseCategory; label: string; color: string }[] = [
-  { id: 'seed', label: 'Seeds & Seedlings', color: '#10b981' },
-  { id: 'fertiliser', label: 'Fertilisers & Manure', color: '#f59e0b' },
-  { id: 'pesticide', label: 'Crop Protection & Bio-agents', color: '#ef4444' },
-  { id: 'labour', label: 'Farm Labour & Weeding', color: '#6366f1' },
-  { id: 'irrigation', label: 'Irrigation & Diesel/Electricity', color: '#0ea5e9' },
-  { id: 'equipment', label: 'Tractor / Machinery Hire', color: '#8b5cf6' },
-  { id: 'transport', label: 'Transport & Mandi Fee', color: '#ec4899' },
-  { id: 'other', label: 'Other Operational Expenses', color: '#64748b' },
+  { id: 'seed', label: 'Seeds & Seedlings', color: '#15803d' },
+  { id: 'fertiliser', label: 'Fertilisers & Manure', color: '#16a34a' },
+  { id: 'pesticide', label: 'Crop Protection & Bio-agents', color: '#22c55e' },
+  { id: 'labour', label: 'Farm Labour & Weeding', color: '#1e293b' },
+  { id: 'irrigation', label: 'Irrigation & Diesel/Electricity', color: '#334155' },
+  { id: 'equipment', label: 'Tractor / Machinery Hire', color: '#475569' },
+  { id: 'transport', label: 'Transport & Mandi Fee', color: '#64748b' },
+  { id: 'other', label: 'Other Operational Expenses', color: '#94a3b8' },
 ];
 
 const INCOME_CATEGORIES: { id: IncomeCategory; label: string; color: string }[] = [
-  { id: 'crop_sale', label: 'Crop Produce Sale', color: '#10b981' },
-  { id: 'subsidy', label: 'Government Subsidy / DBT', color: '#3b82f6' },
-  { id: 'other', label: 'Other Farm Income', color: '#8b5cf6' },
+  { id: 'crop_sale', label: 'Crop Produce Sale', color: '#16a34a' },
+  { id: 'subsidy', label: 'Government Subsidy / DBT', color: '#22c55e' },
+  { id: 'other', label: 'Other Farm Income', color: '#4ade80' },
 ];
 
 const DEFAULT_TRANSACTIONS: Transaction[] = [
@@ -275,7 +275,7 @@ export default function FinancesPage() {
       />
 
       <InfoBanner variant="info">
-        💰 <strong>Financial records are private:</strong> All entries are stored solely in your local browser storage. Revenue calculations are illustrative estimates based on user-entered yield and price assumptions.
+        <strong>Financial records are private:</strong> All entries are stored solely in your local browser storage. Revenue calculations are illustrative estimates based on user-entered yield and price assumptions.
       </InfoBanner>
 
       {/* Summary KPI Cards */}
@@ -283,22 +283,19 @@ export default function FinancesPage() {
         <StatCard
           label="Total Cultivation Expenses"
           value={formatCurrency(summaries.totalExpense)}
-          icon={<ArrowUpRight className="w-5 h-5 text-red-600" />}
-          iconBg="bg-red-50"
+          icon={<ArrowUpRight className="w-5 h-5 text-neutral-800" />}
           subtitle={`${transactions.filter(t => t.type === 'expense').length} expense entries recorded`}
         />
         <StatCard
           label="Total Recorded Income"
           value={formatCurrency(summaries.totalIncome)}
-          icon={<ArrowDownLeft className="w-5 h-5 text-emerald-600" />}
-          iconBg="bg-emerald-50"
+          icon={<ArrowDownLeft className="w-5 h-5 text-[var(--color-primary-600)]" />}
           subtitle="Produce sales & DBT subsidies"
         />
         <StatCard
           label="Current Net Balance"
           value={formatCurrency(summaries.netBalance)}
-          icon={<IndianRupee className="w-5 h-5 text-blue-600" />}
-          iconBg={summaries.netBalance >= 0 ? 'bg-emerald-50' : 'bg-red-50'}
+          icon={<IndianRupee className="w-5 h-5 text-[var(--color-primary-600)]" />}
           subtitle={summaries.netBalance >= 0 ? 'Positive net cashflow' : 'Operating deficit (pre-harvest)'}
         />
       </div>
@@ -390,7 +387,7 @@ export default function FinancesPage() {
               <Card className="p-0 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs text-left" aria-label="Farm transactions table">
-                    <thead className="bg-[var(--color-surface-2)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold border-b border-[var(--color-border)]">
+                    <thead className="bg-[var(--color-surface-2)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold">
                       <tr>
                         <th className="py-2.5 px-4">Date</th>
                         <th className="py-2.5 px-4">Category</th>
@@ -399,7 +396,7 @@ export default function FinancesPage() {
                         <th className="py-2.5 px-3 text-right">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[var(--color-border)]">
+                    <tbody>
                       {filteredTransactions.map(tx => {
                         const isExp = tx.type === 'expense';
                         const crop = CROPS.find(c => c.id === tx.cropId);
@@ -410,7 +407,7 @@ export default function FinancesPage() {
                               {formatDate(tx.date)}
                             </td>
                             <td className="py-3 px-4 whitespace-nowrap">
-                              <Badge variant={isExp ? 'amber' : 'green'}>
+                              <Badge>
                                 {tx.category.replace('_', ' ')}
                               </Badge>
                             </td>
@@ -424,17 +421,13 @@ export default function FinancesPage() {
                                 </p>
                               )}
                             </td>
-                            <td
-                              className={`py-3 px-4 text-right font-bold whitespace-nowrap ${
-                                isExp ? 'text-red-600' : 'text-emerald-600'
-                              }`}
-                            >
+                            <td className={`py-3 px-4 text-right font-semibold whitespace-nowrap ${isExp ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-primary-700)]'}`}>
                               {isExp ? '-' : '+'} {formatCurrency(tx.amount)}
                             </td>
                             <td className="py-3 px-3 text-right whitespace-nowrap">
                               <button
                                 onClick={() => setDeleteTargetId(tx.id)}
-                                className="p-1 text-[var(--color-text-muted)] hover:text-red-600 rounded transition-colors"
+                                className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] rounded transition-colors"
                                 aria-label="Delete transaction"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -571,7 +564,7 @@ export default function FinancesPage() {
           {/* Calculated Output & Formula Breakdown */}
           <div className="lg:col-span-2 space-y-4">
             <Card className="border-[var(--color-primary-200)] bg-[var(--color-surface-1)]">
-              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)] mb-4">
+              <div className="flex items-center justify-between pb-2 mb-4">
                 <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
                   Projected Financial Outcome (Estimates)
                 </h3>
@@ -579,7 +572,7 @@ export default function FinancesPage() {
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-4">
-                <div className="p-3 bg-white rounded-xl border border-[var(--color-border)]">
+                <div className="p-3 bg-white rounded-lg">
                   <span className="text-xs text-[var(--color-text-muted)]">Total Expected Harvest</span>
                   <p className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
                     {calcTotalYield} Quintals
@@ -589,9 +582,9 @@ export default function FinancesPage() {
                   </span>
                 </div>
 
-                <div className="p-3 bg-white rounded-xl border border-[var(--color-border)]">
+                <div className="p-3 bg-white rounded-lg">
                   <span className="text-xs text-[var(--color-text-muted)]">Estimated Gross Revenue</span>
-                  <p className="text-lg font-bold text-emerald-700 mt-1">
+                  <p className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
                     {formatCurrency(calcEstimatedRevenue)}
                   </p>
                   <span className="text-[10px] text-[var(--color-text-muted)]">
@@ -599,13 +592,9 @@ export default function FinancesPage() {
                   </span>
                 </div>
 
-                <div className="p-3 bg-white rounded-xl border border-[var(--color-border)]">
+                <div className="p-3 bg-white rounded-lg">
                   <span className="text-xs text-[var(--color-text-muted)]">Estimated Net Margin</span>
-                  <p
-                    className={`text-lg font-bold mt-1 ${
-                      calcNetProfit >= 0 ? 'text-emerald-700' : 'text-red-700'
-                    }`}
-                  >
+                  <p className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
                     {formatCurrency(calcNetProfit)}
                   </p>
                   <span className="text-[10px] text-[var(--color-text-muted)]">
@@ -613,9 +602,9 @@ export default function FinancesPage() {
                   </span>
                 </div>
 
-                <div className="p-3 bg-white rounded-xl border border-[var(--color-border)]">
+                <div className="p-3 bg-white rounded-lg">
                   <span className="text-xs text-[var(--color-text-muted)]">Benefit-Cost Ratio</span>
-                  <p className="text-lg font-bold text-blue-700 mt-1">
+                  <p className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
                     {(calcEstimatedRevenue / Math.max(1, calcCultivationCost)).toFixed(2)} : 1
                   </p>
                   <span className="text-[10px] text-[var(--color-text-muted)]">
@@ -623,13 +612,9 @@ export default function FinancesPage() {
                   </span>
                 </div>
 
-                <div className="p-3 bg-white rounded-xl border border-[var(--color-border)] col-span-2 sm:col-span-1">
+                <div className="p-3 bg-white rounded-lg col-span-2 sm:col-span-1">
                   <span className="text-xs text-[var(--color-text-muted)]">Projected ROI</span>
-                  <p
-                    className={`text-lg font-bold mt-1 ${
-                      calcNetProfit >= 0 ? 'text-emerald-700' : 'text-red-700'
-                    }`}
-                  >
+                  <p className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
                     {((calcNetProfit / Math.max(1, calcCultivationCost)) * 100).toFixed(1)}%
                   </p>
                   <span className="text-[10px] text-[var(--color-text-muted)]">
@@ -639,15 +624,15 @@ export default function FinancesPage() {
               </div>
 
               {/* Explanatory Formula */}
-              <div className="bg-white p-4 rounded-xl border border-[var(--color-border)] space-y-2 text-xs text-[var(--color-text-secondary)]">
+              <div className="bg-white p-4 rounded-lg space-y-2 text-xs text-[var(--color-text-secondary)]">
                 <p className="font-semibold text-[var(--color-text-primary)]">
                   Calculation Formula Breakdown:
                 </p>
-                <div className="space-y-1 font-mono text-[11px] bg-[var(--color-surface-2)] p-2.5 rounded-lg text-[var(--color-text-primary)]">
+                <div className="space-y-1 font-mono text-[11px] bg-[var(--color-surface-2)] p-2.5 rounded text-[var(--color-text-primary)]">
                   <p>1. Total Yield = {calcArea} acres × {calcExpectedYield} qtl = {calcTotalYield} qtl</p>
                   <p>2. Gross Revenue = {calcTotalYield} qtl × ₹{calcMarketPrice} = ₹{calcEstimatedRevenue.toLocaleString('en-IN')}</p>
                   <p>3. Cultivation Cost = ₹{calcCultivationCost.toLocaleString('en-IN')} ({calcCropExpenses > 0 ? 'from your recorded expenses' : 'estimated standard @ ₹18,000/acre'})</p>
-                  <p className="font-bold text-emerald-800">4. Estimated Profit = Gross Revenue − Total Cost = ₹{calcNetProfit.toLocaleString('en-IN')}</p>
+                  <p className="font-bold">4. Estimated Profit = Gross Revenue − Total Cost = ₹{calcNetProfit.toLocaleString('en-IN')}</p>
                 </div>
                 <p className="text-[11px] text-[var(--color-text-muted)] italic">
                   Note: Yield and prices depend on monsoon rainfall, pest infestations, harvest moisture, and mandi fluctuations. Use this as a budgeting tool, not an agricultural guarantee.
@@ -661,8 +646,8 @@ export default function FinancesPage() {
       {/* Transaction Entry Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between pb-2">
               <h3 className="text-base font-bold text-[var(--color-text-primary)]">
                 Record Financial Entry
               </h3>
@@ -675,7 +660,7 @@ export default function FinancesPage() {
             </div>
 
             {formError && (
-              <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg">
+              <div className="p-3 bg-[var(--color-surface-2)] text-[var(--color-text-primary)] text-xs rounded-md">
                 {formError}
               </div>
             )}
@@ -688,10 +673,10 @@ export default function FinancesPage() {
                     setFormType('expense');
                     setFormCategory('seed');
                   }}
-                  className={`py-2 text-xs font-bold rounded-lg border transition-all ${
+                  className={`py-2 text-xs font-semibold rounded-md transition-all ${
                     formType === 'expense'
-                      ? 'bg-red-50 border-red-400 text-red-700'
-                      : 'border-[var(--color-border)] text-[var(--color-text-muted)]'
+                      ? 'bg-neutral-900 text-white'
+                      : 'border border-[var(--color-border)] text-[var(--color-text-muted)]'
                   }`}
                 >
                   - Farm Expense
@@ -702,10 +687,10 @@ export default function FinancesPage() {
                     setFormType('income');
                     setFormCategory('crop_sale');
                   }}
-                  className={`py-2 text-xs font-bold rounded-lg border transition-all ${
+                  className={`py-2 text-xs font-semibold rounded-md transition-all ${
                     formType === 'income'
-                      ? 'bg-emerald-50 border-emerald-400 text-emerald-700'
-                      : 'border-[var(--color-border)] text-[var(--color-text-muted)]'
+                      ? 'bg-neutral-900 text-white'
+                      : 'border border-[var(--color-border)] text-[var(--color-text-muted)]'
                   }`}
                 >
                   + Farm Income
@@ -771,7 +756,7 @@ export default function FinancesPage() {
                 />
               </FormField>
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--color-border)]">
+              <div className="flex items-center justify-end gap-2 pt-3">
                 <Button
                   type="button"
                   variant="outline"

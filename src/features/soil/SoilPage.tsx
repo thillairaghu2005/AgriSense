@@ -34,7 +34,7 @@ const SOIL_PROFILES: {
   {
     type: 'alluvial',
     name: 'Alluvial Soil',
-    color: 'bg-amber-100 border-amber-300 text-amber-900',
+    color: 'bg-neutral-100 border-neutral-200 text-neutral-800',
     description: 'Deposition soil rich in potash and humus. Extremely fertile with balanced loam texture.',
     drainage: 'Moderate to well-drained',
     idealCrops: ['Rice', 'Wheat', 'Sugarcane', 'Maize', 'Pulses'],
@@ -43,7 +43,7 @@ const SOIL_PROFILES: {
   {
     type: 'black',
     name: 'Black Soil (Regur / Vertisol)',
-    color: 'bg-stone-200 border-stone-400 text-stone-900',
+    color: 'bg-neutral-100 border-neutral-200 text-neutral-800',
     description: 'High clay content with high moisture retention and swelling properties. Rich in calcium and magnesium.',
     drainage: 'Slow drainage; prone to waterlogging in heavy rains',
     idealCrops: ['Cotton', 'Soyabean', 'Gram (Chickpea)', 'Millets', 'Sugarcane'],
@@ -52,7 +52,7 @@ const SOIL_PROFILES: {
   {
     type: 'red',
     name: 'Red Soil',
-    color: 'bg-rose-100 border-rose-300 text-rose-900',
+    color: 'bg-neutral-100 border-neutral-200 text-neutral-800',
     description: 'Porous and friable texture with iron oxide richness. Naturally low in nitrogen and phosphorus.',
     drainage: 'Rapid drainage; low water retention',
     idealCrops: ['Groundnut', 'Millets', 'Pulses', 'Oilseeds', 'Potato'],
@@ -61,7 +61,7 @@ const SOIL_PROFILES: {
   {
     type: 'loamy',
     name: 'Loamy Soil',
-    color: 'bg-emerald-100 border-emerald-300 text-emerald-900',
+    color: 'bg-neutral-100 border-neutral-200 text-neutral-800',
     description: 'The agricultural standard mixture of sand, silt, and clay. Excellent tilth and aeration.',
     drainage: 'Ideal balanced drainage and aeration',
     idealCrops: ['Vegetables', 'Wheat', 'Cotton', 'Fruits', 'Maize'],
@@ -70,7 +70,7 @@ const SOIL_PROFILES: {
   {
     type: 'sandy',
     name: 'Sandy Soil',
-    color: 'bg-yellow-100 border-yellow-300 text-yellow-900',
+    color: 'bg-neutral-100 border-neutral-200 text-neutral-800',
     description: 'Coarse particles with high permeability. Highly prone to nutrient leaching.',
     drainage: 'Excessive drainage; dry surface',
     idealCrops: ['Groundnut', 'Watermelon', 'Millets', 'Root vegetables'],
@@ -79,7 +79,7 @@ const SOIL_PROFILES: {
   {
     type: 'clay',
     name: 'Clay Soil',
-    color: 'bg-stone-300 border-stone-500 text-stone-900',
+    color: 'bg-neutral-100 border-neutral-200 text-neutral-800',
     description: 'Fine particles with high water-holding capacity and plasticity. Very slow drying.',
     drainage: 'Poor drainage; high compaction risk',
     idealCrops: ['Rice (Paddy)', 'Broccoli', 'Cabbage'],
@@ -88,7 +88,7 @@ const SOIL_PROFILES: {
   {
     type: 'laterite',
     name: 'Laterite Soil',
-    color: 'bg-orange-100 border-orange-300 text-orange-900',
+    color: 'bg-neutral-100 border-neutral-200 text-neutral-800',
     description: 'Formed by intense tropical leaching. Acidic with low organic matter, lime, and nitrogen.',
     drainage: 'Rapid drainage',
     idealCrops: ['Tea', 'Coffee', 'Cashew', 'Rubber', 'Coconut'],
@@ -282,7 +282,7 @@ export default function SoilPage() {
       />
 
       <InfoBanner variant="info">
-        🧪 <strong>Certified Laboratory Guidance:</strong> Fertilizer dosages must be based on certified <strong>Soil Health Cards (SHC)</strong> issued by government soil testing laboratories. Calculations below provide extension-standard estimates.
+        <strong>Certified Laboratory Guidance:</strong> Fertilizer dosages must be based on certified <strong>Soil Health Cards (SHC)</strong> issued by government soil testing laboratories. Calculations below provide extension-standard estimates.
       </InfoBanner>
 
       {/* Tabs */}
@@ -325,7 +325,7 @@ export default function SoilPage() {
               : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
           }`}
         >
-          <Calculator className="w-3.5 h-3.5 text-emerald-600" />
+          <Calculator className="w-3.5 h-3.5" />
           <span>Fertiliser Dose Calculator</span>
         </button>
 
@@ -348,7 +348,7 @@ export default function SoilPage() {
       {activeTab === 'profile' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {SOIL_PROFILES.map(item => (
-            <Card key={item.type} className="flex flex-col justify-between hover:border-[var(--color-primary-400)]">
+            <Card key={item.type} className="flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-base font-bold text-[var(--color-text-primary)]">
@@ -391,9 +391,9 @@ export default function SoilPage() {
                 </div>
               </div>
 
-              <div className="pt-2.5 border-t border-[var(--color-border)]">
+              <div className="pt-2.5">
                 <p className="text-[11px] text-[var(--color-text-muted)] italic">
-                  💡 {item.managementTips}
+                  {item.managementTips}
                 </p>
               </div>
             </Card>
@@ -405,8 +405,8 @@ export default function SoilPage() {
       {activeTab === 'tests' && (
         <div className="space-y-6">
           {showAddForm && (
-            <Card className="border-[var(--color-primary-400)] shadow-sm">
-              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)] mb-4">
+            <Card className="shadow-sm">
+              <div className="flex items-center justify-between pb-3 mb-4">
                 <div className="flex items-center gap-2">
                   <FlaskConical className="w-5 h-5 text-[var(--color-primary-600)]" />
                   <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
@@ -422,7 +422,7 @@ export default function SoilPage() {
               </div>
 
               {formError && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg mb-4">
+                <div className="p-3 bg-neutral-100 border border-neutral-300 text-neutral-800 text-xs rounded-lg mb-4">
                   {formError}
                 </div>
               )}
@@ -538,7 +538,7 @@ export default function SoilPage() {
                         {uploadedDocName ? 'Change File' : 'Browse File'}
                       </Button>
                       {uploadedDocName && (
-                        <span className="text-xs text-[var(--color-primary-700)] font-medium truncate max-w-[150px]">
+                        <span className="text-xs text-neutral-800 font-medium truncate max-w-[150px]">
                           {uploadedDocName}
                         </span>
                       )}
@@ -605,11 +605,11 @@ export default function SoilPage() {
                 const isNeutral = !isAcidic && !isAlkaline;
 
                 return (
-                  <Card key={test.id} className="space-y-4 border border-[var(--color-border)] print:border-black">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-3 border-b border-[var(--color-border)]">
+                  <Card key={test.id} className="space-y-4 print:border-black">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-3">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                          <span className="text-xs font-medium px-2 py-0.5 rounded bg-[var(--color-primary-50)] text-[var(--color-primary-800)] border border-[var(--color-primary-200)]">
                             Laboratory Tested
                           </span>
                           <span className="text-xs text-[var(--color-text-muted)]">
@@ -625,7 +625,7 @@ export default function SoilPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          leftIcon={<Calculator className="w-3.5 h-3.5 text-emerald-600" />}
+                          leftIcon={<Calculator className="w-3.5 h-3.5" />}
                           onClick={() => {
                             setCalcSoilStatus({
                               n: test.nitrogen || 'medium',
@@ -640,7 +640,7 @@ export default function SoilPage() {
                         </Button>
                         <button
                           onClick={() => setDeleteTargetId(test.id)}
-                          className="p-1.5 text-[var(--color-text-muted)] hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                          className="p-1.5 text-[var(--color-text-muted)] hover:text-neutral-900 rounded-lg hover:bg-neutral-100 transition-colors"
                           aria-label="Delete test"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -706,11 +706,11 @@ export default function SoilPage() {
                     </div>
 
                     {/* General Amendment Advisory */}
-                    <div className="bg-emerald-50/60 p-3.5 rounded-xl border border-emerald-200 text-xs text-emerald-950 space-y-1">
-                      <p className="font-semibold text-emerald-900 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-700" /> Agronomic Soil Health Advisory:
+                    <div className="bg-[var(--color-primary-50)] p-3.5 rounded-xl border border-[var(--color-primary-200)] text-xs text-[var(--color-primary-900)] space-y-1">
+                      <p className="font-semibold text-[var(--color-primary-900)] flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary-700)]" /> Agronomic Soil Health Advisory:
                       </p>
-                      <ul className="list-disc list-inside space-y-0.5 text-emerald-800 text-[11px] leading-relaxed">
+                      <ul className="list-disc list-inside space-y-0.5 text-[var(--color-primary-800)] text-[11px] leading-relaxed">
                         {isAcidic && <li>Soil pH is acidic (&lt; 6.5). Apply agricultural lime (calcium carbonate) at 100 kg/acre to restore nutrient bioavailability.</li>}
                         {isAlkaline && <li>Soil pH is alkaline (&gt; 7.8). Apply gypsum (200 kg/acre) and incorporate green manure (Dhaincha) to reduce sodicity.</li>}
                         {isNeutral && <li>Soil pH is in the optimal range (6.5–7.5) for nutrient bioavailability and root health.</li>}
@@ -738,7 +738,7 @@ export default function SoilPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-1 space-y-4">
             <h2 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-              <Calculator className="w-4 h-4 text-emerald-600" />
+              <Calculator className="w-4 h-4" />
               Nutrient Input Parameters
             </h2>
 
@@ -814,10 +814,10 @@ export default function SoilPage() {
             </div>
           </Card>
 
-          <Card className="lg:col-span-2 space-y-5 bg-gradient-to-br from-white to-[var(--color-surface-1)]">
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+          <Card className="lg:col-span-2 space-y-5">
+            <div className="flex items-center justify-between pb-3">
               <div>
-                <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">
+                <span className="text-xs font-bold text-neutral-700 uppercase tracking-wider">
                   Recommended Fertilizer Application
                 </span>
                 <h3 className="text-base font-bold text-[var(--color-text-primary)] mt-0.5">
@@ -837,51 +837,51 @@ export default function SoilPage() {
 
             {/* Commercial Bags Summary */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200 text-center">
-                <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wider block">
+              <div className="p-4 rounded-xl bg-white border border-[var(--color-border)] shadow-xs text-center">
+                <span className="text-[11px] font-bold text-[var(--color-text-secondary)] uppercase tracking-wider block">
                   DAP (18-46-0)
                 </span>
-                <p className="text-2xl font-extrabold text-amber-950 mt-1">
-                  {fertilizerPlan.dapBags} <span className="text-xs font-normal">bags</span>
+                <p className="text-2xl font-extrabold text-[var(--color-primary-700)] mt-1">
+                  {fertilizerPlan.dapBags} <span className="text-xs font-normal text-[var(--color-text-muted)]">bags</span>
                 </p>
-                <p className="text-[10px] text-amber-700 mt-0.5">
+                <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">
                   ({fertilizerPlan.dapKg} kg total) — Basal application at sowing
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 text-center">
-                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider block">
+              <div className="p-4 rounded-xl bg-white border border-[var(--color-border)] shadow-xs text-center">
+                <span className="text-[11px] font-bold text-[var(--color-text-secondary)] uppercase tracking-wider block">
                   Urea (46% N)
                 </span>
-                <p className="text-2xl font-extrabold text-emerald-950 mt-1">
-                  {fertilizerPlan.ureaBags} <span className="text-xs font-normal">bags</span>
+                <p className="text-2xl font-extrabold text-[var(--color-primary-700)] mt-1">
+                  {fertilizerPlan.ureaBags} <span className="text-xs font-normal text-[var(--color-text-muted)]">bags</span>
                 </p>
-                <p className="text-[10px] text-emerald-700 mt-0.5">
+                <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">
                   ({fertilizerPlan.ureaKg} kg total) — 2 to 3 split top-dressings
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-200 text-center">
-                <span className="text-[11px] font-bold text-blue-800 uppercase tracking-wider block">
+              <div className="p-4 rounded-xl bg-white border border-[var(--color-border)] shadow-xs text-center">
+                <span className="text-[11px] font-bold text-[var(--color-text-secondary)] uppercase tracking-wider block">
                   MOP Potash (60% K2O)
                 </span>
-                <p className="text-2xl font-extrabold text-blue-950 mt-1">
-                  {fertilizerPlan.mopBags} <span className="text-xs font-normal">bags</span>
+                <p className="text-2xl font-extrabold text-[var(--color-primary-700)] mt-1">
+                  {fertilizerPlan.mopBags} <span className="text-xs font-normal text-[var(--color-text-muted)]">bags</span>
                 </p>
-                <p className="text-[10px] text-blue-700 mt-0.5">
-                  ({fertilizerPlan.mopKg} kg total) — Basal / panicle initiation
+                <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">
+                  ({fertilizerPlan.mopKg} kg total) — Basal or split dose
                 </p>
               </div>
             </div>
 
             {/* Application Schedule Table */}
             <div className="border border-[var(--color-border)] rounded-xl overflow-hidden bg-white">
-              <div className="bg-[var(--color-surface-1)] px-4 py-2 border-b border-[var(--color-border)] font-bold text-xs text-[var(--color-text-primary)]">
+              <div className="bg-[var(--color-surface-1)] px-4 py-2 font-bold text-xs text-[var(--color-text-primary)]">
                 Application Timing & Split Schedule
               </div>
               <div className="p-4 space-y-3 text-xs">
                 <div className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-neutral-700 mt-0.5 flex-shrink-0" />
                   <div>
                     <span className="font-semibold text-[var(--color-text-primary)]">Basal Dose (At Sowing / Transplanting):</span>
                     <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
@@ -891,7 +891,7 @@ export default function SoilPage() {
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-neutral-700 mt-0.5 flex-shrink-0" />
                   <div>
                     <span className="font-semibold text-[var(--color-text-primary)]">First Top Dressing (20–25 DAS / Active Tillering):</span>
                     <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
@@ -901,7 +901,7 @@ export default function SoilPage() {
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-neutral-700 mt-0.5 flex-shrink-0" />
                   <div>
                     <span className="font-semibold text-[var(--color-text-primary)]">Second Top Dressing (40–45 DAS / Panicle Initiation):</span>
                     <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
@@ -913,7 +913,7 @@ export default function SoilPage() {
             </div>
 
             {/* Soil Amendment Note */}
-            <div className="p-3 bg-stone-100 rounded-lg text-xs text-stone-800 border border-stone-300">
+            <div className="p-3 bg-neutral-100 rounded-lg text-xs text-neutral-800 border border-neutral-200">
               <strong>Soil Conditioning Advice:</strong> {fertilizerPlan.soilAmendment}
             </div>
           </Card>
@@ -931,17 +931,17 @@ export default function SoilPage() {
               Soil pH measures the acidity or alkalinity of the soil solution. Most nutrients are most readily available to crops between pH 6.0 and 7.5.
             </p>
             <div className="space-y-2 text-xs">
-              <div className="p-2 rounded bg-red-50 border border-red-200">
-                <span className="font-semibold text-red-900">pH &lt; 5.5 (Strongly Acidic):</span>
-                <p className="text-[11px] text-red-800 mt-0.5">Aluminum & manganese toxicity risk; phosphorus and calcium become locked.</p>
+              <div className="p-2 rounded bg-neutral-50 border border-neutral-200">
+                <span className="font-semibold text-neutral-900">pH &lt; 5.5 (Strongly Acidic):</span>
+                <p className="text-[11px] text-neutral-700 mt-0.5">Aluminum & manganese toxicity risk; phosphorus and calcium become locked.</p>
               </div>
-              <div className="p-2 rounded bg-emerald-50 border border-emerald-200">
-                <span className="font-semibold text-emerald-900">pH 6.2 – 7.5 (Optimal Neutral):</span>
-                <p className="text-[11px] text-emerald-800 mt-0.5">Maximum microbial activity and balanced uptake of N, P, K, and micronutrients.</p>
+              <div className="p-2 rounded bg-neutral-50 border border-neutral-200">
+                <span className="font-semibold text-neutral-900">pH 6.2 – 7.5 (Optimal Neutral):</span>
+                <p className="text-[11px] text-neutral-700 mt-0.5">Maximum microbial activity and balanced uptake of N, P, K, and micronutrients.</p>
               </div>
-              <div className="p-2 rounded bg-amber-50 border border-amber-200">
-                <span className="font-semibold text-amber-900">pH &gt; 8.0 (Alkaline / Calcareous):</span>
-                <p className="text-[11px] text-amber-800 mt-0.5">Zinc, iron, and boron deficiencies common; phosphorus fixes as insoluble calcium phosphate.</p>
+              <div className="p-2 rounded bg-neutral-50 border border-neutral-200">
+                <span className="font-semibold text-neutral-900">pH &gt; 8.0 (Alkaline / Calcareous):</span>
+                <p className="text-[11px] text-neutral-700 mt-0.5">Zinc, iron, and boron deficiencies common; phosphorus fixes as insoluble calcium phosphate.</p>
               </div>
             </div>
           </Card>
@@ -952,25 +952,25 @@ export default function SoilPage() {
             </h3>
             <div className="space-y-3 text-xs">
               <div>
-                <span className="font-semibold text-blue-700">Nitrogen (N) — Vegetative Growth:</span>
+                <span className="font-semibold text-neutral-900">Nitrogen (N) — Vegetative Growth:</span>
                 <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
                   Promotes leaf canopy, chlorophyll, and vigorous tillering. Excess causes lodging and pest attraction.
                 </p>
               </div>
               <div>
-                <span className="font-semibold text-amber-700">Phosphorus (P) — Root & Grain Development:</span>
+                <span className="font-semibold text-neutral-900">Phosphorus (P) — Root & Grain Development:</span>
                 <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
                   Essential for early root establishment, flowering, seed setting, and energy transfer (ATP).
                 </p>
               </div>
               <div>
-                <span className="font-semibold text-purple-700">Potassium (K) — Stress & Disease Resistance:</span>
+                <span className="font-semibold text-neutral-900">Potassium (K) — Stress & Disease Resistance:</span>
                 <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
                   Regulates stomatal opening, drought resilience, stalk strength, and fruit quality.
                 </p>
               </div>
               <div>
-                <span className="font-semibold text-emerald-700">Organic Carbon (OC) — Soil Life:</span>
+                <span className="font-semibold text-neutral-900">Organic Carbon (OC) — Soil Life:</span>
                 <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
                   Measures humus and microbial health. Aim for &gt; 0.75% for good soil structure.
                 </p>

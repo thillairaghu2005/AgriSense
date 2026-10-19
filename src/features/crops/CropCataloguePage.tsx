@@ -12,10 +12,6 @@ const CATEGORY_LABELS: Record<CropCategory, string> = {
   cereal: 'Cereal', pulse: 'Pulse', oilseed: 'Oilseed', vegetable: 'Vegetable',
   fruit: 'Fruit', cash_crop: 'Cash Crop', spice: 'Spice', fiber: 'Fiber',
 };
-const CATEGORY_COLORS: Partial<Record<CropCategory, 'green' | 'amber' | 'blue' | 'purple' | 'gray'>> = {
-  cereal: 'amber', pulse: 'green', oilseed: 'blue', vegetable: 'green',
-  cash_crop: 'purple', spice: 'amber', fiber: 'gray',
-};
 
 export default function CropCataloguePage() {
   const [query, setQuery] = useState('');
@@ -47,7 +43,7 @@ export default function CropCataloguePage() {
         <select
           value={seasonFilter}
           onChange={e => setSeasonFilter(e.target.value)}
-          className="px-3 py-2 text-sm border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-md bg-white text-[var(--color-text-secondary)] focus:outline-none focus:ring-1 focus:ring-neutral-900"
           aria-label="Filter by season"
         >
           <option value="">All Seasons</option>
@@ -56,7 +52,7 @@ export default function CropCataloguePage() {
         <select
           value={categoryFilter}
           onChange={e => setCategoryFilter(e.target.value)}
-          className="px-3 py-2 text-sm border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-md bg-white text-[var(--color-text-secondary)] focus:outline-none focus:ring-1 focus:ring-neutral-900"
           aria-label="Filter by category"
         >
           <option value="">All Categories</option>
@@ -65,12 +61,12 @@ export default function CropCataloguePage() {
       </div>
 
       {/* Results count */}
-      <p className="text-sm text-[var(--color-text-muted)]">{filteredCrops.length} crop{filteredCrops.length !== 1 ? 's' : ''} found</p>
+      <p className="text-xs text-[var(--color-text-muted)]">{filteredCrops.length} crop{filteredCrops.length !== 1 ? 's' : ''} found</p>
 
       {/* Grid */}
       {filteredCrops.length === 0 ? (
         <EmptyState
-          icon={<Leaf className="w-12 h-12" />}
+          icon={<Leaf className="w-10 h-10" />}
           title="No crops found"
           description="Try adjusting your search or filters."
         />
@@ -85,11 +81,11 @@ export default function CropCataloguePage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap mb-2">
-                    <Badge variant={CATEGORY_COLORS[crop.category] ?? 'gray'}>
+                    <Badge>
                       {CATEGORY_LABELS[crop.category]}
                     </Badge>
                     {crop.seasons.map(s => (
-                      <Badge key={s} variant="gray">{SEASON_LABELS[s]}</Badge>
+                      <Badge key={s}>{SEASON_LABELS[s]}</Badge>
                     ))}
                   </div>
                   <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">{crop.name}</h2>
@@ -104,7 +100,7 @@ export default function CropCataloguePage() {
                 <ChevronRight className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0 mt-1" />
               </div>
 
-              <div className="mt-3 pt-3 border-t border-[var(--color-border)]">
+              <div className="mt-3 pt-2">
                 <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2">
                   {crop.sowingGuidance.slice(0, 100)}…
                 </p>

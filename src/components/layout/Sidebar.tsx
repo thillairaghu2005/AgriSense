@@ -48,25 +48,23 @@ export default function Sidebar() {
 
   return (
     <nav
-      className="flex flex-col h-full bg-white border-r border-[var(--color-border)] overflow-y-auto"
+      className="flex flex-col h-full bg-white overflow-y-auto"
       aria-label="Main navigation"
     >
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[var(--color-border)]">
-        <div className="flex items-center justify-center w-8 h-8 bg-[var(--color-primary-600)] rounded-lg">
-          <Sprout className="w-5 h-5 text-white" strokeWidth={2} />
-        </div>
+      {/* Logo without container box */}
+      <div className="flex items-center gap-2.5 px-5 py-5">
+        <Sprout className="w-5 h-5 text-[var(--color-primary-600)]" strokeWidth={2.5} />
         <div>
-          <span className="text-sm font-bold text-[var(--color-text-primary)]">AgriSense</span>
+          <span className="text-sm font-bold text-[var(--color-text-primary)] tracking-tight">AgriSense</span>
           <p className="text-[10px] text-[var(--color-text-muted)] leading-none mt-0.5">Indian Farmers Platform</p>
         </div>
       </div>
 
       {/* Nav groups */}
-      <div className="flex-1 px-3 py-4 space-y-6">
+      <div className="flex-1 px-3 py-2 space-y-5">
         {NAV_GROUPS.map(group => (
           <div key={group.sectionKey}>
-            <p className="px-2 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-text-muted)]">
+            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
               {t(group.sectionKey)}
             </p>
             <ul className="space-y-0.5">
@@ -90,7 +88,7 @@ export default function Sidebar() {
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-3 border-t border-[var(--color-border)]">
+      <div className="px-5 py-3">
         <p className="text-[10px] text-[var(--color-text-muted)]">
           Demo prototype — all data is illustrative
         </p>

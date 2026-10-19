@@ -20,11 +20,11 @@ import {
 } from 'lucide-react';
 
 const NOTIFICATION_ICONS: Record<NotificationType, React.ReactNode> = {
-  weather: <CloudSun className="w-5 h-5 text-amber-500" />,
-  market: <TrendingUp className="w-5 h-5 text-emerald-600" />,
-  crop_reminder: <Calendar className="w-5 h-5 text-blue-600" />,
-  scheme: <BookOpen className="w-5 h-5 text-purple-600" />,
-  system: <Bell className="w-5 h-5 text-gray-600" />,
+  weather: <CloudSun className="w-5 h-5 text-[var(--color-primary-600)]" />,
+  market: <TrendingUp className="w-5 h-5 text-[var(--color-primary-600)]" />,
+  crop_reminder: <Calendar className="w-5 h-5 text-[var(--color-primary-600)]" />,
+  scheme: <BookOpen className="w-5 h-5 text-[var(--color-primary-600)]" />,
+  system: <Bell className="w-5 h-5 text-[var(--color-primary-600)]" />,
 };
 
 const DEFAULT_NOTIFICATIONS: AppNotification[] = [
@@ -141,7 +141,7 @@ export default function NotificationsPage() {
       />
 
       <InfoBanner variant="info">
-        🔔 <strong>Illustrative alerts:</strong> These simulated notifications demonstrate how real-time push alerts, market shifts, and weather warnings would inform farmers.
+        <strong>Illustrative alerts:</strong> These simulated notifications demonstrate how real-time push alerts, market shifts, and weather warnings would inform farmers.
       </InfoBanner>
 
       {/* Filter Bar */}
@@ -163,7 +163,7 @@ export default function NotificationsPage() {
             onClick={() => setUnreadOnly(!unreadOnly)}
             className={`px-3 py-2 text-xs font-semibold rounded-lg border transition-all ${
               unreadOnly
-                ? 'bg-[var(--color-primary-50)] border-[var(--color-primary-400)] text-[var(--color-primary-800)]'
+                ? 'bg-[var(--color-primary-600)] border-[var(--color-primary-600)] text-white'
                 : 'bg-white border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)]'
             }`}
           >
@@ -204,12 +204,12 @@ export default function NotificationsPage() {
                 key={notif.id}
                 className={`transition-all ${
                   !notif.isRead
-                    ? 'border-l-4 border-l-[var(--color-primary-500)] bg-white shadow-xs'
-                    : 'bg-gray-50/70 border-[var(--color-border)] opacity-85'
+                    ? 'border-[var(--color-primary-300)] bg-[var(--color-primary-50)]/30 shadow-xs'
+                    : 'bg-white opacity-85'
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-[var(--color-surface-2)] flex-shrink-0 mt-0.5">
+                  <div className="flex-shrink-0 mt-1">
                     {NOTIFICATION_ICONS[notif.type]}
                   </div>
 
@@ -218,15 +218,12 @@ export default function NotificationsPage() {
                     onClick={() => handleNotificationClick(notif)}
                   >
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <Badge variant={notif.type === 'weather' ? 'amber' : notif.type === 'market' ? 'green' : 'blue'}>
+                      <Badge>
                         {notif.type.replace('_', ' ').toUpperCase()}
                       </Badge>
                       <span className="text-[11px] text-[var(--color-text-muted)]">
                         {formatDate(notif.date)}
                       </span>
-                      {!notif.isRead && (
-                        <span className="w-2 h-2 rounded-full bg-[var(--color-primary-600)]" />
-                      )}
                     </div>
 
                     <h3 className={`text-sm font-bold text-[var(--color-text-primary)] ${!notif.isRead ? '' : 'font-semibold'}`}>
@@ -238,7 +235,7 @@ export default function NotificationsPage() {
                     </p>
 
                     {notif.destinationRoute && (
-                      <span className="text-[11px] font-semibold text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 mt-2">
+                      <span className="text-[11px] font-semibold text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] hover:underline inline-flex items-center gap-1 mt-2">
                         View related page <ExternalLink className="w-3 h-3" />
                       </span>
                     )}
@@ -247,15 +244,15 @@ export default function NotificationsPage() {
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <button
                       onClick={() => handleToggleRead(notif.id)}
-                      className="p-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-primary-600)] rounded-lg transition-colors"
+                      className="p-1.5 text-[var(--color-text-muted)] hover:text-neutral-900 rounded-lg transition-colors"
                       title={notif.isRead ? 'Mark as unread' : 'Mark as read'}
                       aria-label="Toggle read status"
                     >
-                      {notif.isRead ? <Circle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                      {notif.isRead ? <Circle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4 text-neutral-800" />}
                     </button>
                     <button
                       onClick={() => handleDismiss(notif.id)}
-                      className="p-1.5 text-[var(--color-text-muted)] hover:text-red-600 rounded-lg transition-colors"
+                      className="p-1.5 text-[var(--color-text-muted)] hover:text-neutral-900 rounded-lg transition-colors"
                       title="Dismiss notification"
                       aria-label="Dismiss notification"
                     >

@@ -75,7 +75,7 @@ export default function KnowledgePage() {
       />
 
       <InfoBanner variant="info">
-        📖 <strong>Practical farmer knowledge:</strong> Articles provide field-tested techniques aligned with Indian agricultural practices. Consult your district KVK for hyper-local micro-climate advice.
+        <strong>Practical farmer knowledge:</strong> Articles provide field-tested techniques aligned with Indian agricultural practices. Consult your district KVK for hyper-local micro-climate advice.
       </InfoBanner>
 
       {/* Search and Filters */}
@@ -106,11 +106,11 @@ export default function KnowledgePage() {
             onClick={() => setBookmarksOnly(!bookmarksOnly)}
             className={`px-3 py-2 text-xs font-semibold rounded-lg border flex items-center gap-1.5 transition-all ${
               bookmarksOnly
-                ? 'bg-[var(--color-primary-50)] border-[var(--color-primary-400)] text-[var(--color-primary-800)]'
+                ? 'bg-[var(--color-primary-600)] border-[var(--color-primary-600)] text-white'
                 : 'bg-white border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)]'
             }`}
           >
-            {bookmarksOnly ? <BookmarkCheck className="w-3.5 h-3.5 text-[var(--color-primary-700)]" /> : <Bookmark className="w-3.5 h-3.5" />}
+            {bookmarksOnly ? <BookmarkCheck className="w-3.5 h-3.5 text-white" /> : <Bookmark className="w-3.5 h-3.5" />}
             <span>Saved ({bookmarkedIds.length})</span>
           </button>
         </div>
@@ -147,19 +147,19 @@ export default function KnowledgePage() {
               <Card
                 key={article.id}
                 onClick={() => navigate(`/knowledge/${article.id}`)}
-                className="hover:border-[var(--color-primary-400)] transition-all flex flex-col justify-between"
+                className="transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <Badge variant="blue">
+                    <Badge>
                       {CATEGORY_LABELS[article.category] || article.category}
                     </Badge>
                     <button
                       onClick={e => toggleBookmark(e, article.id)}
                       className={`p-1.5 rounded-lg transition-colors ${
                         isSaved
-                          ? 'text-[var(--color-primary-700)] bg-[var(--color-primary-100)]'
-                          : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]'
+                          ? 'text-[var(--color-primary-600)]'
+                          : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
                       }`}
                       aria-label={isSaved ? 'Remove bookmark' : 'Bookmark article'}
                     >
@@ -167,7 +167,7 @@ export default function KnowledgePage() {
                     </button>
                   </div>
 
-                  <h3 className="text-base font-bold text-[var(--color-text-primary)] leading-snug group-hover:text-[var(--color-primary-700)]">
+                  <h3 className="text-base font-bold text-[var(--color-text-primary)] leading-snug">
                     {article.title}
                   </h3>
 
@@ -188,17 +188,16 @@ export default function KnowledgePage() {
                   </div>
                 </div>
 
-                <div className="pt-4 mt-3 border-t border-[var(--color-border)] flex items-center justify-between text-xs text-[var(--color-text-muted)]">
+                <div className="pt-4 mt-3 flex items-center justify-between text-xs text-[var(--color-text-muted)]">
                   <div className="flex items-center gap-3">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
                       {article.readingTimeMinutes} min read
                     </span>
-                    <span>•</span>
                     <span>{formatDate(article.publishedDate)}</span>
                   </div>
 
-                  <span className="text-xs font-semibold text-[var(--color-primary-600)] flex items-center gap-0.5">
+                  <span className="text-xs font-semibold text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] flex items-center gap-0.5">
                     Read guide <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>

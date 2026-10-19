@@ -46,9 +46,7 @@ export default function ArticleDetailPage() {
   if (!article) {
     return (
       <div className="py-16 text-center space-y-6">
-        <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto text-amber-700">
-          <Info className="w-8 h-8" />
-        </div>
+        <Info className="w-12 h-12 text-neutral-400 mx-auto" />
         <div>
           <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
             Article Not Found
@@ -91,10 +89,10 @@ export default function ArticleDetailPage() {
   return (
     <div className="max-w-4xl mx-auto py-6 sm:py-8 px-4 sm:px-6 space-y-10 animate-fade-in">
       {/* Top Bar Navigation */}
-      <div className="flex items-center justify-between pb-4 border-b border-[var(--color-border)]">
+      <div className="flex items-center justify-between pb-4">
         <button
           onClick={() => navigate('/knowledge')}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] transition-colors py-2 px-3 rounded-lg hover:bg-[var(--color-surface-2)]"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-800 hover:text-[var(--color-primary-700)] transition-colors py-2 px-3 rounded-lg hover:bg-[var(--color-surface-2)]"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Knowledge Centre</span>
@@ -105,11 +103,11 @@ export default function ArticleDetailPage() {
             onClick={toggleBookmark}
             className={`px-4 py-2 text-xs font-semibold rounded-xl border flex items-center gap-2 transition-all ${
               isSaved
-                ? 'bg-[var(--color-primary-100)] text-[var(--color-primary-800)] border-[var(--color-primary-300)] shadow-xs'
+                ? 'bg-[var(--color-primary-600)] text-white border-[var(--color-primary-600)] shadow-xs'
                 : 'bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] hover:bg-[var(--color-surface-2)]'
             }`}
           >
-            {isSaved ? <BookmarkCheck className="w-4 h-4 text-[var(--color-primary-700)]" /> : <Bookmark className="w-4 h-4" />}
+            {isSaved ? <BookmarkCheck className="w-4 h-4 text-white" /> : <Bookmark className="w-4 h-4" />}
             <span>{isSaved ? 'Saved in My Library' : 'Save Article'}</span>
           </button>
 
@@ -122,7 +120,7 @@ export default function ArticleDetailPage() {
             <Share2 className="w-4 h-4" />
           </button>
           {copied && (
-            <span className="text-xs text-emerald-600 font-semibold animate-fade-in">
+            <span className="text-xs text-[var(--color-primary-700)] font-semibold animate-fade-in">
               Link copied!
             </span>
           )}
@@ -132,9 +130,9 @@ export default function ArticleDetailPage() {
       {/* Main Article Card with Generous Whitespace */}
       <article className="card p-8 sm:p-12 md:p-14 bg-white shadow-sm border border-[var(--color-border)] rounded-2xl">
         {/* Article Meta Header */}
-        <header className="space-y-6 pb-10 border-b border-[var(--color-border)]">
+        <header className="space-y-6 pb-10">
           <div className="flex items-center gap-3 flex-wrap">
-            <Badge variant="blue" className="px-3.5 py-1 text-xs uppercase font-bold tracking-wider">
+            <Badge className="px-3.5 py-1 text-xs uppercase font-bold tracking-wider">
               {article.category.replace('_', ' ')}
             </Badge>
             {article.sourceLabel && (
@@ -153,7 +151,6 @@ export default function ArticleDetailPage() {
               <Calendar className="w-4 h-4 text-[var(--color-text-muted)]" />
               Published: {formatDate(article.publishedDate)}
             </span>
-            <span>•</span>
             <span className="flex items-center gap-1.5 font-medium">
               <Clock className="w-4 h-4 text-[var(--color-text-muted)]" />
               {article.readingTimeMinutes} min read
@@ -161,11 +158,11 @@ export default function ArticleDetailPage() {
           </div>
 
           {/* Key Summary Callout Box */}
-          <div className="mt-8 p-6 sm:p-7 bg-gradient-to-r from-[var(--color-primary-50)] to-emerald-50 border-l-4 border-[var(--color-primary-600)] rounded-r-2xl">
-            <p className="text-xs uppercase font-bold tracking-wider text-[var(--color-primary-800)] mb-2.5 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[var(--color-primary-600)]" /> Executive Summary
+          <div className="mt-8 p-6 sm:p-7 bg-[var(--color-primary-50)] rounded-2xl border border-[var(--color-primary-200)]">
+            <p className="text-xs uppercase font-bold tracking-wider text-[var(--color-primary-900)] mb-2.5 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[var(--color-primary-700)]" /> Executive Summary
             </p>
-            <p className="text-base sm:text-lg text-[var(--color-text-primary)] font-medium leading-relaxed sm:leading-8">
+            <p className="text-base sm:text-lg text-[var(--color-primary-900)] font-medium leading-relaxed sm:leading-8">
               {article.summary}
             </p>
           </div>
@@ -192,9 +189,9 @@ export default function ArticleDetailPage() {
             const paragraphs = bodyContent.split(/\n{2,}/).filter(p => p.trim());
 
             return (
-              <section key={sIdx} className="space-y-6 pt-8 first:pt-0 border-t border-[var(--color-border)] first:border-t-0">
+              <section key={sIdx} className="space-y-6 pt-8 first:pt-0">
                 {headerTitle && (
-                  <div className="pb-3 border-b border-[var(--color-border)] mb-6">
+                  <div className="pb-3 mb-6">
                     <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)] tracking-tight">
                       {headerTitle}
                     </h2>
@@ -212,9 +209,9 @@ export default function ArticleDetailPage() {
                       return (
                         <div
                           key={bIdx}
-                          className="my-8 p-6 sm:p-7 bg-amber-50/95 border-l-4 border-amber-500 rounded-r-2xl text-amber-950 text-base leading-relaxed sm:leading-8 flex items-start gap-4 shadow-xs"
+                          className="my-8 p-6 sm:p-7 bg-neutral-50 rounded-2xl border border-neutral-200 text-neutral-800 text-base leading-relaxed sm:leading-8 flex items-start gap-4 shadow-xs"
                         >
-                          <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-1" />
+                          <Info className="w-5 h-5 text-neutral-700 flex-shrink-0 mt-1" />
                           <div className="italic">
                             {formatInlineMarkdown(trimmed.replace(/^>\s*/, ''))}
                           </div>
@@ -233,7 +230,7 @@ export default function ArticleDetailPage() {
                         <ul key={bIdx} className="my-6 space-y-3.5 pl-2">
                           {listItems.map((item, i) => (
                             <li key={i} className="flex items-start gap-3.5 text-base sm:text-[17px] text-[var(--color-text-secondary)] leading-relaxed sm:leading-8">
-                              <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-primary-600)] mt-2.5 flex-shrink-0" />
+                              <span className="text-neutral-500 mt-0.5 flex-shrink-0">—</span>
                               <span>{formatInlineMarkdown(item)}</span>
                             </li>
                           ))}
@@ -249,7 +246,7 @@ export default function ArticleDetailPage() {
                         .map(l => {
                           const match = l.trim().match(/^(\d+)\.\s*(.*)/);
                           return {
-                            num: match ? match[1] : '•',
+                            num: match ? match[1] : '-',
                             text: match ? match[2] : l.trim(),
                           };
                         });
@@ -258,8 +255,8 @@ export default function ArticleDetailPage() {
                         <ol key={bIdx} className="my-6 space-y-4 pl-2">
                           {listItems.map((item, i) => (
                             <li key={i} className="flex items-start gap-4 text-base sm:text-[17px] text-[var(--color-text-secondary)] leading-relaxed sm:leading-8">
-                              <span className="w-6 h-6 rounded-full bg-[var(--color-primary-100)] text-[var(--color-primary-800)] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-1">
-                                {item.num}
+                              <span className="text-sm font-bold text-neutral-800 mt-1 flex-shrink-0 min-w-[20px]">
+                                {item.num}.
                               </span>
                               <span>{formatInlineMarkdown(item.text)}</span>
                             </li>
@@ -285,7 +282,7 @@ export default function ArticleDetailPage() {
         </div>
 
         {/* Article Tags Footer */}
-        <footer className="mt-14 pt-8 border-t border-[var(--color-border)] flex items-center gap-2.5 flex-wrap">
+        <footer className="mt-14 pt-8 flex items-center gap-2.5 flex-wrap">
           <span className="text-xs sm:text-sm text-[var(--color-text-muted)] font-semibold flex items-center gap-1.5 mr-1">
             <Tag className="w-4 h-4" /> Topics:
           </span>
@@ -310,24 +307,24 @@ export default function ArticleDetailPage() {
             <Card
               key={rel.id}
               onClick={() => navigate(`/knowledge/${rel.id}`)}
-              className="hover:border-[var(--color-primary-400)] transition-all cursor-pointer p-6 flex flex-col justify-between group bg-white"
+              className="transition-all cursor-pointer p-6 flex flex-col justify-between group bg-white"
             >
               <div>
-                <span className="text-[10px] uppercase font-bold text-[var(--color-primary-700)] block mb-2 tracking-wide">
+                <span className="text-[10px] uppercase font-bold text-neutral-600 block mb-2 tracking-wide">
                   {rel.category.replace('_', ' ')}
                 </span>
-                <h4 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] line-clamp-2 group-hover:text-[var(--color-primary-700)] transition-colors leading-snug">
+                <h4 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] line-clamp-2 transition-colors leading-snug">
                   {rel.title}
                 </h4>
                 <p className="text-xs sm:text-sm text-[var(--color-text-muted)] mt-2.5 line-clamp-2 leading-relaxed">
                   {rel.summary}
                 </p>
               </div>
-              <div className="mt-5 pt-3 border-t border-[var(--color-border)] flex items-center justify-between text-xs text-[var(--color-text-muted)]">
+              <div className="mt-5 pt-3 flex items-center justify-between text-xs text-[var(--color-text-muted)]">
                 <span className="flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5" /> {rel.readingTimeMinutes} min
                 </span>
-                <span className="font-semibold text-[var(--color-primary-600)] group-hover:underline">
+                <span className="font-semibold text-neutral-900 group-hover:underline">
                   Read Guide →
                 </span>
               </div>
