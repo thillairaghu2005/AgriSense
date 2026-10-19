@@ -1,0 +1,17 @@
+{
+  "name": "AgriSense — Indian Farmers Digital Assistant",
+  "short_name": "AgriSense",
+  "description": "Multilingual agricultural platform for Indian farmers: crop recommendations, APMC mandi prices, weather advisories, soil health cards, and government schemes.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#16a34a",
+  "background_color": "#f9fafb",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
