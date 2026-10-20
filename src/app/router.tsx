@@ -13,6 +13,13 @@ const MarketPrices = lazy(() => import('@/features/market/MarketPricesPage'));
 const Weather = lazy(() => import('@/features/weather/WeatherPage'));
 const Assistant = lazy(() => import('@/features/assistant/AssistantPage'));
 const Schemes = lazy(() => import('@/features/schemes/SchemesPage'));
+const Applications = lazy(() => import('@/features/applications/ApplicationsPage'));
+const SeedDistribution = lazy(() => import('@/features/seeds/SeedDistributionPage'));
+const Plantations = lazy(() => import('@/features/plantations/PlantationsPage'));
+const Grievances = lazy(() => import('@/features/grievances/GrievancesPage'));
+const DbtLedger = lazy(() => import('@/features/dbt/DbtLedgerPage'));
+const Analytics = lazy(() => import('@/features/analytics/AnalyticsPage'));
+const GovernmentResources = lazy(() => import('@/features/resources/GovernmentResourcesPage'));
 const PestsDiseases = lazy(() => import('@/features/pests-diseases/PestsDiseasesPage'));
 const Soil = lazy(() => import('@/features/soil/SoilPage'));
 const Finances = lazy(() => import('@/features/finances/FinancesPage'));
@@ -32,6 +39,14 @@ const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <SuspenseWrapper><Dashboard /></SuspenseWrapper> },
+      { path: 'schemes', element: <SuspenseWrapper><Schemes /></SuspenseWrapper> },
+      { path: 'applications', element: <SuspenseWrapper><Applications /></SuspenseWrapper> },
+      { path: 'seed-distribution', element: <SuspenseWrapper><SeedDistribution /></SuspenseWrapper> },
+      { path: 'plantations', element: <SuspenseWrapper><Plantations /></SuspenseWrapper> },
+      { path: 'grievances', element: <SuspenseWrapper><Grievances /></SuspenseWrapper> },
+      { path: 'dbt-ledger', element: <SuspenseWrapper><DbtLedger /></SuspenseWrapper> },
+      { path: 'analytics', element: <SuspenseWrapper><Analytics /></SuspenseWrapper> },
+      { path: 'government-resources', element: <SuspenseWrapper><GovernmentResources /></SuspenseWrapper> },
       { path: 'crops', element: <SuspenseWrapper><CropCatalogue /></SuspenseWrapper> },
       { path: 'crops/:cropId', element: <SuspenseWrapper><CropDetail /></SuspenseWrapper> },
       { path: 'recommendations', element: <SuspenseWrapper><Recommendations /></SuspenseWrapper> },
@@ -39,7 +54,6 @@ const router = createBrowserRouter([
       { path: 'market-prices', element: <SuspenseWrapper><MarketPrices /></SuspenseWrapper> },
       { path: 'weather', element: <SuspenseWrapper><Weather /></SuspenseWrapper> },
       { path: 'assistant', element: <SuspenseWrapper><Assistant /></SuspenseWrapper> },
-      { path: 'schemes', element: <SuspenseWrapper><Schemes /></SuspenseWrapper> },
       { path: 'pests-diseases', element: <SuspenseWrapper><PestsDiseases /></SuspenseWrapper> },
       { path: 'soil', element: <SuspenseWrapper><Soil /></SuspenseWrapper> },
       { path: 'farm-finances', element: <SuspenseWrapper><Finances /></SuspenseWrapper> },

@@ -1,17 +1,34 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import type { FarmerProfile, AppContextValue } from '@/types';
+import type { FarmerProfile, AppContextValue, UserRole } from '@/types';
 import { storageGet, storageSet, storageClearAll, STORAGE_KEYS } from '@/lib/storage';
 import { translate } from '@/data/translations';
 import { ToastProvider } from '@/components/feedback/Toast';
 
 const DEFAULT_PROFILE: FarmerProfile = {
-  displayName: 'Farmer',
+  displayName: 'Ramasamy K.',
   preferredLanguage: 'en',
   state: 'tn',
   district: 'tn-thanjavur',
-  landArea: 2,
+  block: 'Kumbakonam',
+  village: 'Thiruvidaimarudur',
+  pincode: '612101',
+  landArea: 2.5,
   landAreaUnit: 'acres',
-  soilType: 'loamy',
+  soilType: 'alluvial',
+  farmerCategory: 'small',
+  socialCategory: 'obc',
+  gender: 'male',
+  mobileNumber: '98421-55820',
+  aadhaarMasked: 'XXXX-XXXX-4892',
+  surveyNumber: '142/3A',
+  pattaNumber: 'TN-THJ-8821',
+  bankName: 'State Bank of India',
+  bankAccountMasked: 'XXXXXX5912',
+  bankIfsc: 'SBIN0001234',
+  irrigationSource: 'borewell',
+  cropsGrown: ['paddy', 'black_gram', 'banana'],
+  kccCardHolder: true,
+  pmKisanRegId: 'TN19284758',
   accessibility: {
     highContrast: false,
     largeText: false,
@@ -33,6 +50,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
   const [district, setDistrictVal] = useState<string>(() =>
     storageGet(STORAGE_KEYS.DISTRICT, DEFAULT_PROFILE.district)
+  );
+  const [role, setRoleState] = useState<UserRole>(() =>
+    storageGet(STORAGE_KEYS.USER_ROLE, 'farmer')
   );
 
   // Sync accessibility classes to document root
@@ -80,6 +100,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     storageSet(STORAGE_KEYS.DISTRICT, d);
   }, []);
 
+  const setRole = useCallback((newRole: UserRole) => {
+    setRoleState(newRole);
+    storageSet(STORAGE_KEYS.USER_ROLE, newRole);
+  }, []);
+
   const t = useCallback((key: string) => translate(language, key), [language]);
 
   const resetDemoData = useCallback(() => {
@@ -88,10 +113,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setLanguageState(DEFAULT_PROFILE.preferredLanguage);
     setStateVal(DEFAULT_PROFILE.state);
     setDistrictVal(DEFAULT_PROFILE.district);
+    setRoleState('farmer');
   }, []);
 
   return (
-    <AppContext.Provider value={{ profile, updateProfile, language, setLanguage, state, setState, district, setDistrict, t, resetDemoData }}>
+    <AppContext.Provider
+      value={{
+        profile,
+        updateProfile,
+        language,
+        setLanguage,
+        state,
+        setState,
+        district,
+        setDistrict,
+        role,
+        setRole,
+        t,
+        resetDemoData,
+      }}
+    >
       <ToastProvider>
         {children}
       </ToastProvider>

@@ -1,0 +1,167 @@
+import type { GovernmentResource } from '@/types';
+
+export const GOVERNMENT_RESOURCES: GovernmentResource[] = [
+  {
+    id: 'res-pmkisan-portal',
+    title: 'PM-KISAN Official Central Portal',
+    department: 'Department of Agriculture & Farmers Welfare, MoA&FW, Govt. of India',
+    level: 'central',
+    category: 'Portal',
+    url: 'https://pmkisan.gov.in',
+    description: 'National portal for online farmer registration, Aadhaar e-KYC, beneficiary status checking, installment details, and grievance redressal.',
+    helpline: '155261 / 1800-11-5526 / 011-24300606',
+    lastVerifiedDate: '2024-09-15',
+  },
+  {
+    id: 'res-pmfby-portal',
+    title: 'PMFBY National Crop Insurance Portal',
+    department: 'Credit & Insurance Division, DA&FW, Ministry of Agriculture & Farmers Welfare',
+    level: 'central',
+    category: 'Portal',
+    url: 'https://pmfby.gov.in',
+    description: 'National portal for crop insurance enrollment, premium calculator, crop loss intimation within 72 hours, policy download, and claim tracking.',
+    helpline: '14447 (National Toll-Free Crop Insurance Helpline)',
+    lastVerifiedDate: '2024-09-01',
+  },
+  {
+    id: 'res-kcc-portal',
+    title: 'Kisan Credit Card (KCC) Scheme Guidelines & Application Portal',
+    department: 'DA&FW, Ministry of Agriculture & Farmers Welfare & Reserve Bank of India',
+    level: 'central',
+    category: 'Form',
+    url: 'https://myscheme.gov.in/schemes/kcc',
+    description: 'Download the official one-page simplified KCC loan application form for crop cultivation, dairy, livestock, and fisheries credit.',
+    helpline: '1800-180-1551 (Kisan Call Centre)',
+    lastVerifiedDate: '2024-08-20',
+  },
+  {
+    id: 'res-agrimachinery-smam',
+    title: 'Direct Benefit Transfer in Agricultural Mechanization (SMAM)',
+    department: 'Mechanization & Technology Division, DA&FW, MoA&FW',
+    level: 'central',
+    category: 'Portal',
+    url: 'https://agrimachinery.nic.in',
+    description: 'Official DBT portal for online subsidy applications for tractors, power tillers, rotavators, seed drills, harvesters, and Custom Hiring Centres.',
+    helpline: '011-23382926 / 1800-180-1551',
+    lastVerifiedDate: '2024-09-10',
+  },
+  {
+    id: 'res-pmksy-microirrigation',
+    title: 'PMKSY - Per Drop More Crop (Micro Irrigation) Portal',
+    department: 'DA&FW, MoA&FW and Ministry of Jal Shakti',
+    level: 'central',
+    category: 'Portal',
+    url: 'https://pmksy.gov.in/microirrigation',
+    description: 'Guidelines, state-wise funding allocations, vendor specifications, and guidelines for Drip and Sprinkler irrigation subsidies.',
+    helpline: '1800-180-1551',
+    lastVerifiedDate: '2024-08-15',
+  },
+  {
+    id: 'res-enam-portal',
+    title: 'National Agriculture Market (e-NAM) Portal',
+    department: 'Small Farmers Agri-Business Consortium (SFAC), Ministry of Agriculture',
+    level: 'central',
+    category: 'Database',
+    url: 'https://enam.gov.in',
+    description: 'Pan-India electronic trading portal networking existing APMC mandis to create a unified national market for agricultural commodities.',
+    helpline: '1800-270-0224 (e-NAM Helpdesk)',
+    lastVerifiedDate: '2024-09-25',
+  },
+  {
+    id: 'res-soilhealth-portal',
+    title: 'Soil Health Card National Portal',
+    department: 'Integrated Nutrient Management Division, DA&FW, MoA&FW',
+    level: 'central',
+    category: 'Database',
+    url: 'https://soilhealth.dac.gov.in',
+    description: 'Digital Soil Health Card search by state, district, village, and farmer name; fertilizer recommendation generator.',
+    helpline: '011-23382012',
+    lastVerifiedDate: '2024-07-30',
+  },
+  {
+    id: 'res-tnagrisnet-portal',
+    title: 'Tamil Nadu Agrisnet — Agriculture & Farmers Welfare Department',
+    department: 'Department of Agriculture, Government of Tamil Nadu',
+    level: 'state',
+    state: 'tn',
+    category: 'Portal',
+    url: 'https://www.tnagrisnet.tn.gov.in',
+    description: 'Comprehensive portal for Tamil Nadu farmers covering Kalaignarin All Village Integrated Agriculture Development Programme, seed booking, and Uzhavan App.',
+    helpline: '1800-425-4444 (Uzhavan Toll-Free)',
+    lastVerifiedDate: '2024-09-05',
+  },
+  {
+    id: 'res-tanhoda-portal',
+    title: 'Tamil Nadu Horticulture Development Agency (TANHODA)',
+    department: 'Department of Horticulture and Plantation Crops, Govt. of Tamil Nadu',
+    level: 'state',
+    state: 'tn',
+    category: 'Portal',
+    url: 'https://tanhoda.tn.gov.in',
+    description: 'Official portal for 100% micro irrigation subsidy for small/marginal farmers, orchard establishment, protected polyhouses, and state nurseries.',
+    helpline: '044-28583320 / 1800-425-4444',
+    lastVerifiedDate: '2024-08-28',
+  },
+  {
+    id: 'res-tnau-portal',
+    title: 'Tamil Nadu Agricultural University (TNAU) Agritech Portal',
+    department: 'Tamil Nadu Agricultural University, Coimbatore',
+    level: 'state',
+    state: 'tn',
+    category: 'Database',
+    url: 'https://agritech.tnau.ac.in',
+    description: 'Authoritative agricultural technology information system covering crop production guides, certified seed availability, pest advisories, and weather forecasts in Tamil & English.',
+    helpline: '0422-6611202',
+    lastVerifiedDate: '2024-09-12',
+  },
+  {
+    id: 'res-ap-rythubharosa',
+    title: 'Andhra Pradesh YSR Rythu Bharosa Portal',
+    department: 'Department of Agriculture, Government of Andhra Pradesh',
+    level: 'state',
+    state: 'ap',
+    category: 'Portal',
+    url: 'https://ysrrythubharosa.ap.gov.in',
+    description: 'Official portal for annual ₹13,500 farmer assistance, tenant farmer CCRC cards, Rythu Bharosa Kendras (RBKs), and e-Crop booking.',
+    helpline: '155251 / 1902',
+    lastVerifiedDate: '2024-07-15',
+  },
+  {
+    id: 'res-mahadbt-krishi',
+    title: 'Maharashtra MahaDBT Farmer Schemes Portal',
+    department: 'Department of Agriculture, Government of Maharashtra',
+    level: 'state',
+    state: 'mh',
+    category: 'Portal',
+    url: 'https://mahadbt.maharashtra.gov.in',
+    description: 'Unified single-window application portal for all Maharashtra agriculture, horticulture, drip, tractor, and well construction subsidies.',
+    helpline: '022-49150800',
+    lastVerifiedDate: '2024-08-10',
+  },
+  {
+    id: 'res-kcc-callcentre',
+    title: 'Kisan Call Centre (KCC) National Toll-Free Helpline',
+    department: 'Ministry of Agriculture and Farmers Welfare, Government of India',
+    level: 'central',
+    category: 'Helpline',
+    url: 'https://dackkms.gov.in',
+    description: 'Nationwide toll-free telephone advisory available 7 days a week from 06:00 AM to 10:00 PM in 22 local Indian languages by agricultural graduates.',
+    helpline: '1800-180-1551 (Toll-Free All India)',
+    lastVerifiedDate: '2024-09-20',
+  },
+];
+
+export function searchGovernmentResources(query: string, category?: string, level?: string): GovernmentResource[] {
+  const q = query.toLowerCase().trim();
+  return GOVERNMENT_RESOURCES.filter(r => {
+    const matchesQuery =
+      !q ||
+      r.title.toLowerCase().includes(q) ||
+      r.department.toLowerCase().includes(q) ||
+      r.description.toLowerCase().includes(q) ||
+      (r.helpline && r.helpline.includes(q));
+    const matchesCat = !category || r.category === category;
+    const matchesLevel = !level || r.level === level;
+    return matchesQuery && matchesCat && matchesLevel;
+  });
+}

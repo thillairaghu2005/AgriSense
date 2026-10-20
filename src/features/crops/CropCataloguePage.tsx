@@ -11,6 +11,7 @@ const SEASON_LABELS: Record<Season, string> = { kharif: 'Kharif', rabi: 'Rabi', 
 const CATEGORY_LABELS: Record<CropCategory, string> = {
   cereal: 'Cereal', pulse: 'Pulse', oilseed: 'Oilseed', vegetable: 'Vegetable',
   fruit: 'Fruit', cash_crop: 'Cash Crop', spice: 'Spice', fiber: 'Fiber',
+  plantation: 'Plantation', fodder: 'Fodder',
 };
 
 export default function CropCataloguePage() {

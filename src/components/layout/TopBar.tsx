@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Search, Bell, User, X, Sprout } from 'lucide-react';
+import { Menu, Search, Bell, User, X, Sprout, ShieldCheck } from 'lucide-react';
 import { useApp } from '@/app/providers';
 import { STATES } from '@/data/locations';
 import { LANGUAGES } from '@/data/translations';
+import type { UserRole } from '@/types';
 import Sidebar from './Sidebar';
 import GlobalSearch from './GlobalSearch';
 
 export default function TopBar() {
-  const { t, language, setLanguage, state, setState, district, setDistrict } = useApp();
+  const { t, language, setLanguage, state, setState, district, setDistrict, role, setRole } = useApp();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
@@ -27,6 +28,13 @@ export default function TopBar() {
     '/weather': 'nav.weather',
     '/assistant': 'nav.assistant',
     '/schemes': 'nav.schemes',
+    '/applications': 'nav.applications',
+    '/seed-distribution': 'nav.seeds',
+    '/plantations': 'nav.plantations',
+    '/dbt-ledger': 'nav.dbt',
+    '/grievances': 'nav.grievances',
+    '/analytics': 'nav.analytics',
+    '/government-resources': 'nav.resources',
     '/pests-diseases': 'nav.pests',
     '/soil': 'nav.soil',
     '/farm-finances': 'nav.finances',
@@ -39,9 +47,16 @@ export default function TopBar() {
   );
   const pageTitle = pathKey ? t(PAGE_TITLES[pathKey]) : 'AgriSense';
 
+  const ROLE_OPTIONS: { id: UserRole; label: string; badge: string }[] = [
+    { id: 'farmer', label: 'Farmer (Beneficiary)', badge: 'Farmer' },
+    { id: 'officer', label: 'Agri Officer (ADA/AO)', badge: 'Officer' },
+    { id: 'manager', label: 'Scheme Manager', badge: 'Manager' },
+    { id: 'admin', label: 'Govt Administrator', badge: 'Admin' },
+  ];
+
   return (
     <>
-      <header className="flex items-center gap-3 px-6 h-16 bg-white z-10 flex-shrink-0">
+      <header className="flex items-center gap-3 px-4 sm:px-6 h-16 bg-white z-10 flex-shrink-0 border-b border-[var(--color-border)]">
         {/* Mobile menu button */}
         <button
           className="lg:hidden flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
@@ -62,6 +77,24 @@ export default function TopBar() {
         </h1>
 
         <div className="flex-1" />
+
+        {/* Role Selector Pill */}
+        <div className="flex items-center gap-1.5 bg-[var(--color-surface-2)] px-2.5 py-1 rounded-full border border-[var(--color-border)]">
+          <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-primary-600)] shrink-0" />
+          <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-text-muted)] hidden xl:inline">Role:</span>
+          <select
+            value={role}
+            onChange={e => setRole(e.target.value as UserRole)}
+            className="text-xs font-semibold bg-transparent text-[var(--color-text-primary)] cursor-pointer focus:outline-none"
+            aria-label="Switch User Portal Role"
+          >
+            {ROLE_OPTIONS.map(r => (
+              <option key={r.id} value={r.id}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Region selectors */}
         <div className="hidden md:flex items-center gap-2">
@@ -92,11 +125,11 @@ export default function TopBar() {
         <select
           value={language}
           onChange={e => setLanguage(e.target.value)}
-          className="hidden sm:block text-xs border border-[var(--color-border)] rounded-md px-2.5 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
+          className="text-xs border border-[var(--color-border)] rounded-md px-2 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
           aria-label="Select language"
         >
           {LANGUAGES.map(l => (
-            <option key={l.code} value={l.code}>{l.nativeLabel}</option>
+            <option key={l.code} value={l.code}>{l.nativeLabel} ({l.label})</option>
           ))}
         </select>
 

@@ -2,7 +2,8 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Leaf, Sparkles, CalendarDays, TrendingUp,
   CloudSun, Bot, BookOpen, Bug, Beaker, Wallet, Library,
-  Bell, UserCircle, Sprout
+  Bell, UserCircle, Sprout, FileText, Receipt, ShieldAlert,
+  Trees, BarChart3, Building2, PackageCheck
 } from 'lucide-react';
 import { useApp } from '@/app/providers';
 
@@ -15,21 +16,33 @@ const NAV_GROUPS = [
     ],
   },
   {
+    sectionKey: 'nav.section.welfare',
+    items: [
+      { to: '/schemes', icon: BookOpen, labelKey: 'nav.schemes' },
+      { to: '/applications', icon: FileText, labelKey: 'nav.applications' },
+      { to: '/seed-distribution', icon: PackageCheck, labelKey: 'nav.seeds' },
+      { to: '/plantations', icon: Trees, labelKey: 'nav.plantations' },
+      { to: '/dbt-ledger', icon: Receipt, labelKey: 'nav.dbt' },
+      { to: '/grievances', icon: ShieldAlert, labelKey: 'nav.grievances' },
+    ],
+  },
+  {
     sectionKey: 'nav.section.farm',
     items: [
       { to: '/crops', icon: Leaf, labelKey: 'nav.crops' },
       { to: '/recommendations', icon: Sparkles, labelKey: 'nav.recommendations' },
       { to: '/calendar', icon: CalendarDays, labelKey: 'nav.calendar' },
       { to: '/market-prices', icon: TrendingUp, labelKey: 'nav.market' },
-      { to: '/farm-finances', icon: Wallet, labelKey: 'nav.finances' },
       { to: '/soil', icon: Beaker, labelKey: 'nav.soil' },
+      { to: '/farm-finances', icon: Wallet, labelKey: 'nav.finances' },
     ],
   },
   {
-    sectionKey: 'nav.section.discover',
+    sectionKey: 'nav.section.intelligence',
     items: [
+      { to: '/analytics', icon: BarChart3, labelKey: 'nav.analytics' },
+      { to: '/government-resources', icon: Building2, labelKey: 'nav.resources' },
       { to: '/weather', icon: CloudSun, labelKey: 'nav.weather' },
-      { to: '/schemes', icon: BookOpen, labelKey: 'nav.schemes' },
       { to: '/pests-diseases', icon: Bug, labelKey: 'nav.pests' },
       { to: '/knowledge', icon: Library, labelKey: 'nav.knowledge' },
       { to: '/assistant', icon: Bot, labelKey: 'nav.assistant' },

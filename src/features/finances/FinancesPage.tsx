@@ -28,14 +28,14 @@ import {
 } from 'recharts';
 
 const EXPENSE_CATEGORIES: { id: ExpenseCategory; label: string; color: string }[] = [
-  { id: 'seed', label: 'Seeds & Seedlings', color: '#15803d' },
-  { id: 'fertiliser', label: 'Fertilisers & Manure', color: '#16a34a' },
-  { id: 'pesticide', label: 'Crop Protection & Bio-agents', color: '#22c55e' },
-  { id: 'labour', label: 'Farm Labour & Weeding', color: '#1e293b' },
-  { id: 'irrigation', label: 'Irrigation & Diesel/Electricity', color: '#334155' },
-  { id: 'equipment', label: 'Tractor / Machinery Hire', color: '#475569' },
-  { id: 'transport', label: 'Transport & Mandi Fee', color: '#64748b' },
-  { id: 'other', label: 'Other Operational Expenses', color: '#94a3b8' },
+  { id: 'seed', label: 'Seeds & Seedlings', color: '#14532d' },
+  { id: 'fertiliser', label: 'Fertilisers & Manure', color: '#166534' },
+  { id: 'pesticide', label: 'Crop Protection & Bio-agents', color: '#15803d' },
+  { id: 'labour', label: 'Farm Labour & Weeding', color: '#16a34a' },
+  { id: 'irrigation', label: 'Irrigation & Diesel/Electricity', color: '#22c55e' },
+  { id: 'equipment', label: 'Tractor / Machinery Hire', color: '#4ade80' },
+  { id: 'transport', label: 'Transport & Mandi Fee', color: '#86efac' },
+  { id: 'other', label: 'Other Operational Expenses', color: '#000000' },
 ];
 
 const INCOME_CATEGORIES: { id: IncomeCategory; label: string; color: string }[] = [

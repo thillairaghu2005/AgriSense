@@ -1,17 +1,110 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useApp } from '@/app/providers';
-import { getWeatherForRegion } from '@/data/weather';
-import { STATES } from '@/data/locations';
+import { getWeatherForRegion, type RegionWeather } from '@/data/weather';
+import { STATES, getLocationCoordinates } from '@/data/locations';
 import { Card, PageHeader, DemoLabel, Badge, InfoBanner } from '@/components/ui/Card';
-import { CloudSun, Droplets, Wind, Thermometer, AlertTriangle, ShieldCheck, ShieldAlert, Clock, Sprout } from 'lucide-react';
+import Button from '@/components/ui/Button';
+import {
+  CloudSun,
+  Droplets,
+  Wind,
+  Thermometer,
+  AlertTriangle,
+  ShieldCheck,
+  ShieldAlert,
+  Clock,
+  Sprout,
+  Navigation,
+  RefreshCw,
+  Radio,
+  Wifi,
+} from 'lucide-react';
 import { WeatherIcon } from '@/components/ui/WeatherIcon';
+import { fetchLiveWeatherData } from '@/lib/weatherApi';
+import { storageGet, storageSet, STORAGE_KEYS } from '@/lib/storage';
 
 export default function WeatherPage() {
-  const { state: selectedState, t } = useApp();
+  const { state: selectedState, district: selectedDistrict, t } = useApp();
   const [selectedDay, setSelectedDay] = useState(0);
-  const weather = getWeatherForRegion(selectedState);
+
+  // Live vs Mock mode state
+  const [isLive, setIsLive] = useState<boolean>(() =>
+    storageGet(STORAGE_KEYS.WEATHER_LIVE_ENABLED, true)
+  );
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [liveWeather, setLiveWeather] = useState<RegionWeather | null>(null);
+  const [gpsLocation, setGpsLocation] = useState<{ lat: number; lon: number; label: string } | null>(null);
+  const [gpsError, setGpsError] = useState<string | null>(null);
+
   const stateName = STATES.find(s => s.id === selectedState)?.name ?? selectedState;
-  const dayData = weather.forecast[selectedDay];
+
+  // Compute active coordinates
+  const activeCoord = gpsLocation || getLocationCoordinates(selectedState, selectedDistrict);
+
+  // Fetch live weather data
+  const loadWeatherData = useCallback(async () => {
+    if (!isLive) return;
+    setIsLoading(true);
+    try {
+      const data = await fetchLiveWeatherData(
+        activeCoord.lat,
+        activeCoord.lon,
+        activeCoord.label,
+        selectedState
+      );
+      setLiveWeather(data);
+    } catch {
+      // Fallback handled in weatherApi
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLive, activeCoord.lat, activeCoord.lon, activeCoord.label, selectedState]);
+
+  useEffect(() => {
+    loadWeatherData();
+  }, [loadWeatherData]);
+
+  // Handle GPS location request
+  function handleUseGps() {
+    if (!navigator.geolocation) {
+      setGpsError('Geolocation is not supported by your browser.');
+      return;
+    }
+    setIsLoading(true);
+    setGpsError(null);
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        setGpsLocation({
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          label: 'Your Farm Location (GPS)',
+        });
+        setIsLive(true);
+        storageSet(STORAGE_KEYS.WEATHER_LIVE_ENABLED, true);
+      },
+      err => {
+        setIsLoading(false);
+        setGpsError(`Could not access GPS (${err.message}). Using regional profile.`);
+      },
+      { timeout: 10000 }
+    );
+  }
+
+  function toggleLiveMode(val: boolean) {
+    setIsLive(val);
+    storageSet(STORAGE_KEYS.WEATHER_LIVE_ENABLED, val);
+    if (!val) {
+      setGpsLocation(null);
+    }
+  }
+
+  // Active weather object (live if available and active, otherwise static fallback)
+  const weather: RegionWeather = (isLive && liveWeather)
+    ? liveWeather
+    : getWeatherForRegion(selectedState);
+
+  const dayData = weather.forecast[selectedDay] || weather.forecast[0];
 
   const sprayStyles = {
     ideal: {
@@ -29,19 +122,100 @@ export default function WeatherPage() {
       icon: <ShieldAlert className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
       bg: 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]',
     },
-  }[weather.spraySuitability];
+  }[weather.spraySuitability] || {
+    label: 'Weather Evaluation',
+    icon: <AlertTriangle className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
+    bg: 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]',
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <PageHeader
-        title={t('weather.title')}
-        subtitle={`${stateName} (${weather.regionLabel}) — Agro-meteorological sample advisory`}
-        badge={<DemoLabel label={t('demo.notLive')} />}
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <PageHeader
+          title={t('weather.title')}
+          subtitle={
+            isLive
+              ? `${activeCoord.label} — Live Open-Meteo Global Forecasting Model (${weather.lastUpdatedLabel})`
+              : `${stateName} (${weather.regionLabel}) — Agro-meteorological sample advisory`
+          }
+          badge={
+            isLive ? (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                LIVE OPEN-METEO
+              </span>
+            ) : (
+              <DemoLabel label={t('demo.notLive')} />
+            )
+          }
+        />
 
-      <InfoBanner variant="warning">
-        {t('demo.weatherNote')} For operational field actions, consult the <strong>India Meteorological Department (imd.gov.in)</strong> or Gramin Krishi Mausam Sewa (GKMS).
-      </InfoBanner>
+        {/* Live Controls Toolbar */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="inline-flex p-1 bg-[var(--color-surface-2)] rounded-lg text-xs font-medium">
+            <button
+              onClick={() => toggleLiveMode(true)}
+              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
+                isLive
+                  ? 'bg-white text-[var(--color-primary-700)] font-semibold shadow-xs'
+                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+              }`}
+            >
+              <Wifi className="w-3.5 h-3.5 text-emerald-600" />
+              Live API
+            </button>
+            <button
+              onClick={() => toggleLiveMode(false)}
+              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
+                !isLive
+                  ? 'bg-white text-[var(--color-primary-700)] font-semibold shadow-xs'
+                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+              }`}
+            >
+              <Radio className="w-3.5 h-3.5 text-neutral-500" />
+              Sample Data
+            </button>
+          </div>
+
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={handleUseGps}
+            leftIcon={<Navigation className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />}
+            title="Fetch weather for your device GPS coordinates"
+          >
+            Use GPS
+          </Button>
+
+          {isLive && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={loadWeatherData}
+              disabled={isLoading}
+              leftIcon={<RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />}
+            >
+              Refresh
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {gpsError && (
+        <InfoBanner variant="warning">
+          {gpsError}
+        </InfoBanner>
+      )}
+
+      {isLive ? (
+        <InfoBanner variant="info">
+          Streaming <strong>live agrometeorological telemetry</strong> via Open-Meteo API for <strong>{activeCoord.label}</strong> (Lat: {activeCoord.lat.toFixed(3)}, Lon: {activeCoord.lon.toFixed(3)}). Agricultural spray windows and moisture levels are computed in real time.
+        </InfoBanner>
+      ) : (
+        <InfoBanner variant="warning">
+          {t('demo.weatherNote')} For operational field actions, consult the <strong>India Meteorological Department (imd.gov.in)</strong> or switch to <strong>Live API</strong> above.
+        </InfoBanner>
+      )}
 
       {/* Agricultural Spraying & Field Operation Index */}
       <div className={`p-4 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${sprayStyles.bg}`}>
@@ -49,7 +223,9 @@ export default function WeatherPage() {
           {sprayStyles.icon}
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-primary)]">Agricultural Field Suitability</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-primary)]">
+                Agricultural Field Suitability
+              </span>
               <Badge>{sprayStyles.label}</Badge>
             </div>
             <p className="text-xs text-[var(--color-text-secondary)] mt-1 leading-relaxed">
@@ -57,17 +233,17 @@ export default function WeatherPage() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs font-medium flex-shrink-0 bg-white px-3 py-1.5 rounded-md">
+        <div className="flex items-center gap-2 text-xs font-medium flex-shrink-0 bg-white px-3 py-1.5 rounded-md shadow-xs border border-neutral-100">
           <Sprout className="w-4 h-4 text-[var(--color-primary-600)]" />
           <span>Soil Moisture: <strong className="capitalize">{weather.soilMoistureIndex}</strong></span>
         </div>
       </div>
 
-      {/* Current conditions cards without container boxes around icons */}
+      {/* Current conditions cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="card text-center">
           <div className="flex justify-center mb-1">
-            <WeatherIcon condition={weather.forecast[0].condition} className="w-8 h-8 text-[var(--color-primary-600)]" />
+            <WeatherIcon condition={weather.forecast[0]?.condition || 'sunny'} className="w-8 h-8 text-[var(--color-primary-600)]" />
           </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.currentTempC}°C</p>
           <p className="text-xs text-[var(--color-text-muted)]">{weather.currentCondition}</p>
@@ -84,7 +260,9 @@ export default function WeatherPage() {
         </div>
         <div className="card text-center">
           <Thermometer className="w-6 h-6 text-[var(--color-primary-600)] mx-auto mb-1" />
-          <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.forecast[0].maxTempC}°/{weather.forecast[0].minTempC}°C</p>
+          <p className="text-2xl font-bold text-[var(--color-text-primary)]">
+            {weather.forecast[0]?.maxTempC}° / {weather.forecast[0]?.minTempC}°C
+          </p>
           <p className="text-xs text-[var(--color-text-muted)]">Today High/Low</p>
         </div>
       </div>
@@ -120,12 +298,12 @@ export default function WeatherPage() {
         <div className="flex gap-2 overflow-x-auto pb-2">
           {weather.forecast.map((day, idx) => (
             <button
-              key={day.dateLabel}
+              key={`${day.dateLabel}-${idx}`}
               onClick={() => setSelectedDay(idx)}
-              className={`flex flex-col items-center gap-1.5 p-3 rounded-lg min-w-[84px] transition-all ${
+              className={`flex flex-col items-center gap-1.5 p-3 rounded-lg min-w-[84px] transition-all cursor-pointer ${
                 selectedDay === idx
-                  ? 'bg-[var(--color-primary-50)] text-[var(--color-primary-800)] font-semibold border border-[var(--color-primary-200)]'
-                  : 'bg-white text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-1)]'
+                  ? 'bg-[var(--color-primary-50)] text-[var(--color-primary-800)] font-semibold border border-[var(--color-primary-200)] shadow-xs'
+                  : 'bg-white text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-1)] border border-transparent'
               }`}
               aria-pressed={selectedDay === idx}
             >
@@ -154,7 +332,7 @@ export default function WeatherPage() {
               { label: t('weather.rainProb'), value: `${dayData.rainProbability}%` },
               { label: t('weather.rainfall'), value: `${dayData.expectedRainfallMm} mm` },
             ].map(row => (
-              <div key={row.label} className="flex justify-between text-xs py-1">
+              <div key={row.label} className="flex justify-between text-xs py-1 border-b border-neutral-100 last:border-0">
                 <span className="text-[var(--color-text-muted)]">{row.label}</span>
                 <span className="font-medium text-[var(--color-text-primary)]">{row.value}</span>
               </div>
@@ -166,7 +344,7 @@ export default function WeatherPage() {
           <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">{t('weather.farmingAdvice')}</h3>
           <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">{dayData.farmingAdvice}</p>
           <p className="mt-3 text-[10px] text-[var(--color-text-muted)] italic">
-            Agrometeorological advisory aligned with regional ICAR and IMD guidelines.
+            Agrometeorological advisory dynamically generated for agricultural field protection.
           </p>
         </Card>
       </div>
@@ -175,12 +353,12 @@ export default function WeatherPage() {
       {weather.alerts.length > 0 && (
         <Card>
           <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-[var(--color-text-primary)]" />
+            <AlertTriangle className="w-4 h-4 text-amber-600" />
             {t('weather.alerts')}
           </h2>
           <div className="space-y-3">
             {weather.alerts.map(alert => (
-              <div key={alert.id} className="p-3.5 rounded-lg bg-[var(--color-surface-2)]">
+              <div key={alert.id} className="p-3.5 rounded-lg bg-[var(--color-surface-2)] border-l-4 border-amber-500">
                 <div className="flex items-center gap-2 mb-1.5">
                   <Badge>
                     {alert.severity.toUpperCase()}

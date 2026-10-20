@@ -90,4 +90,12 @@ export const STORAGE_KEYS = {
   NOTIFICATIONS: 'notifications',
   SCHEME_CHECKLISTS: 'scheme-checklists',
   BOOKMARKED_ARTICLES: 'bookmarked-articles',
+  AGMARKNET_API_KEY: 'agmarknet-api-key',
+  WEATHER_LIVE_ENABLED: 'weather-live-enabled',
+  MARKET_LIVE_ENABLED: 'market-live-enabled',
+  USER_ROLE: 'user-role',
+  APPLICATIONS: 'scheme-applications',
+  GRIEVANCES: 'grievance-tickets',
+  SEED_REQUISITIONS: 'seed-requisitions',
+  SAPLING_BOOKINGS: 'sapling-bookings',
 };

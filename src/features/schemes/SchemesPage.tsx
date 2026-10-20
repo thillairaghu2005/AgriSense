@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { searchSchemes } from '@/data/schemes';
 import { Card, PageHeader, InfoBanner } from '@/components/ui/Card';
 import { SearchInput } from '@/components/forms/FormComponents';
-import { ExternalLink, CheckSquare, Square, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react';
+import Button from '@/components/ui/Button';
+import { useApp } from '@/app/providers';
+import { evaluateEligibility, type EligibilityResult } from '@/lib/eligibilityEngine';
 import type { Scheme } from '@/types';
 import { storageGet, storageSet, STORAGE_KEYS } from '@/lib/storage';
+import {
+  ExternalLink, CheckSquare, Square, ChevronDown, ChevronUp,
+  AlertCircle, ShieldCheck, Sparkles,
+  CheckCircle2, ArrowRight
+} from 'lucide-react';
 
 function useSchemeChecklists() {
   const [checklists, setChecklists] = useState<Record<string, string[]>>(() =>
@@ -26,49 +34,75 @@ function useSchemeChecklists() {
   return { checklists, toggleItem };
 }
 
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex gap-3 text-xs leading-relaxed">
-      <span className="text-[var(--color-text-muted)] font-medium w-28 flex-shrink-0">{label}</span>
-      <span className="text-[var(--color-text-secondary)]">{value}</span>
-    </div>
-  );
-}
-
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-text-muted)] mt-4 mb-2">
+    <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] mt-4 mb-2">
       {children}
     </p>
   );
 }
 
-function SchemeCard({ scheme, checklist, onToggle }: { scheme: Scheme; checklist: string[]; onToggle: (item: string) => void }) {
+function SchemeCard({
+  scheme,
+  eligibility,
+  checklist,
+  onToggle,
+  onApply,
+}: {
+  scheme: Scheme;
+  eligibility: EligibilityResult;
+  checklist: string[];
+  onToggle: (item: string) => void;
+  onApply: (schemeId: string) => void;
+}) {
   const [expanded, setExpanded] = useState(false);
 
-  const levelLabel = scheme.level === 'central' ? 'Central' : 'State';
+  const levelLabel = scheme.level === 'central' ? 'Central Scheme' : 'State Scheme';
   const catLabel = scheme.category.replace(/_/g, ' ');
 
+  const matchColor =
+    eligibility.matchScore >= 80
+      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+      : eligibility.matchScore >= 50
+      ? 'bg-amber-50 text-amber-800 border-amber-300'
+      : 'bg-gray-100 text-gray-700 border-gray-300';
+
   return (
-    <Card>
+    <Card className="hover:border-[var(--color-primary-400)] transition-all">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-primary-800)] bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] px-2 py-0.5 rounded">
+          {/* Badge Strip */}
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--color-primary-800)] bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] px-2.5 py-0.5 rounded">
               {levelLabel}
             </span>
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-secondary)] bg-[var(--color-surface-2)] border border-[var(--color-border)] px-2 py-0.5 rounded">
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-secondary)] bg-[var(--color-surface-2)] border border-[var(--color-border)] px-2.5 py-0.5 rounded">
               {catLabel}
             </span>
-            {!scheme.isVerified && (
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)] border border-[var(--color-border)] px-2 py-0.5 rounded">
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded border flex items-center gap-1 ${matchColor}`}>
+              <Sparkles className="w-3 h-3 text-emerald-600" />
+              {eligibility.matchScore}% Match
+            </span>
+            {scheme.isVerified ? (
+              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                Verified MoA&FW
+              </span>
+            ) : (
+              <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
                 Sample
               </span>
             )}
           </div>
-          <h2 className="text-sm font-bold text-[var(--color-text-primary)]">{scheme.name}</h2>
-          <p className="text-xs text-[var(--color-text-secondary)] mt-1">{scheme.shortDescription}</p>
+
+          <h2 className="text-base font-bold text-[var(--color-text-primary)]">
+            {scheme.name}
+          </h2>
+          <p className="text-xs text-[var(--color-text-secondary)] mt-1 leading-relaxed">
+            {scheme.shortDescription}
+          </p>
         </div>
+
         <button
           onClick={() => setExpanded(e => !e)}
           className="flex items-center justify-center w-8 h-8 rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] flex-shrink-0"
@@ -79,149 +113,200 @@ function SchemeCard({ scheme, checklist, onToggle }: { scheme: Scheme; checklist
         </button>
       </div>
 
-      {/* Summary strip */}
-      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
-        {scheme.subsidyAmount && (
-          <Row label="Subsidy / Amount" value={scheme.subsidyAmount} />
-        )}
-        {scheme.fundingBudget && (
-          <Row label="Funding Budget" value={scheme.fundingBudget} />
-        )}
-        {scheme.coverageStates && (
-          <Row label="Coverage" value={scheme.coverageStates} />
-        )}
-        {scheme.renewalPeriod && (
-          <Row label="Renewal" value={scheme.renewalPeriod} />
-        )}
-        {scheme.targetBeneficiaries && (
-          <Row label="Target" value={scheme.targetBeneficiaries} />
-        )}
+      {/* Summary Highlight Strip */}
+      <div className="mt-3.5 grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] text-xs">
+        <div>
+          <span className="text-[10px] text-[var(--color-text-muted)] font-medium block">Assistance / Subsidy</span>
+          <span className="font-bold text-emerald-700">{scheme.subsidyPercentage || scheme.maxBenefitAmount || 'Direct Grant'}</span>
+        </div>
+        <div>
+          <span className="text-[10px] text-[var(--color-text-muted)] font-medium block">Max Benefit</span>
+          <span className="font-semibold text-[var(--color-text-primary)]">{scheme.maxBenefitAmount || 'As per norms'}</span>
+        </div>
+        <div>
+          <span className="text-[10px] text-[var(--color-text-muted)] font-medium block">Application Deadline</span>
+          <span className="font-semibold text-[var(--color-text-primary)] truncate block">{scheme.deadlines || 'Open Year-round'}</span>
+        </div>
+        <div>
+          <span className="text-[10px] text-[var(--color-text-muted)] font-medium block">Helpline</span>
+          <span className="font-semibold text-[var(--color-text-primary)] truncate block">{scheme.helplineNumber}</span>
+        </div>
       </div>
 
+      {/* Eligibility breakdown banner */}
+      <div className="mt-3 flex items-center justify-between text-xs pt-1">
+        <div className="flex items-center gap-1.5">
+          {eligibility.isEligible ? (
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+          ) : (
+            <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+          )}
+          <span className="text-[11px] font-medium text-[var(--color-text-secondary)]">
+            {eligibility.isEligible
+              ? 'You meet all core eligibility criteria for this scheme.'
+              : eligibility.failedCriteria[0] || 'Check specific conditions below.'}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => onApply(scheme.id)}
+            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+          >
+            Apply Now
+          </Button>
+        </div>
+      </div>
+
+      {/* Expandable Comprehensive Details */}
       {expanded && (
-        <div className="mt-4 animate-fade-in space-y-1">
+        <div className="mt-4 pt-4 border-t border-[var(--color-border)] animate-fade-in space-y-4 text-xs">
+          {/* Objectives */}
+          {scheme.objectives && scheme.objectives.length > 0 && (
+            <div>
+              <SectionLabel>Objectives & Scope</SectionLabel>
+              <ul className="space-y-1 list-disc pl-4 text-[var(--color-text-secondary)]">
+                {scheme.objectives.map((obj, i) => (
+                  <li key={i}>{obj}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-          {/* Eligibility */}
-          <SectionLabel>Eligibility</SectionLabel>
-          <p className="text-xs text-[var(--color-text-secondary)]">{scheme.eligibilitySummary}</p>
+          {/* Detailed Eligibility & Profile Match Evaluation */}
+          <div>
+            <SectionLabel>Personalized Eligibility Evaluation</SectionLabel>
+            <p className="text-[var(--color-text-secondary)] mb-2">{scheme.eligibilitySummary}</p>
+            <div className="p-3 bg-[var(--color-surface-2)] rounded-lg space-y-1.5 border border-[var(--color-border)]">
+              {eligibility.passedCriteria.map((c, i) => (
+                <div key={i} className="flex items-start gap-1.5 text-emerald-800 text-[11px]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                  <span>{c}</span>
+                </div>
+              ))}
+              {eligibility.warnings.map((w, i) => (
+                <div key={i} className="flex items-start gap-1.5 text-amber-800 text-[11px]">
+                  <AlertCircle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <span>{w}</span>
+                </div>
+              ))}
+              {eligibility.failedCriteria.map((f, i) => (
+                <div key={i} className="flex items-start gap-1.5 text-red-800 text-[11px]">
+                  <AlertCircle className="w-3.5 h-3.5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <span>{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {/* Benefits */}
-          <SectionLabel>Benefits</SectionLabel>
-          <p className="text-xs text-[var(--color-text-secondary)]">{scheme.benefits}</p>
+          {/* Financial Assistance & Benefits */}
+          <div>
+            <SectionLabel>Financial Assistance & Benefits</SectionLabel>
+            <p className="text-[var(--color-text-secondary)] leading-relaxed">{scheme.benefits}</p>
+            {scheme.financialAssistance && (
+              <p className="text-[11px] text-[var(--color-text-muted)] mt-1">
+                <strong>Funding Mechanism:</strong> {scheme.financialAssistance}
+              </p>
+            )}
+          </div>
 
           {/* Key Features */}
           {scheme.keyFeatures && scheme.keyFeatures.length > 0 && (
-            <>
-              <SectionLabel>Key Features</SectionLabel>
-              <div className="space-y-1">
+            <div>
+              <SectionLabel>Key Highlights</SectionLabel>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {scheme.keyFeatures.map((f, i) => (
-                  <p key={i} className="text-xs text-[var(--color-text-secondary)] pl-2">
-                    {f}
-                  </p>
+                  <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-secondary)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 flex-shrink-0" />
+                    <span>{f}</span>
+                  </div>
                 ))}
               </div>
-            </>
+            </div>
           )}
 
-          {/* Activity Timeline */}
+          {/* Activity Timeline Calendar */}
           {scheme.timeline && scheme.timeline.length > 0 && (
-            <>
-              <SectionLabel>Activity Timeline</SectionLabel>
+            <div>
+              <SectionLabel>Seasonal Activity Timeline</SectionLabel>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr>
-                      <th className="text-left text-[var(--color-text-muted)] font-semibold pr-4 pb-1 w-36">Period</th>
-                      <th className="text-left text-[var(--color-text-muted)] font-semibold pb-1">Activity</th>
+                    <tr className="border-b border-[var(--color-border)]">
+                      <th className="text-left text-[var(--color-text-muted)] font-semibold pb-1.5 w-40">Period / Month</th>
+                      <th className="text-left text-[var(--color-text-muted)] font-semibold pb-1.5">Scheduled Activity</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {scheme.timeline.map((t, i) => (
+                  <tbody className="divide-y divide-[var(--color-border)]">
+                    {scheme.timeline.map((tItem, i) => (
                       <tr key={i}>
-                        <td className="pr-4 py-0.5 text-[var(--color-text-muted)] align-top font-medium">{t.activityMonth}</td>
-                        <td className="py-0.5 text-[var(--color-text-secondary)] align-top">{t.activity}</td>
+                        <td className="py-1.5 font-medium text-[var(--color-text-primary)] align-top">{tItem.activityMonth}</td>
+                        <td className="py-1.5 text-[var(--color-text-secondary)] align-top">{tItem.activity}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            </>
+            </div>
           )}
 
-          {/* Seed Plantation Info */}
-          {scheme.seedInfo && scheme.seedInfo.length > 0 && (
-            <>
-              <SectionLabel>Seed Plantation Details</SectionLabel>
-              <div className="space-y-4">
-                {scheme.seedInfo.map((si, i) => (
-                  <div key={i}>
-                    <p className="text-xs font-semibold text-[var(--color-text-primary)] mb-1.5">{si.cropName}</p>
-                    <div className="space-y-1">
-                      <Row label="Varieties" value={si.recommendedVarieties.join(', ')} />
-                      <Row label="Seed Rate" value={si.seedRateKgPerHectare + ' kg/ha'} />
-                      <Row label="Sowing Depth" value={si.sowingDepthCm + ' cm'} />
-                      <Row label="Spacing" value={si.spacingCm} />
-                      <Row label="Germination" value={si.germinationDays} />
-                      <Row label="Seed Treatment" value={si.seedTreatment} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {/* Required Documents */}
-          <SectionLabel>Required Documents</SectionLabel>
-          <div className="space-y-0.5">
-            {scheme.documents.map((doc, i) => (
-              <p key={i} className="text-xs text-[var(--color-text-secondary)] pl-2">
-                {doc}
-              </p>
-            ))}
+          {/* Step-by-Step Application Procedures */}
+          <div>
+            <SectionLabel>Official Application Procedure</SectionLabel>
+            <div className="space-y-1.5">
+              {scheme.applicationSteps.map((step, i) => (
+                <div key={i} className="flex items-start gap-2 text-[var(--color-text-secondary)]">
+                  <span className="font-bold text-[var(--color-primary-800)] w-4 flex-shrink-0">
+                    {i + 1}.
+                  </span>
+                  <span>{step}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Application Steps without circular box containers */}
-          <SectionLabel>Application Steps</SectionLabel>
-          <div className="space-y-1.5">
-            {scheme.applicationSteps.map((step, i) => (
-              <div key={i} className="flex items-start gap-1.5 text-xs text-[var(--color-text-secondary)]">
-                <span className="font-semibold text-[var(--color-text-muted)] w-4 flex-shrink-0">
-                  {i + 1}.
-                </span>
-                <span>{step}</span>
-              </div>
-            ))}
+          {/* Mandatory Documents Checklist */}
+          <div>
+            <SectionLabel>Required Documents Checklist</SectionLabel>
+            <div className="space-y-1.5">
+              {scheme.documents.map((doc, i) => (
+                <button
+                  key={i}
+                  onClick={() => onToggle(doc)}
+                  className="w-full flex items-center gap-2 text-xs text-left text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+                >
+                  {checklist.includes(doc) ? (
+                    <CheckSquare className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  ) : (
+                    <Square className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0" />
+                  )}
+                  <span>{doc}</span>
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-[var(--color-text-muted)] mt-1">Checklist items are saved locally in your browser.</p>
           </div>
 
-          {/* My Checklist */}
-          <SectionLabel>My Document Checklist</SectionLabel>
-          <div className="space-y-1.5">
-            {scheme.documents.map((doc, i) => (
-              <button
-                key={i}
-                onClick={() => onToggle(doc)}
-                className="w-full flex items-center gap-2 text-xs text-left text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+          {/* Implementing Department & Authoritative Source */}
+          <div className="pt-3 border-t border-[var(--color-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[11px] text-[var(--color-text-muted)]">
+            <div>
+              <span className="block font-medium text-[var(--color-text-secondary)]">
+                Department: {scheme.implementingDepartment}
+              </span>
+              <span>Last Verified Date: {scheme.lastVerifiedDate}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <a
+                href={scheme.officialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-bold text-emerald-700 hover:text-emerald-900 transition-colors"
               >
-                {checklist.includes(doc)
-                  ? <CheckSquare className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  : <Square className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0" />}
-                {doc}
-              </button>
-            ))}
-          </div>
-          <p className="text-[10px] text-[var(--color-text-muted)] mt-1">Checklist saved locally in your browser.</p>
-
-          {/* Footer */}
-          <div className="flex items-center justify-between mt-3 pt-2">
-            <p className="text-[10px] text-[var(--color-text-muted)]">Last verified: {scheme.lastVerifiedDate}</p>
-            <a
-              href={scheme.officialUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] hover:underline font-semibold"
-            >
-              Official website <ExternalLink className="w-3 h-3" />
-            </a>
+                Official Scheme Portal <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </div>
       )}
@@ -230,63 +315,128 @@ function SchemeCard({ scheme, checklist, onToggle }: { scheme: Scheme; checklist
 }
 
 export default function SchemesPage() {
+  const { t, profile } = useApp();
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [levelFilter, setLevelFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [onlyEligible, setOnlyEligible] = useState(false);
   const { checklists, toggleItem } = useSchemeChecklists();
 
-  const filtered = searchSchemes(query, levelFilter || undefined, categoryFilter || undefined);
+  // Evaluate eligibility for all schemes based on current farmer profile
+  const filtered = useMemo(() => {
+    let result = searchSchemes(
+      query,
+      levelFilter || undefined,
+      categoryFilter || undefined,
+      profile.state || undefined
+    );
+
+    if (onlyEligible) {
+      result = result.filter(s => evaluateEligibility(profile, s).isEligible);
+    }
+
+    return result;
+  }, [query, levelFilter, categoryFilter, onlyEligible, profile]);
+
+  function handleApply(schemeId: string) {
+    navigate(`/applications?apply=${schemeId}`);
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <PageHeader title="Government Schemes" subtitle="Central and state-level schemes for farmers" />
+      <PageHeader
+        title={t('schemes.title')}
+        subtitle={t('schemes.subtitle')}
+      />
 
       <InfoBanner variant="warning">
         <div className="flex gap-2">
           <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <span className="text-xs">
-            <strong>Guidance only.</strong> Scheme information is for reference and does not constitute official eligibility determination or approval.
-            Eligibility criteria and benefits may change. Always verify with the official website or your local agriculture/government office before applying.
+            <strong>Authoritative Source Advisory:</strong> All scheme criteria, subsidy calculations, and official links are compiled directly from central and state ministries (Ministry of Agriculture & Farmers Welfare, PM-KISAN, PMFBY, ICAR, TNAU, and State Portals). Always confirm latest seasonal operational guidelines before applying.
           </span>
         </div>
       </InfoBanner>
 
+      {/* Filters Bar */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <SearchInput value={query} onChange={e => setQuery(e.target.value)} placeholder="Search schemes, crops, varieties..." className="flex-1" />
+        <SearchInput
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder={t('schemes.searchPlaceholder')}
+          className="flex-1"
+        />
         <select
           value={levelFilter}
           onChange={e => setLevelFilter(e.target.value)}
-          className="px-3 py-2 text-sm border border-[var(--color-border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          aria-label="Filter by level"
         >
-          <option value="">All Levels</option>
-          <option value="central">Central</option>
-          <option value="state">State</option>
+          <option value="">All Levels (Central & State)</option>
+          <option value="central">Central Government Only</option>
+          <option value="state">State Specific ({profile.state.toUpperCase()})</option>
         </select>
         <select
           value={categoryFilter}
           onChange={e => setCategoryFilter(e.target.value)}
-          className="px-3 py-2 text-sm border border-[var(--color-border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          aria-label="Filter by category"
         >
           <option value="">All Categories</option>
-          {['insurance', 'credit', 'subsidy', 'income_support', 'irrigation', 'mechanisation', 'market', 'organic', 'seed'].map(c => (
-            <option key={c} value={c}>{c.replace(/_/g, ' ')}</option>
-          ))}
+          <option value="income_support">Income Support</option>
+          <option value="insurance">Crop Insurance</option>
+          <option value="credit">Credit & Loans</option>
+          <option value="irrigation">Micro Irrigation</option>
+          <option value="mechanisation">Agricultural Machinery</option>
+          <option value="organic_farming">Organic & Natural Farming</option>
+          <option value="horticulture">Horticulture & Orchards</option>
+          <option value="livestock">Livestock & Dairy</option>
+          <option value="fisheries">Fisheries & Aquaculture</option>
+          <option value="pension">Farmer Pension</option>
+          <option value="solar_energy">Solar Pumps (PM-KUSUM)</option>
+          <option value="disaster_relief">Disaster Relief</option>
+          <option value="soil_health">Soil Health</option>
+          <option value="subsidy">Direct Subsidies</option>
         </select>
+        <button
+          onClick={() => setOnlyEligible(v => !v)}
+          className={`px-3 py-2 text-xs font-semibold rounded-lg border transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+            onlyEligible
+              ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+              : 'bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] hover:bg-[var(--color-surface-2)]'
+          }`}
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          My Eligible Schemes Only
+        </button>
       </div>
 
-      <p className="text-xs text-[var(--color-text-muted)]">{filtered.length} scheme{filtered.length !== 1 ? 's' : ''} found</p>
+      <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)]">
+        <span>Showing {filtered.length} welfare scheme{filtered.length !== 1 ? 's' : ''} for {profile.displayName} ({profile.state.toUpperCase()})</span>
+        <span>Profile Landholding: {profile.landArea} {profile.landAreaUnit}</span>
+      </div>
 
+      {/* Schemes List */}
       <div className="space-y-4">
-        {filtered.map(scheme => (
-          <SchemeCard
-            key={scheme.id}
-            scheme={scheme}
-            checklist={checklists[scheme.id] ?? []}
-            onToggle={item => toggleItem(scheme.id, item)}
-          />
-        ))}
+        {filtered.map(scheme => {
+          const eligibility = evaluateEligibility(profile, scheme);
+          return (
+            <SchemeCard
+              key={scheme.id}
+              scheme={scheme}
+              eligibility={eligibility}
+              checklist={checklists[scheme.id] ?? []}
+              onToggle={item => toggleItem(scheme.id, item)}
+              onApply={handleApply}
+            />
+          );
+        })}
+
         {filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-[var(--color-text-muted)]">No schemes match your search.</div>
+          <div className="py-12 text-center text-sm text-[var(--color-text-muted)]">
+            No government schemes match your filter criteria. Try resetting filters.
+          </div>
         )}
       </div>
     </div>

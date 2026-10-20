@@ -22,27 +22,27 @@
   --color-accent-500: #22c55e;
   --color-accent-600: #16a34a;
 
-  /* Neutral surfaces */
+  /* Neutral & Light Green surfaces */
   --color-surface-0: #ffffff;
-  --color-surface-1: #f8fafc;
-  --color-surface-2: #f1f5f9;
-  --color-surface-3: #e2e8f0;
+  --color-surface-1: #fbfdfb;
+  --color-surface-2: #f0fdf4;
+  --color-surface-3: #e5e7eb;
 
-  /* Text - Crisp Dark Slate & Black */
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #334155;
-  --color-text-muted: #64748b;
+  /* Text - Crisp Pure Black (Zero Dark Blue / Slate) */
+  --color-text-primary: #000000;
+  --color-text-secondary: #171717;
+  --color-text-muted: #525252;
   --color-text-inverse: #ffffff;
 
   /* Status */
   --color-success: #16a34a;
-  --color-warning: #334155;
-  --color-error: #0f172a;
+  --color-warning: #000000;
+  --color-error: #000000;
   --color-info: #16a34a;
 
   /* Border */
-  --color-border: #e2e8f0;
-  --color-border-strong: #cbd5e1;
+  --color-border: #e5e7eb;
+  --color-border-strong: #d4d4d4;
 
   /* Sidebar */
   --sidebar-width: 256px;
