@@ -64,9 +64,11 @@ export default function Sidebar() {
       className="flex flex-col h-full bg-white overflow-y-auto"
       aria-label="Main navigation"
     >
-      {/* Logo without container box */}
-      <div className="flex items-center gap-2.5 px-5 py-5">
-        <Sprout className="w-5 h-5 text-[var(--color-primary-600)]" strokeWidth={2.5} />
+      {/* Logo */}
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-[var(--color-border)]">
+        <div className="w-8 h-8 rounded-lg bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] flex items-center justify-center text-[var(--color-primary-600)] shrink-0">
+          <Sprout className="w-5 h-5" strokeWidth={2.5} />
+        </div>
         <div>
           <span className="text-sm font-bold text-[var(--color-text-primary)] tracking-tight">AgriSense</span>
           <p className="text-[10px] text-[var(--color-text-muted)] leading-none mt-0.5">Indian Farmers Platform</p>
@@ -74,10 +76,10 @@ export default function Sidebar() {
       </div>
 
       {/* Nav groups */}
-      <div className="flex-1 px-3 py-2 space-y-5">
+      <div className="flex-1 px-3 py-3 space-y-5">
         {NAV_GROUPS.map(group => (
           <div key={group.sectionKey}>
-            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+            <p className="px-3 mb-1 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
               {t(group.sectionKey)}
             </p>
             <ul className="space-y-0.5">
@@ -101,9 +103,9 @@ export default function Sidebar() {
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-3">
+      <div className="px-5 py-3 border-t border-[var(--color-border)] bg-[var(--color-surface-1)]">
         <p className="text-[10px] text-[var(--color-text-muted)]">
-          Demo prototype — all data is illustrative
+          Demo prototype — verified MoA&FW guidelines
         </p>
       </div>
     </nav>

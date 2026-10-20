@@ -82,13 +82,13 @@ export default function ApplicationsPage() {
   }
 
   const statusColors: Record<ApplicationStatus, { bg: string; text: string; border: string }> = {
-    submitted: { bg: 'bg-[var(--color-primary-50)]', text: 'text-black', border: 'border-[var(--color-primary-200)]' },
-    under_verification: { bg: 'bg-amber-50', text: 'text-black', border: 'border-amber-200' },
-    field_inspected: { bg: 'bg-[var(--color-primary-100)]', text: 'text-black', border: 'border-[var(--color-primary-300)]' },
-    district_approved: { bg: 'bg-emerald-50', text: 'text-black', border: 'border-emerald-200' },
-    sanctioned: { bg: 'bg-[var(--color-primary-100)]', text: 'text-black', border: 'border-[var(--color-primary-300)]' },
-    dbt_disbursed: { bg: 'bg-[var(--color-primary-200)]', text: 'text-black', border: 'border-[var(--color-primary-400)]' },
-    rejected: { bg: 'bg-red-50', text: 'text-black', border: 'border-red-200' },
+    submitted: { bg: 'bg-sky-50', text: 'text-sky-800', border: 'border-sky-200' },
+    under_verification: { bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200' },
+    field_inspected: { bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-200' },
+    district_approved: { bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200' },
+    sanctioned: { bg: 'bg-purple-50', text: 'text-purple-800', border: 'border-purple-200' },
+    dbt_disbursed: { bg: 'bg-emerald-100', text: 'text-emerald-900', border: 'border-emerald-300' },
+    rejected: { bg: 'bg-red-50', text: 'text-red-800', border: 'border-red-200' },
   };
 
   return (
@@ -136,7 +136,7 @@ export default function ApplicationsPage() {
                 placeholder={t('applications.trackStatus')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+                className="w-full px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] transition-all"
               />
             </div>
 
@@ -149,17 +149,17 @@ export default function ApplicationsPage() {
                   <div
                     key={app.id}
                     onClick={() => setSelectedAppId(app.id)}
-                    className={`p-3.5 rounded-lg border cursor-pointer transition-all ${
+                    className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-[var(--color-primary-600)] bg-[var(--color-primary-50)] shadow-sm'
-                        : 'border-[var(--color-border)] bg-white hover:bg-[var(--color-surface-1)]'
+                        ? 'border-emerald-500 bg-emerald-50/50 shadow-xs ring-1 ring-emerald-500'
+                        : 'border-[var(--color-border)] bg-white hover:bg-[var(--color-surface-1)] hover:border-[var(--color-primary-300)] shadow-xs'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <span className="font-mono text-xs font-bold text-[var(--color-text-primary)]">
                         {app.id}
                       </span>
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
                         {app.status.replace(/_/g, ' ').toUpperCase()}
                       </span>
                     </div>

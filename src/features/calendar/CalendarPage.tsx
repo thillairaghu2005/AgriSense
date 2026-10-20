@@ -351,7 +351,7 @@ export default function CalendarPage() {
               <button
                 type="button"
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-md text-xs font-medium transition-colors ${
+                className={`p-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                   viewMode === 'list'
                     ? 'bg-white shadow-xs text-[var(--color-text-primary)]'
                     : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
@@ -363,7 +363,7 @@ export default function CalendarPage() {
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-md text-xs font-medium transition-colors ${
+                className={`p-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                   viewMode === 'grid'
                     ? 'bg-white shadow-xs text-[var(--color-text-primary)]'
                     : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
@@ -387,15 +387,17 @@ export default function CalendarPage() {
       />
 
       {/* 1-Click Crop Schedule Generator Bar */}
-      <Card className="p-4 bg-[var(--color-primary-50)] border border-[var(--color-primary-200)]">
+      <Card className="p-4 bg-emerald-50/80 border border-emerald-200 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <Sparkles className="w-5 h-5 text-[var(--color-primary-700)] flex-shrink-0" />
+            <div className="w-8 h-8 rounded-lg bg-emerald-100 border border-emerald-300 flex items-center justify-center shrink-0">
+              <Sparkles className="w-4 h-4 text-emerald-700" />
+            </div>
             <div>
-              <h3 className="text-xs font-bold text-[var(--color-primary-900)] uppercase tracking-wide">
+              <h3 className="text-xs font-bold text-emerald-950 uppercase tracking-wide">
                 Auto-Generate Crop Stage Schedule
               </h3>
-              <p className="text-[11px] text-[var(--color-primary-800)] mt-0.5">
+              <p className="text-[11px] text-emerald-800 mt-0.5 font-medium">
                 Automatically populates ICAR growth-stage tasks from sowing to harvest.
               </p>
             </div>
@@ -405,7 +407,7 @@ export default function CalendarPage() {
             <select
               value={templateCrop}
               onChange={e => setTemplateCrop(e.target.value)}
-              className="text-xs px-3 py-1.5 rounded-md border border-[var(--color-border)] bg-white text-[var(--color-text-primary)] outline-none"
+              className="text-xs px-3 py-1.5 rounded-lg border border-[var(--color-border)] bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:ring-2 focus:ring-[var(--color-primary-600)] outline-none cursor-pointer transition-all"
             >
               <option value="">Select Crop Template…</option>
               {CROPS.map(c => (
@@ -428,7 +430,7 @@ export default function CalendarPage() {
 
       {/* Filters & Status Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-lg w-fit">
+        <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-lg w-fit border border-[var(--color-border)]">
           {[
             { id: 'all', label: 'All Tasks', count: tasks.length },
             { id: 'pending', label: 'Pending', count: tasks.filter(t => t.status === 'pending' && !isOverdue(t.dueDate)).length },
@@ -438,14 +440,14 @@ export default function CalendarPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1.5 ${
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === tab.id
-                  ? 'bg-white text-[var(--color-text-primary)] shadow-xs'
+                  ? 'bg-white text-[var(--color-text-primary)] shadow-xs font-bold'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
               <span>{tab.label}</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--color-surface-3)] text-[var(--color-text-primary)]">
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--color-surface-3)] text-[var(--color-text-primary)] font-bold">
                 {tab.count}
               </span>
             </button>

@@ -181,7 +181,7 @@ export default function AssistantPage() {
       </div>
 
       {/* Chat Messages Container */}
-      <Card className="flex-1 overflow-y-auto p-4 space-y-4 mb-3 bg-[var(--color-surface-1)]">
+      <Card className="flex-1 overflow-y-auto p-4 space-y-4 mb-3 bg-white border border-[var(--color-border)] shadow-xs">
         {messages.map(msg => (
           <div
             key={msg.id}
@@ -189,24 +189,32 @@ export default function AssistantPage() {
               msg.role === 'user' ? 'ml-auto flex-row-reverse' : ''
             }`}
           >
-            <div className="flex-shrink-0 mt-1">
-              {msg.role === 'user' ? <User className="w-5 h-5 text-neutral-700" /> : <Bot className="w-5 h-5 text-[var(--color-primary-600)]" />}
+            <div className="flex-shrink-0 mt-0.5">
+              {msg.role === 'user' ? (
+                <div className="w-7 h-7 rounded-full bg-[var(--color-primary-100)] border border-[var(--color-primary-300)] flex items-center justify-center text-[var(--color-primary-800)] shadow-xs">
+                  <User className="w-4 h-4" />
+                </div>
+              ) : (
+                <div className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[var(--color-primary-600)] shadow-xs">
+                  <Bot className="w-4 h-4" />
+                </div>
+              )}
             </div>
 
             <div
               className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-[var(--color-primary-700)] text-white rounded-tr-none'
-                  : 'bg-white text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs rounded-tl-none'
+                  ? 'bg-[var(--color-primary-700)] text-white shadow-xs rounded-tr-none'
+                  : 'bg-[var(--color-surface-1)] text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs rounded-tl-none'
               }`}
             >
               <p>{msg.content}</p>
               <div
-                className={`flex items-center justify-between gap-2 mt-2 pt-1 text-[10px] ${
+                className={`flex items-center justify-between gap-2 mt-2 pt-1 border-t ${
                   msg.role === 'user'
-                    ? 'text-white/80'
-                    : 'text-[var(--color-text-muted)]'
-                }`}
+                    ? 'border-white/20 text-white/80'
+                    : 'border-[var(--color-border)] text-[var(--color-text-muted)]'
+                } text-[10px]`}
               >
                 <span>
                   {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -214,7 +222,7 @@ export default function AssistantPage() {
                 {msg.role === 'assistant' && (
                   <button
                     onClick={() => speakMessage(msg.id, msg.content)}
-                    className="inline-flex items-center gap-1 hover:text-[var(--color-primary-700)] transition-colors p-0.5"
+                    className="inline-flex items-center gap-1 hover:text-[var(--color-primary-700)] transition-colors p-0.5 cursor-pointer"
                     aria-label="Listen to message audio"
                     title="Listen to response"
                   >
@@ -229,9 +237,11 @@ export default function AssistantPage() {
 
         {isTyping && (
           <div className="flex gap-3 max-w-xs">
-            <Bot className="w-5 h-5 text-[var(--color-primary-600)] flex-shrink-0 mt-1" />
-            <div className="bg-white border border-[var(--color-border)] p-3 rounded-2xl rounded-tl-none text-xs text-[var(--color-text-muted)] flex items-center">
-              <span className="text-[11px] text-neutral-600">Preparing agricultural guidance…</span>
+            <div className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[var(--color-primary-600)] shadow-xs shrink-0 mt-0.5">
+              <Bot className="w-4 h-4" />
+            </div>
+            <div className="bg-[var(--color-surface-1)] border border-[var(--color-border)] p-3 rounded-2xl rounded-tl-none text-xs text-[var(--color-text-muted)] flex items-center shadow-xs">
+              <span className="text-[11px] text-[var(--color-text-secondary)] font-medium">Preparing agricultural guidance…</span>
             </div>
           </div>
         )}
@@ -244,7 +254,7 @@ export default function AssistantPage() {
           <button
             key={s}
             onClick={() => sendMessage(s)}
-            className="text-[11px] px-3 py-1.5 rounded-full bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-50)] hover:text-[var(--color-primary-800)] hover:border-[var(--color-primary-300)] whitespace-nowrap transition-colors flex items-center gap-1 flex-shrink-0"
+            className="text-[11px] px-3.5 py-1.5 rounded-full bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-emerald-50 hover:text-[var(--color-primary-800)] hover:border-emerald-300 shadow-xs whitespace-nowrap transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer"
           >
             <Sparkles className="w-3 h-3 text-[var(--color-primary-600)]" />
             <span>{s}</span>
@@ -253,14 +263,14 @@ export default function AssistantPage() {
       </div>
 
       {/* Input Bar with Voice Microphone */}
-      <div className="flex items-center gap-2 bg-white p-2 border border-[var(--color-border)] rounded-2xl shadow-sm">
+      <div className="flex items-center gap-2 bg-white p-2 border border-[var(--color-border)] rounded-2xl shadow-sm focus-within:border-[var(--color-primary-500)] focus-within:ring-2 focus-within:ring-[var(--color-primary-100)] transition-all">
         <button
           type="button"
           onClick={toggleSpeechRecognition}
-          className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all ${
+          className={`flex items-center justify-center w-10 h-10 rounded-xl cursor-pointer transition-all ${
             isListening
-              ? 'bg-[var(--color-primary-600)] text-white'
-              : 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-3)]'
+              ? 'bg-[var(--color-primary-600)] text-white shadow-xs'
+              : 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-3)] hover:text-[var(--color-text-primary)]'
           }`}
           aria-label={isListening ? 'Stop listening' : 'Start speaking'}
           title={isListening ? 'Listening… click to stop' : 'Speak your question'}

@@ -74,7 +74,7 @@ export default function SeedDistributionPage() {
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setActiveTab('catalog')}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'catalog'
                   ? 'bg-white text-emerald-950 shadow-sm'
                   : 'bg-emerald-800/60 text-white hover:bg-emerald-800'
@@ -84,7 +84,7 @@ export default function SeedDistributionPage() {
             </button>
             <button
               onClick={() => setActiveTab('farms')}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'farms'
                   ? 'bg-white text-emerald-950 shadow-sm'
                   : 'bg-emerald-800/60 text-white hover:bg-emerald-800'
@@ -109,7 +109,7 @@ export default function SeedDistributionPage() {
             <select
               value={seasonFilter}
               onChange={e => setSeasonFilter(e.target.value)}
-              className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+              className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
               aria-label="Filter by season"
             >
               <option value="">All Seasons</option>
@@ -120,7 +120,7 @@ export default function SeedDistributionPage() {
             <select
               value={cropFilter}
               onChange={e => setCropFilter(e.target.value)}
-              className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+              className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
               aria-label="Filter by crop"
             >
               <option value="">All Crop Types</option>
@@ -145,14 +145,14 @@ export default function SeedDistributionPage() {
                   <div>
                     {/* Top Tag Row */}
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--color-primary-50)] text-[var(--color-primary-800)] border border-[var(--color-primary-200)]">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
                           {variety.seedType} Seed
                         </span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
                           {variety.recommendedSeason.map(s => s.toUpperCase()).join(' / ')}
                         </span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                           {variety.subsidyPercentage}% NFSM Subsidy
                         </span>
                       </div>

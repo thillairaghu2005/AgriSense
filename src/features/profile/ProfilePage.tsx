@@ -310,8 +310,10 @@ export default function ProfilePage() {
       {/* Confirmation Modal for Resetting Demo Data */}
       {confirmResetOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
-            <AlertTriangle className="w-10 h-10 text-neutral-800 mx-auto" />
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-[var(--color-border)] space-y-4">
+            <div className="w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
 
             <div className="text-center space-y-2">
               <h3 className="text-base font-bold text-[var(--color-text-primary)]">
@@ -333,7 +335,7 @@ export default function ProfilePage() {
               </Button>
               <Button
                 type="button"
-                variant="primary"
+                variant="danger"
                 size="sm"
                 onClick={handleResetAll}
               >

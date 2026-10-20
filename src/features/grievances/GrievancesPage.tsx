@@ -138,12 +138,12 @@ export default function GrievancesPage() {
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold border ${
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
                         isResolved
                           ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                           : isInProgress
                           ? 'bg-amber-50 text-amber-800 border-amber-200'
-                          : 'bg-[var(--color-primary-50)] text-black border-[var(--color-primary-200)]'
+                          : 'bg-sky-50 text-sky-800 border-sky-200'
                       }`}>
                         {ticket.status.replace(/_/g, ' ').toUpperCase()}
                       </span>

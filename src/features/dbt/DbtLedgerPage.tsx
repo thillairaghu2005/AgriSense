@@ -67,7 +67,7 @@ export default function DbtLedgerPage() {
       {/* KPI Stats Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[var(--color-primary-50)] text-[var(--color-primary-700)]">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center shrink-0 shadow-xs">
             <CreditCard className="w-6 h-6" />
           </div>
           <div>
@@ -81,7 +81,7 @@ export default function DbtLedgerPage() {
         </Card>
 
         <Card className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[var(--color-primary-50)] text-[var(--color-primary-700)]">
+          <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-200 text-sky-700 flex items-center justify-center shrink-0 shadow-xs">
             <Building className="w-6 h-6" />
           </div>
           <div>
@@ -95,7 +95,7 @@ export default function DbtLedgerPage() {
         </Card>
 
         <Card className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[var(--color-primary-50)] text-[var(--color-primary-700)]">
+          <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200 text-teal-700 flex items-center justify-center shrink-0 shadow-xs">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
@@ -120,7 +120,7 @@ export default function DbtLedgerPage() {
         <select
           value={schemeFilter}
           onChange={e => setSchemeFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
         >
           <option value="">All Schemes</option>
           <option value="PM-KISAN">PM-KISAN</option>
@@ -135,7 +135,7 @@ export default function DbtLedgerPage() {
         <select
           value={stateFilter}
           onChange={e => setStateFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
         >
           <option value="">All States</option>
           <option value="tn">Tamil Nadu</option>
@@ -147,10 +147,10 @@ export default function DbtLedgerPage() {
       </div>
 
       {/* Ledger Table */}
-      <Card className="overflow-hidden p-0 border border-[var(--color-border)]">
+      <Card className="overflow-hidden p-0 border border-[var(--color-border)] shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-[var(--color-surface-1)] border-b border-[var(--color-border)] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider text-[10px]">
+            <thead className="bg-[var(--color-surface-2)] border-b border-[var(--color-border)] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="px-4 py-3">Beneficiary & Village</th>
                 <th className="px-4 py-3">Scheme & Installment</th>

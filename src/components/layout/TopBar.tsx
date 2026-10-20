@@ -79,8 +79,10 @@ export default function TopBar() {
         <div className="flex-1" />
 
         {/* Role Selector Pill */}
-        <div className="flex items-center gap-1.5 bg-[var(--color-surface-2)] px-2.5 py-1 rounded-full border border-[var(--color-border)]">
-          <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-primary-600)] shrink-0" />
+        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-[var(--color-border)] shadow-xs">
+          <div className="w-5 h-5 rounded-md bg-[var(--color-primary-50)] text-[var(--color-primary-700)] flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-3.5 h-3.5" />
+          </div>
           <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-text-muted)] hidden xl:inline">Role:</span>
           <select
             value={role}
@@ -101,7 +103,7 @@ export default function TopBar() {
           <select
             value={state}
             onChange={e => { setState(e.target.value); setDistrict(''); }}
-            className="text-xs border border-[var(--color-border)] rounded-md px-2.5 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
+            className="text-xs border border-[var(--color-border)] rounded-lg px-2.5 py-1.5 bg-white text-[var(--color-text-primary)] font-medium cursor-pointer shadow-xs focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
             aria-label="Select state"
           >
             {STATES.map(s => (
@@ -111,7 +113,7 @@ export default function TopBar() {
           <select
             value={district}
             onChange={e => setDistrict(e.target.value)}
-            className="text-xs border border-[var(--color-border)] rounded-md px-2.5 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
+            className="text-xs border border-[var(--color-border)] rounded-lg px-2.5 py-1.5 bg-white text-[var(--color-text-primary)] font-medium cursor-pointer shadow-xs focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
             aria-label="Select district"
           >
             <option value="">All Districts</option>
@@ -125,7 +127,7 @@ export default function TopBar() {
         <select
           value={language}
           onChange={e => setLanguage(e.target.value)}
-          className="text-xs border border-[var(--color-border)] rounded-md px-2 py-1.5 bg-white text-[var(--color-text-secondary)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
+          className="text-xs border border-[var(--color-border)] rounded-lg px-2.5 py-1.5 bg-white text-[var(--color-text-primary)] font-medium cursor-pointer shadow-xs focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)]"
           aria-label="Select language"
         >
           {LANGUAGES.map(l => (
@@ -136,16 +138,16 @@ export default function TopBar() {
         {/* Search button */}
         <button
           onClick={() => setSearchOpen(true)}
-          className="flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
+          className="flex items-center justify-center w-8 h-8 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-primary-800)] hover:bg-[var(--color-surface-2)] border border-transparent hover:border-[var(--color-border)] transition-all cursor-pointer"
           aria-label={t('common.search')}
         >
           <Search className="w-4 h-4" />
         </button>
 
-        {/* Notifications without decorative dot */}
+        {/* Notifications */}
         <button
           onClick={() => navigate('/notifications')}
-          className="flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
+          className="flex items-center justify-center w-8 h-8 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-primary-800)] hover:bg-[var(--color-surface-2)] border border-transparent hover:border-[var(--color-border)] transition-all cursor-pointer"
           aria-label={t('nav.notifications')}
         >
           <Bell className="w-4 h-4" />
@@ -154,7 +156,7 @@ export default function TopBar() {
         {/* Profile */}
         <button
           onClick={() => navigate('/profile')}
-          className="flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
+          className="flex items-center justify-center w-8 h-8 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-primary-800)] hover:bg-[var(--color-surface-2)] border border-transparent hover:border-[var(--color-border)] transition-all cursor-pointer"
           aria-label={t('nav.profile')}
         >
           <User className="w-4 h-4" />

@@ -25,7 +25,7 @@ export default function CropDetailPage() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => navigate('/crops')}
-          className="flex items-center justify-center w-8 h-8 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] transition-colors"
+          className="flex items-center justify-center w-9 h-9 rounded-lg bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-primary-700)] hover:bg-emerald-50 hover:border-emerald-200 transition-colors shadow-xs cursor-pointer"
           aria-label="Back to crop catalogue"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -33,7 +33,7 @@ export default function CropDetailPage() {
         <PageHeader
           title={crop.name}
           subtitle="General crop guidance — conditions vary by region and variety."
-          badge={<Badge>{crop.category.replace('_', ' ')}</Badge>}
+          badge={<Badge variant="blue">{crop.category.replace('_', ' ')}</Badge>}
         />
       </div>
 
@@ -43,26 +43,34 @@ export default function CropDetailPage() {
 
       {/* Overview cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="card text-center">
-          <Clock className="w-5 h-5 text-[var(--color-primary-600)] mx-auto mb-1" />
+        <Card className="text-center p-4">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-2 text-emerald-700 shadow-xs">
+            <Clock className="w-5 h-5" />
+          </div>
           <p className="text-lg font-bold text-[var(--color-text-primary)]">{crop.durationDays[0]}–{crop.durationDays[1]}</p>
-          <p className="text-xs text-[var(--color-text-muted)]">Days to Harvest</p>
-        </div>
-        <div className="card text-center">
-          <Droplets className="w-5 h-5 text-[var(--color-primary-600)] mx-auto mb-1" />
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Days to Harvest</p>
+        </Card>
+        <Card className="text-center p-4">
+          <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center mx-auto mb-2 text-sky-700 shadow-xs">
+            <Droplets className="w-5 h-5" />
+          </div>
           <p className="text-lg font-bold text-[var(--color-text-primary)]">{crop.waterNeedsMmPerSeason[0]}–{crop.waterNeedsMmPerSeason[1]}</p>
-          <p className="text-xs text-[var(--color-text-muted)]">mm Water / Season</p>
-        </div>
-        <div className="card text-center">
-          <Thermometer className="w-5 h-5 text-[var(--color-primary-600)] mx-auto mb-1" />
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">mm Water / Season</p>
+        </Card>
+        <Card className="text-center p-4">
+          <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center mx-auto mb-2 text-amber-700 shadow-xs">
+            <Thermometer className="w-5 h-5" />
+          </div>
           <p className="text-lg font-bold text-[var(--color-text-primary)]">{crop.idealTempCelsius[0]}–{crop.idealTempCelsius[1]}°C</p>
-          <p className="text-xs text-[var(--color-text-muted)]">Ideal Temperature</p>
-        </div>
-        <div className="card text-center">
-          <Layers className="w-5 h-5 text-[var(--color-primary-600)] mx-auto mb-1" />
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Ideal Temperature</p>
+        </Card>
+        <Card className="text-center p-4">
+          <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mx-auto mb-2 text-purple-700 shadow-xs">
+            <Layers className="w-5 h-5" />
+          </div>
           <p className="text-lg font-bold text-[var(--color-text-primary)]">pH {crop.idealPhRange[0]}–{crop.idealPhRange[1]}</p>
-          <p className="text-xs text-[var(--color-text-muted)]">Soil pH Range</p>
-        </div>
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Soil pH Range</p>
+        </Card>
       </div>
 
       {/* Seasons & Soils */}
@@ -71,7 +79,7 @@ export default function CropDetailPage() {
           <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">Seasons</h2>
           <div className="flex gap-2 flex-wrap">
             {crop.seasons.map(s => (
-              <Badge key={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</Badge>
+              <Badge key={s} variant="green">{s.charAt(0).toUpperCase() + s.slice(1)}</Badge>
             ))}
           </div>
         </Card>
@@ -79,7 +87,7 @@ export default function CropDetailPage() {
           <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">Suitable Soils</h2>
           <div className="flex gap-2 flex-wrap">
             {crop.suitableSoils.map(s => (
-              <Badge key={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</Badge>
+              <Badge key={s} variant="neutral">{s.charAt(0).toUpperCase() + s.slice(1)}</Badge>
             ))}
           </div>
         </Card>
@@ -91,13 +99,13 @@ export default function CropDetailPage() {
         <div className="space-y-5">
           {crop.growthStages.map((stage, idx) => (
             <div key={stage.name} className="flex items-start gap-3">
-              <span className="text-xs font-bold text-[var(--color-text-muted)] w-5 flex-shrink-0 mt-0.5">
-                {idx + 1}.
+              <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                {idx + 1}
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">{stage.name}</h3>
-                  <Badge>Day {stage.daysFromSowing}+</Badge>
+                  <Badge variant="purple">Day {stage.daysFromSowing}+</Badge>
                 </div>
                 <p className="text-xs text-[var(--color-text-secondary)] mt-1">{stage.description}</p>
                 {stage.tasks.length > 0 && (

@@ -17,7 +17,7 @@ export function Card({ children, className = '', onClick, ...rest }: CardProps) 
     <div
       {...rest}
       onClick={onClick}
-      className={`card ${clickable ? 'cursor-pointer hover:shadow-md transition-shadow' : ''} ${className}`}
+      className={`card ${clickable ? 'cursor-pointer hover:shadow-md hover:border-[var(--color-primary-400)] transition-all' : ''} ${className}`}
     >
       {children}
     </div>
@@ -29,7 +29,7 @@ interface StatCardProps {
   label: string;
   value: string | number;
   icon?: ReactNode;
-  iconBg?: string; // Kept for backwards compatibility but not used as a box container
+  iconBg?: string; // Kept for backwards compatibility
   trend?: { value: string; positive: boolean };
   subtitle?: string;
   className?: string;
@@ -40,17 +40,17 @@ export function StatCard({ label, value, icon, trend, subtitle, className = '' }
     <div className={`card ${className}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wide truncate">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)] truncate">{value}</p>
-          {subtitle && <p className="mt-0.5 text-xs text-[var(--color-text-muted)] truncate">{subtitle}</p>}
+          <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider truncate">{label}</p>
+          <p className="mt-1.5 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] truncate">{value}</p>
+          {subtitle && <p className="mt-1 text-xs text-[var(--color-text-muted)] truncate">{subtitle}</p>}
           {trend && (
-            <p className={`mt-1 text-xs font-medium ${trend.positive ? 'text-[var(--color-primary-700)]' : 'text-[var(--color-text-secondary)]'}`}>
+            <p className={`mt-1.5 text-xs font-semibold ${trend.positive ? 'text-[var(--color-primary-700)]' : 'text-amber-700'}`}>
               {trend.positive ? '↑' : '↓'} {trend.value}
             </p>
           )}
         </div>
         {icon && (
-          <div className="flex-shrink-0 ml-3 text-[var(--color-primary-600)]">
+          <div className="flex-shrink-0 ml-3 w-10 h-10 rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-primary-200)] flex items-center justify-center text-[var(--color-primary-700)] shadow-xs">
             {icon}
           </div>
         )}
@@ -72,10 +72,10 @@ export function PageHeader({ title, subtitle, actions, badge }: PageHeaderProps)
     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
       <div className="min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <h1 className="text-xl font-bold text-[var(--color-text-primary)]">{title}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">{title}</h1>
           {badge}
         </div>
-        {subtitle && <p className="mt-1 text-sm text-[var(--color-text-muted)]">{subtitle}</p>}
+        {subtitle && <p className="mt-1 text-xs sm:text-sm text-[var(--color-text-muted)] leading-relaxed">{subtitle}</p>}
       </div>
       {actions && <div className="flex items-center gap-2 flex-shrink-0">{actions}</div>}
     </div>
@@ -91,9 +91,20 @@ interface BadgeProps {
   className?: string;
 }
 
-export function Badge({ children, className = '' }: BadgeProps) {
+const BADGE_VARIANT_MAP: Record<BadgeVariant, string> = {
+  green: 'badge-green',
+  amber: 'badge-amber',
+  red: 'badge-red',
+  blue: 'badge-blue',
+  purple: 'badge-purple',
+  gray: 'badge-gray',
+  neutral: 'badge-neutral',
+};
+
+export function Badge({ children, variant = 'green', className = '' }: BadgeProps) {
+  const variantClass = BADGE_VARIANT_MAP[variant] || 'badge-green';
   return (
-    <span className={`badge ${className}`}>
+    <span className={`badge ${variantClass} ${className}`}>
       {children}
     </span>
   );
@@ -121,7 +132,7 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
       {icon && <div className="mb-4 text-[var(--color-text-muted)]">{icon}</div>}
       <h3 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h3>
-      {description && <p className="mt-1.5 text-sm text-[var(--color-text-muted)] max-w-xs">{description}</p>}
+      {description && <p className="mt-1.5 text-xs sm:text-sm text-[var(--color-text-muted)] max-w-sm leading-relaxed">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -131,10 +142,10 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
 export function ErrorState({ message = 'Something went wrong.', onRetry }: { message?: string; onRetry?: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-      <AlertTriangle className="w-8 h-8 text-[var(--color-text-secondary)] mb-3" />
-      <p className="text-sm text-[var(--color-text-secondary)]">{message}</p>
+      <AlertTriangle className="w-8 h-8 text-amber-600 mb-3" />
+      <p className="text-sm font-medium text-[var(--color-text-primary)]">{message}</p>
       {onRetry && (
-        <button onClick={onRetry} className="mt-3 text-sm text-[var(--color-text-primary)] hover:underline font-medium">
+        <button onClick={onRetry} className="mt-3 text-xs font-semibold text-[var(--color-primary-700)] hover:underline">
           Try again
         </button>
       )}
@@ -150,12 +161,14 @@ interface InfoBannerProps {
 }
 
 export function InfoBanner({ children, variant = 'info', className = '' }: InfoBannerProps) {
-  const variantBg = variant === 'success' || variant === 'info'
-    ? 'bg-[var(--color-primary-50)] text-[var(--color-primary-900)] border border-[var(--color-primary-200)]'
-    : 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]';
+  const variantStyles = {
+    success: 'bg-emerald-50 text-emerald-950 border border-emerald-200',
+    info: 'bg-sky-50 text-sky-950 border border-sky-200',
+    warning: 'bg-amber-50 text-amber-950 border border-amber-200',
+  }[variant] || 'bg-sky-50 text-sky-950 border border-sky-200';
 
   return (
-    <div className={`rounded-lg p-3.5 text-xs leading-relaxed ${variantBg} ${className}`}>
+    <div className={`rounded-xl p-3.5 text-xs leading-relaxed shadow-xs ${variantStyles} ${className}`}>
       {children}
     </div>
   );
@@ -176,22 +189,22 @@ interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
   return (
-    <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-lg w-fit" role="tablist">
+    <div className="flex gap-1 p-1 bg-[var(--color-surface-3)] border border-[var(--color-border)] rounded-xl w-fit" role="tablist">
       {tabs.map(tab => (
         <button
           key={tab.key}
           role="tab"
           aria-selected={activeTab === tab.key}
           onClick={() => onTabChange(tab.key)}
-          className={`px-3 py-1.5 text-xs font-medium rounded transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
             activeTab === tab.key
-              ? 'bg-white text-[var(--color-text-primary)] shadow-xs'
-              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+              ? 'bg-white text-[var(--color-text-primary)] shadow-xs border border-[var(--color-border)]'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] border border-transparent'
           }`}
         >
           {tab.label}
           {tab.count !== undefined && (
-            <span className={`text-[10px] px-1.5 py-0.5 rounded ${activeTab === tab.key ? 'bg-[var(--color-surface-3)] text-[var(--color-text-primary)]' : 'bg-transparent text-[var(--color-text-muted)]'}`}>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${activeTab === tab.key ? 'bg-[var(--color-surface-2)] text-[var(--color-primary-800)]' : 'bg-transparent text-[var(--color-text-muted)]'}`}>
               {tab.count}
             </span>
           )}

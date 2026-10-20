@@ -302,9 +302,9 @@ export default function PestsDiseasesPage() {
                   </p>
                 </div>
 
-                <div className="bg-neutral-50 p-2.5 rounded-lg border border-neutral-200 text-xs text-neutral-800 space-y-1">
-                  <p className="font-semibold text-neutral-900">Simulated Observations:</p>
-                  <ul className="list-disc list-inside space-y-0.5 text-[11px] text-neutral-700">
+                <div className="bg-emerald-50/80 p-3 rounded-xl border border-emerald-200 text-xs text-emerald-950 space-y-1 shadow-xs">
+                  <p className="font-semibold text-emerald-900">Simulated Observations:</p>
+                  <ul className="list-disc list-inside space-y-0.5 text-[11px] text-emerald-800">
                     {simulatedResult.observations.map((obs, i) => (
                       <li key={i}>{obs}</li>
                     ))}
@@ -403,15 +403,15 @@ export default function PestsDiseasesPage() {
             return (
               <Card
                 key={item.id}
-                className="transition-all flex flex-col justify-between"
+                className="transition-all flex flex-col justify-between hover:border-[var(--color-primary-400)] shadow-xs"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Badge variant="neutral">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <Badge variant={item.type === 'pest' ? 'amber' : 'purple'}>
                         {item.type === 'pest' ? 'Pest' : 'Disease'}
                       </Badge>
-                      <Badge variant="neutral">
+                      <Badge variant={item.severity === 'high' ? 'red' : item.severity === 'medium' ? 'amber' : 'green'}>
                         Severity: {item.severity.toUpperCase()}
                       </Badge>
                     </div>
@@ -426,7 +426,7 @@ export default function PestsDiseasesPage() {
                     {affectedCrops.map(c => (
                       <span
                         key={c.id}
-                        className="text-[10px] bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] px-1.5 py-0.5 rounded"
+                        className="text-[10px] bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] px-1.5 py-0.5 rounded shadow-xs"
                       >
                         {c.name}
                       </span>

@@ -109,23 +109,23 @@ export default function WeatherPage() {
   const sprayStyles = {
     ideal: {
       label: 'Ideal Spray Window',
-      icon: <ShieldCheck className="w-5 h-5 text-[var(--color-primary-600)] flex-shrink-0" />,
-      bg: 'bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] text-[var(--color-primary-900)]',
+      icon: <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />,
+      bg: 'bg-emerald-50/80 border border-emerald-200 text-emerald-950',
     },
     caution: {
       label: 'Use Caution for Spraying',
-      icon: <AlertTriangle className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
-      bg: 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]',
+      icon: <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />,
+      bg: 'bg-amber-50/80 border border-amber-200 text-amber-950',
     },
     not_recommended: {
       label: 'Spraying Not Recommended',
-      icon: <ShieldAlert className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
-      bg: 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]',
+      icon: <ShieldAlert className="w-5 h-5 text-red-600 flex-shrink-0" />,
+      bg: 'bg-red-50/80 border border-red-200 text-red-950',
     },
   }[weather.spraySuitability] || {
     label: 'Weather Evaluation',
-    icon: <AlertTriangle className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
-    bg: 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]',
+    icon: <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />,
+    bg: 'bg-amber-50/80 border border-amber-200 text-amber-950',
   };
 
   return (
@@ -152,10 +152,10 @@ export default function WeatherPage() {
 
         {/* Live Controls Toolbar */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="inline-flex p-1 bg-[var(--color-surface-2)] rounded-lg text-xs font-medium">
+          <div className="inline-flex p-1 bg-[var(--color-surface-2)] rounded-lg text-xs font-medium border border-[var(--color-border)]">
             <button
               onClick={() => toggleLiveMode(true)}
-              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
+              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer ${
                 isLive
                   ? 'bg-white text-[var(--color-primary-700)] font-semibold shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
@@ -166,7 +166,7 @@ export default function WeatherPage() {
             </button>
             <button
               onClick={() => toggleLiveMode(false)}
-              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
+              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer ${
                 !isLive
                   ? 'bg-white text-[var(--color-primary-700)] font-semibold shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
@@ -218,53 +218,63 @@ export default function WeatherPage() {
       )}
 
       {/* Agricultural Spraying & Field Operation Index */}
-      <div className={`p-4 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${sprayStyles.bg}`}>
+      <div className={`p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${sprayStyles.bg}`}>
         <div className="flex items-start gap-3">
-          {sprayStyles.icon}
+          <div className="p-2 bg-white/80 rounded-lg shadow-xs mt-0.5">
+            {sprayStyles.icon}
+          </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-primary)]">
+              <span className="text-xs font-bold uppercase tracking-wider">
                 Agricultural Field Suitability
               </span>
-              <Badge>{sprayStyles.label}</Badge>
+              <Badge variant={weather.spraySuitability === 'ideal' ? 'green' : weather.spraySuitability === 'caution' ? 'amber' : 'red'}>
+                {sprayStyles.label}
+              </Badge>
             </div>
-            <p className="text-xs text-[var(--color-text-secondary)] mt-1 leading-relaxed">
+            <p className="text-xs mt-1 leading-relaxed opacity-90 font-medium">
               {weather.sprayReason}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs font-medium flex-shrink-0 bg-white px-3 py-1.5 rounded-md shadow-xs border border-neutral-100">
+        <div className="flex items-center gap-2 text-xs font-semibold flex-shrink-0 bg-white px-3.5 py-2 rounded-lg shadow-xs border border-[var(--color-border)] text-[var(--color-text-primary)]">
           <Sprout className="w-4 h-4 text-[var(--color-primary-600)]" />
-          <span>Soil Moisture: <strong className="capitalize">{weather.soilMoistureIndex}</strong></span>
+          <span>Soil Moisture: <strong className="capitalize text-[var(--color-primary-700)]">{weather.soilMoistureIndex}</strong></span>
         </div>
       </div>
 
       {/* Current conditions cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="card text-center">
-          <div className="flex justify-center mb-1">
-            <WeatherIcon condition={weather.forecast[0]?.condition || 'sunny'} className="w-8 h-8 text-[var(--color-primary-600)]" />
+        <Card className="text-center p-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-2 shadow-xs">
+            <WeatherIcon condition={weather.forecast[0]?.condition || 'sunny'} className="w-7 h-7 text-[var(--color-primary-600)]" />
           </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.currentTempC}°C</p>
-          <p className="text-xs text-[var(--color-text-muted)]">{weather.currentCondition}</p>
-        </div>
-        <div className="card text-center">
-          <Droplets className="w-6 h-6 text-[var(--color-primary-600)] mx-auto mb-1" />
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{weather.currentCondition}</p>
+        </Card>
+        <Card className="text-center p-4">
+          <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center mx-auto mb-2 shadow-xs">
+            <Droplets className="w-6 h-6 text-sky-600" />
+          </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.humidity}%</p>
-          <p className="text-xs text-[var(--color-text-muted)]">{t('weather.humidity')}</p>
-        </div>
-        <div className="card text-center">
-          <Wind className="w-6 h-6 text-[var(--color-primary-600)] mx-auto mb-1" />
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{t('weather.humidity')}</p>
+        </Card>
+        <Card className="text-center p-4">
+          <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center mx-auto mb-2 shadow-xs">
+            <Wind className="w-6 h-6 text-teal-600" />
+          </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.windSpeedKmh}</p>
-          <p className="text-xs text-[var(--color-text-muted)]">km/h {t('weather.wind')}</p>
-        </div>
-        <div className="card text-center">
-          <Thermometer className="w-6 h-6 text-[var(--color-primary-600)] mx-auto mb-1" />
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">km/h {t('weather.wind')}</p>
+        </Card>
+        <Card className="text-center p-4">
+          <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto mb-2 shadow-xs">
+            <Thermometer className="w-6 h-6 text-amber-600" />
+          </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">
             {weather.forecast[0]?.maxTempC}° / {weather.forecast[0]?.minTempC}°C
           </p>
-          <p className="text-xs text-[var(--color-text-muted)]">Today High/Low</p>
-        </div>
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Today High/Low</p>
+        </Card>
       </div>
 
       {/* Hourly Trend for Field Operations */}
@@ -276,7 +286,7 @@ export default function WeatherPage() {
           </h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {weather.hourly.map(item => (
-              <div key={item.time} className="flex flex-col items-center p-2.5 rounded-lg bg-[var(--color-surface-1)] text-center">
+              <div key={item.time} className="flex flex-col items-center p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] shadow-xs hover:border-[var(--color-primary-300)] transition-all text-center">
                 <span className="text-[11px] font-semibold text-[var(--color-text-muted)]">{item.time}</span>
                 <div className="my-1.5">
                   <WeatherIcon condition={item.condition} className="w-5 h-5 text-[var(--color-primary-600)]" />
@@ -302,8 +312,8 @@ export default function WeatherPage() {
               onClick={() => setSelectedDay(idx)}
               className={`flex flex-col items-center gap-1.5 p-3 rounded-lg min-w-[84px] transition-all cursor-pointer ${
                 selectedDay === idx
-                  ? 'bg-[var(--color-primary-50)] text-[var(--color-primary-800)] font-semibold border border-[var(--color-primary-200)] shadow-xs'
-                  : 'bg-white text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-1)] border border-transparent'
+                  ? 'bg-emerald-50 text-[var(--color-primary-800)] font-semibold border border-emerald-300 shadow-xs ring-1 ring-emerald-300'
+                  : 'bg-white text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-1)] border border-[var(--color-border)] shadow-xs hover:border-[var(--color-primary-300)]'
               }`}
               aria-pressed={selectedDay === idx}
             >

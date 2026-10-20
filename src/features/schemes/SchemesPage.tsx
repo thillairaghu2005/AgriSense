@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { searchSchemes } from '@/data/schemes';
-import { Card, PageHeader, InfoBanner } from '@/components/ui/Card';
+import { Card, Badge, PageHeader, InfoBanner } from '@/components/ui/Card';
 import { SearchInput } from '@/components/forms/FormComponents';
 import Button from '@/components/ui/Button';
 import { useApp } from '@/app/providers';
@@ -73,23 +73,23 @@ function SchemeCard({
         <div className="flex-1 min-w-0">
           {/* Badge Strip */}
           <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--color-primary-800)] bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] px-2.5 py-0.5 rounded">
+            <Badge variant={scheme.level === 'central' ? 'blue' : 'green'}>
               {levelLabel}
-            </span>
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-secondary)] bg-[var(--color-surface-2)] border border-[var(--color-border)] px-2.5 py-0.5 rounded">
+            </Badge>
+            <Badge variant="neutral">
               {catLabel}
-            </span>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded border flex items-center gap-1 ${matchColor}`}>
+            </Badge>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${matchColor}`}>
               <Sparkles className="w-3 h-3 text-emerald-600" />
               {eligibility.matchScore}% Match
             </span>
             {scheme.isVerified ? (
-              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded flex items-center gap-1">
+              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3" />
                 Verified MoA&FW
               </span>
             ) : (
-              <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
                 Sample
               </span>
             )}
@@ -105,7 +105,7 @@ function SchemeCard({
 
         <button
           onClick={() => setExpanded(e => !e)}
-          className="flex items-center justify-center w-8 h-8 rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] flex-shrink-0"
+          className="flex items-center justify-center w-8 h-8 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)] flex-shrink-0 cursor-pointer transition-colors"
           aria-expanded={expanded}
           aria-label={expanded ? 'Collapse scheme details' : 'Expand scheme details'}
         >
@@ -370,7 +370,7 @@ export default function SchemesPage() {
         <select
           value={levelFilter}
           onChange={e => setLevelFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
           aria-label="Filter by level"
         >
           <option value="">All Levels (Central & State)</option>
@@ -380,7 +380,7 @@ export default function SchemesPage() {
         <select
           value={categoryFilter}
           onChange={e => setCategoryFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)]"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
           aria-label="Filter by category"
         >
           <option value="">All Categories</option>
@@ -401,13 +401,13 @@ export default function SchemesPage() {
         </select>
         <button
           onClick={() => setOnlyEligible(v => !v)}
-          className={`px-3 py-2 text-xs font-semibold rounded-lg border transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+          className={`px-3 py-2 text-xs font-semibold rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
             onlyEligible
               ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-              : 'bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] hover:bg-[var(--color-surface-2)]'
+              : 'bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] shadow-xs hover:bg-[var(--color-surface-2)] hover:border-[var(--color-primary-300)]'
           }`}
         >
-          <Sparkles className="w-3.5 h-3.5" />
+          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
           My Eligible Schemes Only
         </button>
       </div>

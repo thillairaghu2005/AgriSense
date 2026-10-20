@@ -20,11 +20,11 @@ export function FormField({ label, htmlFor, hint, error, required, children }: F
         className="block text-xs font-semibold text-[var(--color-text-primary)]"
       >
         {label}
-        {required && <span className="text-[var(--color-text-muted)] ml-1" aria-hidden="true">*</span>}
+        {required && <span className="text-red-500 ml-1" aria-hidden="true">*</span>}
       </label>
       {children}
       {hint && !error && <p className="text-xs text-[var(--color-text-muted)]">{hint}</p>}
-      {error && <p className="text-xs text-[var(--color-text-secondary)] font-medium" role="alert">{error}</p>}
+      {error && <p className="text-xs text-red-600 font-medium" role="alert">{error}</p>}
     </div>
   );
 }
@@ -39,15 +39,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ error, leftIcon, className = '', ...props }, ref) => (
     <div className="relative">
       {leftIcon && (
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none">
           {leftIcon}
         </div>
       )}
       <input
         ref={ref}
         {...props}
-        className={`w-full px-3 py-2 text-xs rounded-md border bg-white text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] transition-colors focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)] focus:border-[var(--color-primary-600)] disabled:opacity-50 disabled:bg-[var(--color-surface-2)] ${
-          error ? 'border-neutral-900' : 'border-[var(--color-border)]'
+        className={`w-full px-3 py-2 text-xs rounded-lg border bg-white text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] transition-all shadow-xs focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] focus:border-transparent disabled:opacity-50 disabled:bg-[var(--color-surface-2)] disabled:cursor-not-allowed ${
+          error ? 'border-red-500 focus:ring-red-500' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
         } ${leftIcon ? 'pl-9' : ''} ${className}`}
       />
     </div>
@@ -63,18 +63,18 @@ interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
 export function SearchInput({ className = '', value, onClear, ...props }: SearchInputProps) {
   return (
     <div className={`relative ${className}`}>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)]" />
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)] pointer-events-none" />
       <input
         type="search"
         value={value}
         {...props}
-        className="w-full pl-9 pr-8 py-2 text-xs rounded-md border border-[var(--color-border)] bg-white text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)] focus:border-[var(--color-primary-600)] transition-colors"
+        className="w-full pl-9 pr-8 py-2 text-xs rounded-lg border border-[var(--color-border)] bg-white text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] focus:border-transparent transition-all"
       />
       {value && onClear && (
         <button
           type="button"
           onClick={onClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-0.5 rounded"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-0.5 rounded cursor-pointer transition-colors"
           aria-label="Clear search"
         >
           <X className="w-3.5 h-3.5" />
@@ -94,8 +94,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     <select
       ref={ref}
       {...props}
-      className={`w-full px-3 py-2 text-xs rounded-md border bg-white text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)] focus:border-[var(--color-primary-600)] transition-colors cursor-pointer disabled:opacity-50 ${
-        error ? 'border-neutral-900' : 'border-[var(--color-border)]'
+      className={`w-full px-3 py-2 text-xs rounded-lg border bg-white text-[var(--color-text-primary)] shadow-xs transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] focus:border-transparent disabled:opacity-50 disabled:bg-[var(--color-surface-2)] disabled:cursor-not-allowed ${
+        error ? 'border-red-500 focus:ring-red-500' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
       } ${className}`}
     >
       {children}
@@ -114,8 +114,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     <textarea
       ref={ref}
       {...props}
-      className={`w-full px-3 py-2 text-xs rounded-md border bg-white text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)] focus:border-[var(--color-primary-600)] transition-colors resize-y min-h-[80px] ${
-        error ? 'border-neutral-900' : 'border-[var(--color-border)]'
+      className={`w-full px-3 py-2 text-xs rounded-lg border bg-white text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] shadow-xs transition-all resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] focus:border-transparent disabled:opacity-50 disabled:bg-[var(--color-surface-2)] disabled:cursor-not-allowed ${
+        error ? 'border-red-500 focus:ring-red-500' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
       } ${className}`}
     />
   )

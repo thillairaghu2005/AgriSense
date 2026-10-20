@@ -83,7 +83,7 @@ export default function PlantationsPage() {
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setActiveTab('orchard')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'orchard'
                   ? 'bg-white text-emerald-950 shadow-sm'
                   : 'bg-emerald-900/60 text-white hover:bg-emerald-900'
@@ -93,7 +93,7 @@ export default function PlantationsPage() {
             </button>
             <button
               onClick={() => setActiveTab('timber')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'timber'
                   ? 'bg-white text-emerald-950 shadow-sm'
                   : 'bg-emerald-900/60 text-white hover:bg-emerald-900'
@@ -103,7 +103,7 @@ export default function PlantationsPage() {
             </button>
             <button
               onClick={() => setActiveTab('nurseries')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'nurseries'
                   ? 'bg-white text-emerald-950 shadow-sm'
                   : 'bg-emerald-900/60 text-white hover:bg-emerald-900'

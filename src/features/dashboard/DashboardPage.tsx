@@ -58,15 +58,15 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 animate-fade-in pb-12">
       {/* Role Switcher Banner */}
-      <div className="bg-[var(--color-primary-50)] text-black p-4 rounded-xl shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 border border-[var(--color-primary-200)]">
+      <div className="bg-emerald-50/70 text-[var(--color-text-primary)] p-4 rounded-xl shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 border border-emerald-200">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[var(--color-primary-600)] flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-[var(--color-primary-600)] flex items-center justify-center shrink-0 shadow-xs">
+            <ShieldCheck className="w-5 h-5 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-primary-800)]">Active Perspective</span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-white text-black border border-[var(--color-primary-300)]">
+              <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-white text-[var(--color-primary-800)] border border-emerald-300 shadow-xs">
                 {role === 'farmer' ? 'Farmer / Beneficiary' : role === 'officer' ? 'Agricultural Officer (ADA/AO)' : role === 'manager' ? 'District Scheme Manager' : 'Central Administrator'}
               </span>
             </div>
@@ -77,7 +77,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick Role Toggle Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-lg border border-[var(--color-primary-200)]">
+        <div className="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-lg border border-emerald-200 shadow-xs">
           {(
             [
               { id: 'farmer', label: 'Farmer' },
@@ -89,10 +89,10 @@ export default function DashboardPage() {
             <button
               key={r.id}
               onClick={() => setRole(r.id)}
-              className={`px-3 py-1.5 text-xs font-medium rounded transition-all ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
                 role === r.id
                   ? 'bg-[var(--color-primary-600)] text-white font-semibold shadow-xs'
-                  : 'text-black hover:bg-[var(--color-primary-100)]'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-emerald-50'
               }`}
             >
               {r.label}
@@ -190,7 +190,7 @@ export default function DashboardPage() {
                   {topEligible.map(({ scheme, eligibility }) => (
                     <div
                       key={scheme.id}
-                      className="p-3.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] hover:bg-[var(--color-surface-2)] transition-colors"
+                      className="p-3.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] hover:bg-white hover:border-[var(--color-primary-300)] hover:shadow-xs transition-all"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
@@ -199,13 +199,19 @@ export default function DashboardPage() {
                             <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
                               {eligibility.matchScore}% Match
                             </span>
-                            <Badge>{scheme.level === 'central' ? 'Central Scheme' : 'State Scheme'}</Badge>
+                            <Badge variant={scheme.level === 'central' ? 'blue' : 'green'}>
+                              {scheme.level === 'central' ? 'Central Scheme' : 'State Scheme'}
+                            </Badge>
                           </div>
                           <p className="text-xs text-[var(--color-text-muted)] mt-1 line-clamp-2">{scheme.shortDescription}</p>
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-[11px] text-[var(--color-text-secondary)]">
                             <span><strong className="text-[var(--color-text-primary)]">Assistance:</strong> {scheme.financialAssistance}</span>
                             {scheme.subsidyPercentage && (
-                              <span className="text-emerald-700 font-semibold">Subsidy: {scheme.subsidyPercentage}%</span>
+                              <span className="text-emerald-700 font-semibold">
+                                Subsidy: {String(scheme.subsidyPercentage).includes('%') || isNaN(Number(scheme.subsidyPercentage))
+                                  ? scheme.subsidyPercentage
+                                  : `${scheme.subsidyPercentage}%`}
+                              </span>
                             )}
                           </div>
                         </div>
@@ -262,10 +268,12 @@ export default function DashboardPage() {
                   <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Subsidized Inputs Hub</p>
                   <button
                     onClick={() => navigate('/seed-distribution')}
-                    className="w-full flex items-center justify-between p-2 rounded-md bg-white border border-[var(--color-border)] hover:border-[var(--color-primary-600)] text-xs text-left"
+                    className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] hover:bg-white hover:border-[var(--color-primary-400)] hover:shadow-xs transition-all cursor-pointer text-xs text-left"
                   >
-                    <div className="flex items-center gap-2">
-                      <PackageCheck className="w-4 h-4 text-[var(--color-primary-600)]" />
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-md bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
+                        <PackageCheck className="w-4 h-4 text-[var(--color-primary-600)]" />
+                      </div>
                       <span className="font-medium text-[var(--color-text-primary)]">Certified Seed Requisition</span>
                     </div>
                     <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
@@ -273,10 +281,12 @@ export default function DashboardPage() {
 
                   <button
                     onClick={() => navigate('/plantations')}
-                    className="w-full flex items-center justify-between p-2 rounded-md bg-white border border-[var(--color-border)] hover:border-[var(--color-primary-600)] text-xs text-left"
+                    className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] hover:bg-white hover:border-[var(--color-primary-400)] hover:shadow-xs transition-all cursor-pointer text-xs text-left"
                   >
-                    <div className="flex items-center gap-2">
-                      <Trees className="w-4 h-4 text-[var(--color-primary-600)]" />
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-md bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
+                        <Trees className="w-4 h-4 text-[var(--color-primary-600)]" />
+                      </div>
                       <span className="font-medium text-[var(--color-text-primary)]">Orchard & Tree Saplings</span>
                     </div>
                     <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
@@ -284,10 +294,12 @@ export default function DashboardPage() {
 
                   <button
                     onClick={() => navigate('/grievances')}
-                    className="w-full flex items-center justify-between p-2 rounded-md bg-white border border-[var(--color-border)] hover:border-[var(--color-primary-600)] text-xs text-left"
+                    className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] hover:bg-white hover:border-amber-400 hover:shadow-xs transition-all cursor-pointer text-xs text-left"
                   >
-                    <div className="flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-amber-600" />
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-md bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
+                        <AlertTriangle className="w-4 h-4 text-amber-600" />
+                      </div>
                       <span className="font-medium text-[var(--color-text-primary)]">Lodge Scheme Grievance</span>
                     </div>
                     <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
@@ -451,7 +463,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xs font-bold text-[var(--color-text-primary)]">{app.id}</span>
                           <span className="text-xs text-[var(--color-text-secondary)] font-medium">({app.farmerName})</span>
-                          <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--color-primary-50)] text-black border border-[var(--color-primary-200)] font-medium">
+                          <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
                             {app.district}
                           </span>
                         </div>

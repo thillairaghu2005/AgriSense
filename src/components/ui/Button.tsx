@@ -14,17 +14,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANT_STYLES: Record<Variant, string> = {
-  primary: 'bg-[var(--color-primary-600)] text-white hover:bg-[var(--color-primary-700)] active:bg-[var(--color-primary-800)] shadow-xs',
-  secondary: 'bg-[var(--color-surface-2)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-3)] active:bg-[var(--color-surface-3)]',
-  outline: 'bg-white border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-1)] active:bg-[var(--color-surface-2)]',
-  ghost: 'bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] active:bg-[var(--color-surface-3)]',
-  danger: 'bg-neutral-900 text-white hover:bg-neutral-800 active:bg-black',
+  primary: 'bg-[var(--color-primary-600)] text-white hover:bg-[var(--color-primary-700)] active:bg-[var(--color-primary-800)] shadow-xs font-semibold',
+  secondary: 'bg-white border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)] hover:border-[var(--color-border-strong)] active:bg-[var(--color-surface-3)] shadow-xs font-semibold',
+  outline: 'bg-transparent border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-white hover:border-[var(--color-primary-600)] active:bg-[var(--color-surface-2)] font-semibold',
+  ghost: 'bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-primary-800)] active:bg-[var(--color-surface-3)] font-medium',
+  danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-xs font-semibold',
 };
 
 const SIZE_STYLES: Record<Size, string> = {
-  sm: 'px-3 py-1.5 text-xs rounded-md gap-1.5',
-  md: 'px-4 py-2 text-xs font-semibold rounded-md gap-2',
-  lg: 'px-5 py-2.5 text-sm font-semibold rounded-md gap-2',
+  sm: 'px-3 py-1.5 text-xs font-semibold rounded-lg gap-1.5',
+  md: 'px-4 py-2 text-xs font-semibold rounded-lg gap-2',
+  lg: 'px-5 py-2.5 text-sm font-semibold rounded-lg gap-2',
 };
 
 export default function Button({
@@ -42,7 +42,7 @@ export default function Button({
     <button
       {...props}
       disabled={disabled || isLoading}
-      className={`inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-[var(--color-primary-600)] disabled:opacity-50 disabled:cursor-not-allowed ${VARIANT_STYLES[variant]} ${SIZE_STYLES[size]} ${className}`}
+      className={`inline-flex items-center justify-center transition-all cursor-pointer focus-visible:outline-[var(--color-primary-600)] disabled:opacity-50 disabled:cursor-not-allowed ${VARIANT_STYLES[variant]} ${SIZE_STYLES[size]} ${className}`}
     >
       {isLoading ? (
         <Loader2 className="w-3.5 h-3.5 animate-spin" />

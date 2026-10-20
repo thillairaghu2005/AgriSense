@@ -16,10 +16,12 @@ const en: Record<string, string> = {
   'nav.weather': 'Weather Advisories',
   'nav.assistant': 'Farming Assistant',
   'nav.schemes': 'Govt. Schemes',
+  'nav.seeds': 'Certified Seeds',
   'nav.seedDistribution': 'Seed Distribution',
   'nav.plantations': 'Plantations & Agroforestry',
   'nav.applications': 'Application Tracker',
   'nav.grievances': 'Grievance Redressal',
+  'nav.dbt': 'DBT Ledger',
   'nav.dbtLedger': 'DBT & Beneficiaries',
   'nav.analytics': 'Analytics & Reports',
   'nav.resources': 'Govt. Resources & Links',
@@ -40,9 +42,12 @@ const en: Record<string, string> = {
 
   // Section headers
   'nav.section.overview': 'Overview & Dashboards',
+  'nav.section.welfare': 'Schemes & Welfare Services',
   'nav.section.schemesWelfare': 'Schemes & Welfare Services',
   'nav.section.seedsPlantations': 'Seeds & Plantations',
+  'nav.section.farm': 'Farm Management',
   'nav.section.farmManagement': 'Farm Management',
+  'nav.section.intelligence': 'Intelligence & Knowledge',
   'nav.section.marketClimate': 'Market & Climate Intelligence',
   'nav.section.governance': 'Governance & Transparency',
   'nav.section.settings': 'Settings & Accessibility',
@@ -89,6 +94,9 @@ const en: Record<string, string> = {
 
   // Farmer Dashboard
   'dashboard.greeting': 'Welcome back',
+  'dashboard.greeting.morning': 'Good morning',
+  'dashboard.greeting.afternoon': 'Good afternoon',
+  'dashboard.greeting.evening': 'Good evening',
   'dashboard.farmerTagline': 'Here is your farm and welfare benefit summary today.',
   'dashboard.officerTagline': 'Block Agricultural Officer queue and field verification portal.',
   'dashboard.managerTagline': 'Scheme lifecycle, budget utilisation and sanction monitoring.',
@@ -298,6 +306,18 @@ const en: Record<string, string> = {
   'market.revenueCalc': 'Mandi Revenue Estimator',
   'market.quantity': 'Harvest Quantity (quintals)',
   'market.estimatedRevenue': 'Estimated Value (₹)',
+
+  // Assistant
+  'assistant.title': 'Farming AI Assistant',
+  'assistant.subtitle': 'Voice-enabled agricultural digital assistant with simulated domain knowledge',
+  'assistant.disclaimer': 'Authoritative Agronomy Advisory: Recommendations are simulated based on ICAR, TNAU, and MoA&FW guidance. For specific chemical dosages, consult your local KVK.',
+  'assistant.placeholder': 'Ask about crops, fertilizers, pest remedies, govt subsidies...',
+  'assistant.send': 'Send Query',
+  'assistant.clear': 'Clear History',
+
+  // Demo Notices
+  'demo.notLive': 'Illustrative Sample Data',
+  'demo.weatherNote': 'Demonstration Data — Telemetry simulated for this region.',
 
   // Profile & Settings
   'profile.title': 'Farmer Profile & Landholding Records',

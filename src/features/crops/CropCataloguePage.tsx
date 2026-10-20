@@ -44,7 +44,7 @@ export default function CropCataloguePage() {
         <select
           value={seasonFilter}
           onChange={e => setSeasonFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-md bg-white text-[var(--color-text-secondary)] focus:outline-none focus:ring-1 focus:ring-neutral-900"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
           aria-label="Filter by season"
         >
           <option value="">All Seasons</option>
@@ -53,7 +53,7 @@ export default function CropCataloguePage() {
         <select
           value={categoryFilter}
           onChange={e => setCategoryFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-md bg-white text-[var(--color-text-secondary)] focus:outline-none focus:ring-1 focus:ring-neutral-900"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
           aria-label="Filter by category"
         >
           <option value="">All Categories</option>
@@ -77,19 +77,19 @@ export default function CropCataloguePage() {
             <Card
               key={crop.id}
               onClick={() => navigate(`/crops/${crop.id}`)}
-              className="hover:shadow-md transition-all"
+              className="hover:shadow-md transition-all cursor-pointer group"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap mb-2">
-                    <Badge>
+                  <div className="flex items-center gap-1.5 flex-wrap mb-2">
+                    <Badge variant="blue">
                       {CATEGORY_LABELS[crop.category]}
                     </Badge>
                     {crop.seasons.map(s => (
-                      <Badge key={s}>{SEASON_LABELS[s]}</Badge>
+                      <Badge key={s} variant="green">{SEASON_LABELS[s]}</Badge>
                     ))}
                   </div>
-                  <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">{crop.name}</h2>
+                  <h2 className="text-sm font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary-700)] transition-colors">{crop.name}</h2>
                   <p className="text-xs text-[var(--color-text-muted)] mt-1">
                     {crop.durationDays[0]}–{crop.durationDays[1]} days
                     &nbsp;·&nbsp; pH {crop.idealPhRange[0]}–{crop.idealPhRange[1]}
@@ -98,11 +98,13 @@ export default function CropCataloguePage() {
                     Soils: {crop.suitableSoils.join(', ')}
                   </p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0 mt-1" />
+                <div className="w-7 h-7 rounded-lg bg-[var(--color-surface-2)] flex items-center justify-center shrink-0 group-hover:bg-[var(--color-primary-50)] group-hover:text-[var(--color-primary-700)] transition-colors mt-1">
+                  <ChevronRight className="w-4 h-4 text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-700)]" />
+                </div>
               </div>
 
-              <div className="mt-3 pt-2">
-                <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2">
+              <div className="mt-3 pt-2.5 border-t border-[var(--color-border)]">
+                <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
                   {crop.sowingGuidance.slice(0, 100)}…
                 </p>
               </div>
