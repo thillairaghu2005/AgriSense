@@ -128,7 +128,7 @@ export default function ArticleDetailPage() {
       </div>
 
       {/* Main Article Card with Generous Whitespace */}
-      <article className="card p-8 sm:p-12 md:p-14 bg-white shadow-sm border border-[var(--color-border)] rounded-2xl">
+      <article className="card p-8 sm:p-12 md:p-14 shadow-sm rounded-2xl">
         {/* Article Meta Header */}
         <header className="space-y-6 pb-10">
           <div className="flex items-center gap-3 flex-wrap">

@@ -80,41 +80,41 @@ export default function GrievancesPage() {
       </div>
 
       {/* Emergency Helplines Strip */}
-      <div className="p-4 rounded-xl bg-emerald-950 text-white border border-emerald-900 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="p-4 rounded-xl bg-emerald-50/90 text-[var(--color-text-primary)] border border-emerald-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-emerald-900 text-emerald-400">
+          <div className="p-2.5 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-xs">
             <PhoneCall className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-[10px] text-emerald-300 block font-semibold uppercase">Kisan Call Centre</span>
-            <span className="font-bold text-sm">1800-180-1551</span>
+            <span className="text-[10px] text-emerald-800 block font-semibold uppercase tracking-wider">Kisan Call Centre</span>
+            <span className="font-bold text-sm text-emerald-950">1800-180-1551</span>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-emerald-900 text-emerald-400">
+          <div className="p-2.5 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-xs">
             <PhoneCall className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-[10px] text-emerald-300 block font-semibold uppercase">PM-KISAN Helpline</span>
-            <span className="font-bold text-sm">155261 / 1800-11-5526</span>
+            <span className="text-[10px] text-emerald-800 block font-semibold uppercase tracking-wider">PM-KISAN Helpline</span>
+            <span className="font-bold text-sm text-emerald-950">155261 / 1800-11-5526</span>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-emerald-900 text-emerald-400">
+          <div className="p-2.5 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-xs">
             <PhoneCall className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-[10px] text-emerald-300 block font-semibold uppercase">PMFBY Crop Insurance</span>
-            <span className="font-bold text-sm">14447 (National Toll-Free)</span>
+            <span className="text-[10px] text-emerald-800 block font-semibold uppercase tracking-wider">PMFBY Crop Insurance</span>
+            <span className="font-bold text-sm text-emerald-950">14447 (National Toll-Free)</span>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-emerald-900 text-emerald-400">
+          <div className="p-2.5 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-xs">
             <PhoneCall className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-[10px] text-emerald-300 block font-semibold uppercase">Tamil Nadu Uzhavan Help</span>
-            <span className="font-bold text-sm">1800-425-4444</span>
+            <span className="text-[10px] text-emerald-800 block font-semibold uppercase tracking-wider">Tamil Nadu Uzhavan Help</span>
+            <span className="font-bold text-sm text-emerald-950">1800-425-4444</span>
           </div>
         </div>
       </div>

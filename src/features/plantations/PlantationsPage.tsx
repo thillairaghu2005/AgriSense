@@ -65,17 +65,17 @@ export default function PlantationsPage() {
       />
 
       {/* Hero Mission Header */}
-      <div className="bg-emerald-950 text-white rounded-xl p-5 shadow-sm border border-emerald-900">
+      <div className="bg-emerald-50/90 text-[var(--color-text-primary)] rounded-xl p-5 shadow-xs border border-emerald-200">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-900 text-emerald-300 border border-emerald-800">
-              <ShieldCheck className="w-3.5 h-3.5" />
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
               Mission for Integrated Development of Horticulture (MIDH) & Sub-Mission on Agroforestry (SMAF)
             </div>
-            <h2 className="text-lg font-bold tracking-tight">
+            <h2 className="text-lg font-bold tracking-tight text-emerald-950">
               Orchard Development, Commercial Timber & 3-Year Maintenance Support
             </h2>
-            <p className="text-xs text-emerald-200 max-w-3xl leading-relaxed">
+            <p className="text-xs text-emerald-800/90 max-w-3xl leading-relaxed">
               Transform dryland and perimeter boundaries into high-value perennial wealth with certified fruit grafts,
               fast-growing Malabar Neem, Teak, and Bamboo. Receive multi-year maintenance incentives linked to plant survival.
             </p>
@@ -85,8 +85,8 @@ export default function PlantationsPage() {
               onClick={() => setActiveTab('orchard')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'orchard'
-                  ? 'bg-white text-emerald-950 shadow-sm'
-                  : 'bg-emerald-900/60 text-white hover:bg-emerald-900'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
               }`}
             >
               Horticulture & Orchards
@@ -95,8 +95,8 @@ export default function PlantationsPage() {
               onClick={() => setActiveTab('timber')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'timber'
-                  ? 'bg-white text-emerald-950 shadow-sm'
-                  : 'bg-emerald-900/60 text-white hover:bg-emerald-900'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
               }`}
             >
               Timber & Agroforestry
@@ -105,8 +105,8 @@ export default function PlantationsPage() {
               onClick={() => setActiveTab('nurseries')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'nurseries'
-                  ? 'bg-white text-emerald-950 shadow-sm'
-                  : 'bg-emerald-900/60 text-white hover:bg-emerald-900'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
               }`}
             >
               Certified Nurseries

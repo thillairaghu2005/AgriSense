@@ -23,10 +23,14 @@
   --color-accent-600: #16a34a;
 
   /* Neutral & Light Green surfaces */
-  --color-surface-0: #ffffff;
+  --color-surface-0: #f2f9f5;
   --color-surface-1: #f8fafc;
-  --color-surface-2: #f0fdf4;
+  --color-surface-2: #e8f5ec;
   --color-surface-3: #f1f5f9;
+
+  /* Card Light Green Surface & Border */
+  --color-card-bg: #f2f9f5;
+  --color-card-border: #d1fae5;
 
   /* Text - Crisp Slate & Neutral Tones for Accessible Contrast */
   --color-text-primary: #0f172a;
@@ -67,10 +71,10 @@ body {
   line-height: 1.6;
 }
 
-/* Ensure headings have crisp typography */
+/* Ensure headings have crisp typography and inherit container color correctly */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: inherit;
   line-height: 1.35;
 }
 
@@ -152,11 +156,15 @@ article li {
 
 .card {
   background: var(--color-surface-0);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-card-border);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 3px 0 rgba(16, 185, 129, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--color-primary-300);
 }
 
 .badge {
@@ -260,6 +268,8 @@ html.high-contrast {
   --color-surface-0: #ffffff;
   --color-surface-1: #ffffff;
   --color-surface-2: #eeeeee;
+  --color-card-bg: #ffffff;
+  --color-card-border: #111827;
   --color-border: #111827;
   --color-border-strong: #000000;
   --color-text-primary: #000000;

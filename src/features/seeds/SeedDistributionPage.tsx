@@ -56,17 +56,17 @@ export default function SeedDistributionPage() {
       />
 
       {/* Official Government Mission Banner */}
-      <div className="bg-emerald-900 text-white rounded-xl p-5 shadow-sm border border-emerald-800">
+      <div className="bg-emerald-50/90 text-[var(--color-text-primary)] rounded-xl p-5 shadow-xs border border-emerald-200">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-800/80 text-emerald-200 border border-emerald-700">
-              <ShieldCheck className="w-3.5 h-3.5" />
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
               National Food Security Mission (NFSM) & Certified Seed Hubs
             </div>
-            <h2 className="text-lg font-bold tracking-tight">
+            <h2 className="text-lg font-bold tracking-tight text-emerald-950">
               Direct Certified Seed Requisition & 50% DBT Subsidy
             </h2>
-            <p className="text-xs text-emerald-100 max-w-3xl leading-relaxed">
+            <p className="text-xs text-emerald-800/90 max-w-3xl leading-relaxed">
               Procure genetically pure Foundation and Certified seeds directly from State Agricultural Seed Farms,
               National Seeds Corporation (NSC), and Agricultural University centres with authentic seed tags.
             </p>
@@ -76,8 +76,8 @@ export default function SeedDistributionPage() {
               onClick={() => setActiveTab('catalog')}
               className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'catalog'
-                  ? 'bg-white text-emerald-950 shadow-sm'
-                  : 'bg-emerald-800/60 text-white hover:bg-emerald-800'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
               }`}
             >
               Certified Seed Catalog ({SEED_VARIETIES.length})
@@ -86,8 +86,8 @@ export default function SeedDistributionPage() {
               onClick={() => setActiveTab('farms')}
               className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'farms'
-                  ? 'bg-white text-emerald-950 shadow-sm'
-                  : 'bg-emerald-800/60 text-white hover:bg-emerald-800'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
               }`}
             >
               Government Seed Farms ({SEED_FARMS.length})
