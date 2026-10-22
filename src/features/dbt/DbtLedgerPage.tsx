@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { searchDbtRecords } from '@/data/dbtRecords';
 import { Card, PageHeader } from '@/components/ui/Card';
 import { SearchInput } from '@/components/forms/FormComponents';
 import Button from '@/components/ui/Button';
 import { useApp } from '@/app/providers';
+import { STATES } from '@/data/locations';
 import {
   CheckCircle2, Download
 } from 'lucide-react';
@@ -38,10 +39,15 @@ function exportCsv(records: ReturnType<typeof searchDbtRecords>) {
 }
 
 export default function DbtLedgerPage() {
-  const { t } = useApp();
+  const { t, state: appState } = useApp();
   const [query, setQuery] = useState('');
   const [schemeFilter, setSchemeFilter] = useState('');
-  const [stateFilter, setStateFilter] = useState('');
+  const [stateFilter, setStateFilter] = useState(() => appState || '');
+
+  // Keep stateFilter synced when user switches state in TopBar
+  useEffect(() => {
+    setStateFilter(appState || '');
+  }, [appState]);
 
   const filteredRecords = searchDbtRecords(query, schemeFilter || undefined, stateFilter || undefined);
 
@@ -133,11 +139,9 @@ export default function DbtLedgerPage() {
           className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
         >
           <option value="">All States</option>
-          <option value="tn">Tamil Nadu</option>
-          <option value="ap">Andhra Pradesh</option>
-          <option value="pb">Punjab</option>
-          <option value="mh">Maharashtra</option>
-          <option value="ka">Karnataka</option>
+          {STATES.map(s => (
+            <option key={s.id} value={s.id}>{s.name}</option>
+          ))}
         </select>
       </div>
 

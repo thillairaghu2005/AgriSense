@@ -16,12 +16,30 @@ import {
 } from '@/lib/agmarknetApi';
 import { storageGet, storageSet, STORAGE_KEYS } from '@/lib/storage';
 
+import { useApp } from '@/app/providers';
+
 export default function MarketPricesPage() {
+  const { state: appState, district: appDistrict } = useApp();
+
+  const appStateObj = STATES.find(s => s.id === appState);
+  const appStateName = appStateObj?.name || '';
+  const appDistrictObj = appStateObj?.districts.find(d => d.id === appDistrict);
+  const appDistrictName = appDistrictObj?.name || '';
+
   const [cropFilter, setCropFilter] = useState('');
-  const [stateFilter, setStateFilter] = useState('');
+  const [stateFilter, setStateFilter] = useState(() => appStateName);
+  const [districtFilter, setDistrictFilter] = useState(() => appDistrictName);
   const [query, setQuery] = useState('');
   const [quantity, setQuantity] = useState<number>(10);
   const [selectedPriceId, setSelectedPriceId] = useState<string>('');
+
+  // Keep synced with TopBar region selector
+  useEffect(() => {
+    if (appStateName) {
+      setStateFilter(appStateName);
+    }
+    setDistrictFilter(appDistrictName);
+  }, [appStateName, appDistrictName]);
 
   // Mode: Live Agmarknet vs Sample Seed Data
   const [isLive, setIsLive] = useState<boolean>(() =>
@@ -110,14 +128,20 @@ export default function MarketPricesPage() {
     ? livePrices
     : MARKET_PRICES;
 
+  const activeDistricts = useMemo(() => {
+    if (!stateFilter) return [];
+    return STATES.find(s => s.name.toLowerCase() === stateFilter.toLowerCase() || s.id === stateFilter.toLowerCase())?.districts ?? [];
+  }, [stateFilter]);
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
     return activeDataset.filter(p =>
       (!cropFilter || p.cropId === cropFilter) &&
-      (!stateFilter || p.state === stateFilter) &&
-      (!q || p.cropName.toLowerCase().includes(q) || p.market.toLowerCase().includes(q))
+      (!stateFilter || p.state.toLowerCase() === stateFilter.toLowerCase()) &&
+      (!districtFilter || p.district.toLowerCase() === districtFilter.toLowerCase()) &&
+      (!q || p.cropName.toLowerCase().includes(q) || p.market.toLowerCase().includes(q) || p.district.toLowerCase().includes(q))
     );
-  }, [activeDataset, cropFilter, stateFilter, query]);
+  }, [activeDataset, cropFilter, stateFilter, districtFilter, query]);
 
   const selectedPrice = filtered.find(p => p.id === selectedPriceId) ?? filtered[0];
   const estimatedRevenue = selectedPrice ? quantity * selectedPrice.modalPrice : 0;
@@ -305,12 +329,25 @@ export default function MarketPricesPage() {
         </select>
         <select
           value={stateFilter}
-          onChange={e => setStateFilter(e.target.value)}
+          onChange={e => {
+            setStateFilter(e.target.value);
+            setDistrictFilter('');
+          }}
           className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-border-strong)] focus:outline-none focus:ring-1 focus:ring-neutral-400 cursor-pointer transition-all"
         >
           <option value="">All States</option>
           {STATES.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
         </select>
+        {activeDistricts.length > 0 && (
+          <select
+            value={districtFilter}
+            onChange={e => setDistrictFilter(e.target.value)}
+            className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-border-strong)] focus:outline-none focus:ring-1 focus:ring-neutral-400 cursor-pointer transition-all"
+          >
+            <option value="">All Districts ({stateFilter})</option>
+            {activeDistricts.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+          </select>
+        )}
       </div>
 
       {/* Chart */}

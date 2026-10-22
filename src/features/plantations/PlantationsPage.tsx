@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { PLANTATION_PROGRAMS, searchPlantationPrograms } from '@/data/plantations';
 import { Card, PageHeader } from '@/components/ui/Card';
 import { SearchInput } from '@/components/forms/FormComponents';
@@ -47,7 +47,7 @@ const DEFAULT_ORDERS: SaplingOrderRecord[] = [
 ];
 
 export default function PlantationsPage() {
-  const { t } = useApp();
+  const { t, state: selectedState, district: selectedDistrict } = useApp();
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'orchard' | 'timber' | 'nurseries' | 'orders'>('orchard');
 
@@ -70,17 +70,31 @@ export default function PlantationsPage() {
     return true;
   });
 
-  // Extract unique nurseries
-  const allNurseries = Array.from(
-    new Map(
-      PLANTATION_PROGRAMS.flatMap(p => p.participatingNurseries).map(n => [n.id, n])
-    ).values()
-  );
+  // Extract unique nurseries prioritized by user's state & district
+  const allNurseries = useMemo(() => {
+    const raw = Array.from(
+      new Map(
+        PLANTATION_PROGRAMS.flatMap(p => p.participatingNurseries).map(n => [n.id, n])
+      ).values()
+    );
+    return raw.sort((a, b) => {
+      if (a.state === selectedState && b.state !== selectedState) return -1;
+      if (a.state !== selectedState && b.state === selectedState) return 1;
+      if (selectedDistrict) {
+        if (a.district === selectedDistrict && b.district !== selectedDistrict) return -1;
+        if (a.district !== selectedDistrict && b.district === selectedDistrict) return 1;
+      }
+      return 0;
+    });
+  }, [selectedState, selectedDistrict]);
 
   function handleOpenBooking(program: PlantationProgram) {
     setBookingProgram(program);
     setSaplingCount(Math.min(program.saplingsPerAcre, 200));
-    setSelectedNurseryId(program.participatingNurseries[0]?.id || '');
+    const regionalNursery = program.participatingNurseries.find(
+      n => n.state === selectedState && (!selectedDistrict || n.district === selectedDistrict)
+    ) || program.participatingNurseries.find(n => n.state === selectedState) || program.participatingNurseries[0];
+    setSelectedNurseryId(regionalNursery?.id || program.participatingNurseries[0]?.id || '');
     setBookingSuccess(null);
   }
 

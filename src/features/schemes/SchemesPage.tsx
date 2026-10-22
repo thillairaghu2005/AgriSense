@@ -317,7 +317,7 @@ function SchemeCard({
 }
 
 export default function SchemesPage() {
-  const { t, profile } = useApp();
+  const { t, profile, state: selectedState, district: selectedDistrict } = useApp();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const targetSchemeId = searchParams.get('scheme');
@@ -328,17 +328,23 @@ export default function SchemesPage() {
   const [onlyEligible, setOnlyEligible] = useState(false);
   const { checklists, toggleItem } = useSchemeChecklists();
 
-  // Evaluate eligibility for all schemes based on current farmer profile
+  const effectiveProfile = useMemo(() => ({
+    ...profile,
+    state: selectedState,
+    district: selectedDistrict,
+  }), [profile, selectedState, selectedDistrict]);
+
+  // Evaluate eligibility for all schemes based on current farmer profile & state
   const filtered = useMemo(() => {
     let result = searchSchemes(
       query,
       levelFilter || undefined,
       categoryFilter || undefined,
-      profile.state || undefined
+      selectedState || undefined
     );
 
     if (onlyEligible) {
-      result = result.filter(s => evaluateEligibility(profile, s).isEligible);
+      result = result.filter(s => evaluateEligibility(effectiveProfile, s).isEligible);
     }
 
     // If targetSchemeId is provided, bring it to top if not filtered out
@@ -350,7 +356,7 @@ export default function SchemesPage() {
     }
 
     return result;
-  }, [query, levelFilter, categoryFilter, onlyEligible, profile, targetSchemeId]);
+  }, [query, levelFilter, categoryFilter, onlyEligible, selectedState, effectiveProfile, targetSchemeId]);
 
   function handleApply(schemeId: string) {
     navigate(`/applications?apply=${schemeId}`);
@@ -426,14 +432,14 @@ export default function SchemesPage() {
       </div>
 
       <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)]">
-        <span>Showing {filtered.length} welfare scheme{filtered.length !== 1 ? 's' : ''} for {profile.displayName} ({profile.state.toUpperCase()})</span>
+        <span>Showing {filtered.length} welfare scheme{filtered.length !== 1 ? 's' : ''} for {effectiveProfile.displayName} ({selectedState.toUpperCase()})</span>
         <span>Profile Landholding: {profile.landArea} {profile.landAreaUnit}</span>
       </div>
 
       {/* Schemes List */}
       <div className="space-y-4">
         {filtered.map(scheme => {
-          const eligibility = evaluateEligibility(profile, scheme);
+          const eligibility = evaluateEligibility(effectiveProfile, scheme);
           return (
             <SchemeCard
               key={scheme.id}

@@ -84,6 +84,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
       storageSet(STORAGE_KEYS.PROFILE, next);
       return next;
     });
+    if (updates.state !== undefined) {
+      setStateVal(updates.state);
+      storageSet(STORAGE_KEYS.STATE, updates.state);
+    }
+    if (updates.district !== undefined) {
+      setDistrictVal(updates.district);
+      storageSet(STORAGE_KEYS.DISTRICT, updates.district);
+    }
+    if (updates.preferredLanguage !== undefined) {
+      setLanguageState(updates.preferredLanguage);
+      storageSet(STORAGE_KEYS.LANGUAGE, updates.preferredLanguage);
+    }
   }, []);
 
   const setLanguage = useCallback((lang: string) => {
@@ -94,11 +106,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const setState = useCallback((s: string) => {
     setStateVal(s);
     storageSet(STORAGE_KEYS.STATE, s);
+    setProfile(prev => {
+      const next = { ...prev, state: s };
+      storageSet(STORAGE_KEYS.PROFILE, next);
+      return next;
+    });
   }, []);
 
   const setDistrict = useCallback((d: string) => {
     setDistrictVal(d);
     storageSet(STORAGE_KEYS.DISTRICT, d);
+    setProfile(prev => {
+      const next = { ...prev, district: d };
+      storageSet(STORAGE_KEYS.PROFILE, next);
+      return next;
+    });
   }, []);
 
   const setRole = useCallback((newRole: UserRole) => {
@@ -117,10 +139,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setRoleState('farmer');
   }, []);
 
+  const activeProfile = {
+    ...profile,
+    state,
+    district,
+  };
+
   return (
     <AppContext.Provider
       value={{
-        profile,
+        profile: activeProfile,
         updateProfile,
         language,
         setLanguage,

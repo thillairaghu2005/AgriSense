@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/app/providers';
 import { STATES, getDistrictsByState } from '@/data/locations';
@@ -51,6 +51,21 @@ export default function RecommendationsPage() {
   const [results, setResults] = useState<CropRecommendation[] | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Sync state and district when changed from top navigation bar
+  useEffect(() => {
+    setForm(prev => ({
+      ...prev,
+      state: appState,
+      district: appDistrict,
+    }));
+
+    if (submitted && appState) {
+      const updatedForm = { ...form, state: appState, district: appDistrict };
+      const recs = generateRecommendations(updatedForm as CropRecommendationInput);
+      setResults(recs);
+    }
+  }, [appState, appDistrict]);
 
   const districts = getDistrictsByState(form.state ?? '');
 

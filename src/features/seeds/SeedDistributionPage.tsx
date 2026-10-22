@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SEED_VARIETIES, SEED_FARMS, searchSeedVarieties } from '@/data/seeds';
 import { Card, PageHeader } from '@/components/ui/Card';
@@ -48,7 +48,7 @@ const DEFAULT_REQUISITIONS: SeedRequisitionRecord[] = [
 ];
 
 export default function SeedDistributionPage() {
-  const { t, profile } = useApp();
+  const { t, profile, state: selectedState, district: selectedDistrict } = useApp();
   const [searchParams] = useSearchParams();
   const cropParam = searchParams.get('crop');
 
@@ -82,9 +82,34 @@ export default function SeedDistributionPage() {
     cropFilter || undefined
   );
 
+  const sortedVarieties = useMemo(() => {
+    return [...filteredVarieties].sort((a, b) => {
+      const aMatches = a.stockAvailability.some(s => s.state === selectedState);
+      const bMatches = b.stockAvailability.some(s => s.state === selectedState);
+      if (aMatches && !bMatches) return -1;
+      if (!aMatches && bMatches) return 1;
+      return 0;
+    });
+  }, [filteredVarieties, selectedState]);
+
+  const sortedFarms = useMemo(() => {
+    return [...SEED_FARMS].sort((a, b) => {
+      if (a.state === selectedState && b.state !== selectedState) return -1;
+      if (a.state !== selectedState && b.state === selectedState) return 1;
+      if (selectedDistrict) {
+        if (a.district === selectedDistrict && b.district !== selectedDistrict) return -1;
+        if (a.district !== selectedDistrict && b.district === selectedDistrict) return 1;
+      }
+      return 0;
+    });
+  }, [selectedState, selectedDistrict]);
+
   function handleOpenBooking(variety: SeedVariety) {
     setBookingVariety(variety);
-    setSelectedFarmId(variety.stockAvailability[0]?.farmOrSupplierId || '');
+    const regionalFarm = variety.stockAvailability.find(
+      s => s.state === selectedState && (!selectedDistrict || s.district === selectedDistrict)
+    ) || variety.stockAvailability.find(s => s.state === selectedState) || variety.stockAvailability[0];
+    setSelectedFarmId(regionalFarm?.farmOrSupplierId || variety.stockAvailability[0]?.farmOrSupplierId || '');
     setBookingSuccess(null);
   }
 
@@ -228,7 +253,7 @@ export default function SeedDistributionPage() {
 
           {/* Seed Varieties Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {filteredVarieties.map(variety => {
+            {sortedVarieties.map(variety => {
               const subsidizedRate = (variety.pricePerKg * (100 - variety.subsidyPercentage)) / 100;
               const totalStockKg = variety.stockAvailability.reduce((sum, s) => sum + s.availableKg, 0);
 
@@ -364,7 +389,7 @@ export default function SeedDistributionPage() {
       {activeTab === 'farms' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {SEED_FARMS.map(farm => (
+            {sortedFarms.map(farm => (
               <Card key={farm.id} className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">

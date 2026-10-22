@@ -41,7 +41,7 @@ export function StatCard({ label, value, icon, trend, subtitle, className = '' }
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wide truncate">{label}</p>
-          <p className="mt-1.5 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">{value}</p>
+          <p className="mt-1.5 text-2xl font-light tracking-tight text-[var(--color-text-primary)]">{value}</p>
           {subtitle && <p className="mt-0.5 text-xs text-[var(--color-text-muted)] truncate">{subtitle}</p>}
           {trend && (
             <p className="mt-1 text-xs font-semibold text-[var(--color-text-primary)]">

@@ -113,10 +113,15 @@ export default function WeatherPage() {
     }
   }
 
+  // Reset GPS override when user changes state/district in TopBar
+  useEffect(() => {
+    setGpsLocation(null);
+  }, [selectedState, selectedDistrict]);
+
   // Active weather object (live if available and active, otherwise static fallback)
   const weather: RegionWeather = (isLive && liveWeather)
     ? liveWeather
-    : getWeatherForRegion(selectedState);
+    : getWeatherForRegion(selectedState, selectedDistrict);
 
   const dayData = weather.forecast[selectedDay] || weather.forecast[0];
 

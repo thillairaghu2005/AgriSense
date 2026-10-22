@@ -181,6 +181,34 @@ export default function TopBar() {
                 <X className="w-5 h-5" />
               </button>
             </div>
+            <div className="px-4 py-2 border-b border-[var(--color-border)] space-y-1.5">
+              <span className="text-[10px] uppercase font-bold text-[var(--color-text-muted)] tracking-wider block">
+                Region / State & District
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                <select
+                  value={state}
+                  onChange={e => { setState(e.target.value); setDistrict(''); }}
+                  className="text-xs border border-[var(--color-border)] rounded-lg px-2 py-1.5 bg-white text-[var(--color-text-primary)] font-medium"
+                  aria-label="Select state"
+                >
+                  {STATES.map(s => (
+                    <option key={s.id} value={s.id}>{s.name}</option>
+                  ))}
+                </select>
+                <select
+                  value={district}
+                  onChange={e => setDistrict(e.target.value)}
+                  className="text-xs border border-[var(--color-border)] rounded-lg px-2 py-1.5 bg-white text-[var(--color-text-primary)] font-medium"
+                  aria-label="Select district"
+                >
+                  <option value="">All Districts</option>
+                  {districts.map(d => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
             <div className="flex-1 overflow-y-auto" onClick={() => setDrawerOpen(false)}>
               <Sidebar />
             </div>

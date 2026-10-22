@@ -9,11 +9,12 @@ import {
 import { useApp } from '@/app/providers';
 import Button from '@/components/ui/Button';
 import { getWeatherForRegion, type RegionWeather } from '@/data/weather';
-import { MARKET_PRICES } from '@/data/marketPrices';
+import { MARKET_PRICES, filterMarketPrices } from '@/data/marketPrices';
 import { SCHEMES } from '@/data/schemes';
 import { SEED_VARIETIES, SEED_FARMS } from '@/data/seeds';
 import { getApplications } from '@/data/applications';
 import { getGrievances } from '@/data/grievances';
+import { searchDbtRecords } from '@/data/dbtRecords';
 import { evaluateEligibility } from '@/lib/eligibilityEngine';
 import { STATES, getLocationCoordinates } from '@/data/locations';
 import { WeatherIcon } from '@/components/ui/WeatherIcon';
@@ -36,21 +37,41 @@ export default function DashboardPage() {
       .catch(() => {});
   }, [isLiveWeather, selectedState, selectedDistrict]);
 
-  const weather = (isLiveWeather && liveWeather) ? liveWeather : getWeatherForRegion(selectedState);
-  const stateName = STATES.find(s => s.id === selectedState)?.name ?? selectedState;
+  const weather = (isLiveWeather && liveWeather) ? liveWeather : getWeatherForRegion(selectedState, selectedDistrict);
+  const stateData = STATES.find(s => s.id === selectedState);
+  const stateName = stateData?.name ?? selectedState;
+  const districtObj = stateData?.districts.find(d => d.id === selectedDistrict);
+  const districtName = districtObj?.name || (selectedDistrict ? selectedDistrict : 'All Districts');
 
   // Applications and Grievances
   const applications = getApplications();
   const grievances = getGrievances();
 
-  // Matched schemes for farmer
+  // Matched schemes for farmer with reactive state/district profile
+  const effectiveProfile = { ...profile, state: selectedState, district: selectedDistrict };
   const matchedSchemes = SCHEMES.map(s => ({
     scheme: s,
-    eligibility: evaluateEligibility(profile, s),
+    eligibility: evaluateEligibility(effectiveProfile, s),
   })).sort((a, b) => b.eligibility.matchScore - a.eligibility.matchScore);
 
   const topEligible = matchedSchemes.filter(m => m.eligibility.isEligible).slice(0, 3);
-  const topPrices = MARKET_PRICES.slice(0, 4);
+
+  // Mandi prices filtered for active state and district
+  const stateFilteredPrices = filterMarketPrices(MARKET_PRICES, selectedState, selectedDistrict);
+  const topPrices = (stateFilteredPrices.length > 0 ? stateFilteredPrices : filterMarketPrices(MARKET_PRICES, selectedState)).slice(0, 4);
+  const displayPrices = topPrices.length > 0 ? topPrices : MARKET_PRICES.slice(0, 4);
+
+  // DBT data for active state
+  const stateDbtRecords = searchDbtRecords('', undefined, selectedState);
+  const dbtTotalAmount = stateDbtRecords.reduce((sum, r) => sum + r.amount, 0) || 18000;
+  const dbtCount = stateDbtRecords.length || 3;
+
+  // Seeds and farms for active state
+  const stateFarms = SEED_FARMS.filter(f => f.state === selectedState);
+  const stateVarieties = SEED_VARIETIES.filter(v =>
+    v.stockAvailability.some(s => s.state === selectedState && (!selectedDistrict || s.district === selectedDistrict))
+  );
+  const displayVarietiesCount = stateVarieties.length > 0 ? stateVarieties.length : SEED_VARIETIES.length;
 
   return (
     <div className="space-y-6 animate-fade-in pb-12">
@@ -63,7 +84,7 @@ export default function DashboardPage() {
                 MoA&FW National Digital AgriStack
               </span>
               <span className="text-xs text-[var(--color-text-muted)]">
-                Registry ID: IN-AGRI-2026-TN
+                Registry ID: IN-AGRI-2026-{selectedState.toUpperCase()}
               </span>
             </div>
             <h1 className="text-xl font-bold text-[var(--color-text-primary)] mt-1.5 tracking-tight">
@@ -116,7 +137,7 @@ export default function DashboardPage() {
             </span>
             <span>•</span>
             <span>
-              <strong className="text-[var(--color-text-primary)]">Location:</strong> {profile.village || 'Panchayat Village'}, {selectedDistrict || profile.district}, {stateName}
+              <strong className="text-[var(--color-text-primary)]">Location:</strong> {districtName !== 'All Districts' ? `${districtName}, ${stateName}` : stateName}
             </span>
           </div>
 
@@ -144,11 +165,11 @@ export default function DashboardPage() {
                 <span>Direct Benefit (DBT) Credited</span>
                 <Landmark className="w-4 h-4 text-[var(--color-text-secondary)]" />
               </div>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-                ₹18,000
+              <p className="mt-2 text-2xl font-light tracking-tight text-[var(--color-text-primary)]">
+                ₹{dbtTotalAmount.toLocaleString('en-IN')}
               </p>
               <p className="mt-0.5 text-xs text-[var(--color-text-muted)] font-medium">
-                3 installments credited via PFMS
+                {dbtCount} installments credited via PFMS
               </p>
             </div>
 
@@ -157,7 +178,7 @@ export default function DashboardPage() {
                 <span>Eligible Govt Schemes</span>
                 <BookOpen className="w-4 h-4 text-[var(--color-text-secondary)]" />
               </div>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              <p className="mt-2 text-2xl font-light tracking-tight text-[var(--color-text-primary)]">
                 {topEligible.length} Schemes
               </p>
               <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
@@ -170,7 +191,7 @@ export default function DashboardPage() {
                 <span>Active Applications</span>
                 <Clock className="w-4 h-4 text-[var(--color-text-secondary)]" />
               </div>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              <p className="mt-2 text-2xl font-light tracking-tight text-[var(--color-text-primary)]">
                 {applications.length} In Progress
               </p>
               <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
@@ -183,11 +204,11 @@ export default function DashboardPage() {
                 <span>Certified Farm Supplies</span>
                 <PackageCheck className="w-4 h-4 text-[var(--color-text-secondary)]" />
               </div>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-                {SEED_VARIETIES.length} Varieties
+              <p className="mt-2 text-2xl font-light tracking-tight text-[var(--color-text-primary)]">
+                {displayVarietiesCount} Varieties
               </p>
               <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
-                50% subsidized farm stock
+                50% subsidized {stateName} farm stock
               </p>
             </div>
           </div>
@@ -367,7 +388,7 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <CloudSun className="w-4 h-4 text-[var(--color-text-secondary)]" />
                   <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
-                    Agro-Meteorological Advisory ({stateName})
+                    Agro-Meteorological Advisory ({weather.regionLabel})
                   </h2>
                 </div>
                 <button
@@ -417,7 +438,7 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-[var(--color-text-secondary)]" />
                   <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
-                    e-NAM Mandi Modal Prices vs MSP Benchmarks
+                    e-NAM Mandi Modal Prices vs MSP ({districtName !== 'All Districts' ? `${districtName}, ${stateName}` : stateName})
                   </h2>
                 </div>
                 <button
@@ -440,7 +461,7 @@ export default function DashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {topPrices.map(price => {
+                    {displayPrices.map(price => {
                       const msp = Math.round(price.modalPrice * 1.05);
                       const diff = price.modalPrice - msp;
                       return (
@@ -482,10 +503,10 @@ export default function DashboardPage() {
                 <span className="text-xs text-[var(--color-text-muted)]">Block Agriculture Office</span>
               </div>
               <h2 className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
-                Field Inspection & Verification Queue — {selectedDistrict || 'Thanjavur'} Division
+                Field Inspection & Verification Queue — {districtName} Division ({stateName})
               </h2>
               <p className="text-xs text-[var(--color-text-muted)]">
-                Authorised Officer: Dr. K. Ramanathan, ADA (Agronomy) | Staff ID: AG-TN-2024-884
+                Authorised Officer: Agricultural Development Officer (ADA) | Staff ID: AG-{selectedState.toUpperCase()}-2024-884
               </p>
             </div>
             <Button
@@ -502,22 +523,22 @@ export default function DashboardPage() {
           <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Pending Field Inspections</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">14</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">14</span>
               <span className="text-xs text-[var(--color-text-muted)]">Geo-tagging required</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Certified Seed Farm Stock</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">128.5 Qtl</span>
-              <span className="text-xs text-[var(--color-text-muted)]">CO-51 & CR-1009 available</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">128.5 Qtl</span>
+              <span className="text-xs text-[var(--color-text-muted)]">{stateFarms[0]?.name?.split(',')[0] || 'Regional Farm'} Stock Available</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Assigned Block Grievances</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">{grievances.length}</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">{grievances.length}</span>
               <span className="text-xs text-[var(--color-text-muted)]">Target SLA: 48 hours</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Applications Recommended</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">82</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">82</span>
               <span className="text-xs text-[var(--color-text-muted)]">Forwarded to Collectorate</span>
             </div>
           </div>
@@ -546,7 +567,7 @@ export default function DashboardPage() {
                       <td className="font-semibold">{app.farmerName}</td>
                       <td>{app.schemeName}</td>
                       <td>Survey {app.surveyNumber} ({app.landAreaAcres} ac)</td>
-                      <td>{app.village || 'Thanjavur Block'}</td>
+                      <td>{districtName}</td>
                       <td className="text-right">
                         <Button
                           size="sm"
@@ -609,22 +630,22 @@ export default function DashboardPage() {
           <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Approved Outlay</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">₹840.50 Cr</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">₹840.50 Cr</span>
               <span className="text-xs text-[var(--color-text-muted)]">FY 2026-27 Approved</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">DBT Disbursed via PFMS</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">₹692.10 Cr</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">₹692.10 Cr</span>
               <span className="text-xs text-[var(--color-text-muted)] font-medium">82.3% Utilization</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Registered Beneficiaries</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">1,248,300</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">1,248,300</span>
               <span className="text-xs text-[var(--color-text-muted)]">Active DBT farmers</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Sanction Clearance Speed</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">3.8 Days</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">3.8 Days</span>
               <span className="text-xs text-[var(--color-text-muted)] font-medium">Target SLA: 7 days</span>
             </div>
           </div>
@@ -696,22 +717,22 @@ export default function DashboardPage() {
           <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Active Schemes Master</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">{SCHEMES.length}</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">{SCHEMES.length}</span>
               <span className="text-xs text-[var(--color-text-muted)]">Central & State registries</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Registered Seed Farms</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">{SEED_FARMS.length}</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">{SEED_FARMS.length}</span>
               <span className="text-xs text-[var(--color-text-muted)]">State & Central farms</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">PFMS Gateway Uptime</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">99.98%</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">99.98%</span>
               <span className="text-xs text-[var(--color-text-muted)] font-medium">Zero failed settlement</span>
             </div>
             <div>
               <span className="text-xs text-[var(--color-text-muted)] block">System Audit Events</span>
-              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">148,290</span>
+              <span className="text-2xl font-light text-[var(--color-text-primary)] mt-1 block">148,290</span>
               <span className="text-xs text-[var(--color-text-muted)]">SHA-256 integrity verified</span>
             </div>
           </div>

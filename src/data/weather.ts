@@ -491,27 +491,68 @@ const REGIONAL_PROFILES: Record<string, RegionWeather> = {
   },
 };
 
-export function getWeatherForRegion(stateId: string): RegionWeather {
-  const normalized = (stateId || 'tn').toLowerCase();
+import { STATES } from './locations';
+
+export function getWeatherForRegion(stateId: string, districtId?: string): RegionWeather {
+  const normState = (stateId || 'tn').toLowerCase();
+  const stateObj = STATES.find(s => s.id === normState) || STATES[0];
+  const districtObj = districtId ? stateObj.districts.find(d => d.id === districtId) : undefined;
   
-  if (['pb', 'hr', 'up', 'hp', 'ut'].includes(normalized)) {
-    return REGIONAL_PROFILES.pb;
-  }
-  if (['gj', 'rj'].includes(normalized)) {
-    return REGIONAL_PROFILES.gj;
-  }
-  if (['mh', 'mp', 'cg'].includes(normalized)) {
-    return REGIONAL_PROFILES.mh;
-  }
-  if (['tn', 'ap', 'ts', 'kl', 'ka'].includes(normalized)) {
-    return REGIONAL_PROFILES.tn;
+  const regionLabel = districtObj
+    ? `${districtObj.name}, ${stateObj.name}`
+    : `${stateObj.name} (Regional Advisory)`;
+
+  // Base profile selection
+  let base: RegionWeather;
+  if (['pb', 'hr'].includes(normState)) {
+    base = REGIONAL_PROFILES.pb;
+  } else if (['gj'].includes(normState)) {
+    base = REGIONAL_PROFILES.gj;
+  } else if (['mh'].includes(normState)) {
+    base = REGIONAL_PROFILES.mh;
+  } else {
+    base = REGIONAL_PROFILES.tn;
   }
 
-  // Fallback default
+  // State-specific temperature & condition calibrations
+  const stateCalibrations: Record<string, { temp: number; condition: string; humidity: number; wind: number; crop: string }> = {
+    pb: { temp: 22, condition: 'Pleasant & Clear', humidity: 52, wind: 9, crop: 'wheat and rabi pulses' },
+    hr: { temp: 23, condition: 'Clear Sky', humidity: 50, wind: 10, crop: 'mustard and rabi wheat' },
+    up: { temp: 25, condition: 'Mild & Sunny', humidity: 58, wind: 8, crop: 'sugarcane and potato' },
+    mh: { temp: 28, condition: 'Dry & Sunny', humidity: 48, wind: 12, crop: 'cotton and gram (chana)' },
+    gj: { temp: 30, condition: 'Warm & Clear', humidity: 45, wind: 14, crop: 'groundnut and cotton' },
+    ka: { temp: 25, condition: 'Partly Cloudy', humidity: 62, wind: 11, crop: 'finger millet (ragi) and maize' },
+    ap: { temp: 30, condition: 'Humid Coastal', humidity: 72, wind: 13, crop: 'samba paddy and chilli' },
+    ts: { temp: 29, condition: 'Sunny & Warm', humidity: 55, wind: 10, crop: 'cotton and maize' },
+    wb: { temp: 27, condition: 'Humid & Overcast', humidity: 76, wind: 9, crop: 'paddy and vegetable nurseries' },
+    tn: { temp: 29, condition: 'Coastal Humid Breeze', humidity: 78, wind: 14, crop: 'thaladi paddy and banana' },
+  };
+
+  const cal = stateCalibrations[normState] || { temp: 27, condition: 'Pleasant Weather', humidity: 60, wind: 10, crop: 'standing crops' };
+
+  // District micro-adjustment
+  const districtDelta = (districtObj && districtObj.lat != null) ? Math.round(((districtObj.lat * 10) % 5) - 2) : 0;
+  const currentTemp = cal.temp + districtDelta;
+
+  const adjustedForecast = base.forecast.map((f, idx) => ({
+    ...f,
+    maxTempC: f.maxTempC + (cal.temp - 29) + districtDelta,
+    minTempC: f.minTempC + (cal.temp - 29) + districtDelta,
+    farmingAdvice: idx === 0
+      ? `Optimum conditions for ${cal.crop} in ${regionLabel}. Monitor soil moisture before scheduling irrigation.`
+      : f.farmingAdvice,
+  }));
+
   return {
-    ...REGIONAL_PROFILES.tn,
-    regionId: stateId,
-    regionLabel: stateId.toUpperCase() + ' Agricultural Zone',
+    ...base,
+    regionId: normState,
+    regionLabel,
+    currentTempC: currentTemp,
+    currentCondition: cal.condition,
+    humidity: Math.min(95, Math.max(30, cal.humidity + districtDelta * 2)),
+    windSpeedKmh: cal.wind,
+    lastUpdatedLabel: `Regional IMD Bulletin • ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`,
+    forecast: adjustedForecast,
   };
 }
 
