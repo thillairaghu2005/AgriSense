@@ -79,7 +79,7 @@ export default function TopBar() {
         <div className="flex-1" />
 
         {/* Role Selector Pill */}
-        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-[var(--color-border)] shadow-xs">
+        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-[var(--color-border)] shadow-xs">
           <div className="w-5 h-5 rounded-md bg-[var(--color-primary-50)] text-[var(--color-primary-700)] flex items-center justify-center shrink-0">
             <ShieldCheck className="w-3.5 h-3.5" />
           </div>

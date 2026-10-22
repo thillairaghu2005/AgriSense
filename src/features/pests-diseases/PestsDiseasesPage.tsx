@@ -1,5 +1,6 @@
-import { useState, useMemo, useRef } from 'react';
-import { Card, PageHeader, Badge, InfoBanner, DemoLabel, EmptyState } from '@/components/ui/Card';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Card, PageHeader, Badge, InfoBanner, EmptyState } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { Select, SearchInput } from '@/components/forms/FormComponents';
 import { PESTS_DISEASES } from '@/data/pestsDiseases';
@@ -19,10 +20,27 @@ import {
 } from 'lucide-react';
 
 export default function PestsDiseasesPage() {
+  const [searchParams] = useSearchParams();
+  const pestIdParam = searchParams.get('id');
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCrop, setSelectedCrop] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | PestOrDisease>('all');
-  const [selectedItem, setSelectedItem] = useState<PestDisease | null>(null);
+  const [selectedItem, setSelectedItem] = useState<PestDisease | null>(() => {
+    if (pestIdParam) {
+      return PESTS_DISEASES.find(p => p.id === pestIdParam) || null;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (pestIdParam) {
+      const match = PESTS_DISEASES.find(p => p.id === pestIdParam);
+      if (match) {
+        setSelectedItem(prev => (prev?.id === match.id ? prev : match));
+      }
+    }
+  }, [pestIdParam]);
 
   // Simulated Image Assessment State
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -129,7 +147,7 @@ export default function PestsDiseasesPage() {
 
       setSimulatedResult({
         match,
-        confidence: Math.floor(84 + Math.random() * 11),
+        confidence: 88,
         observations,
       });
     }, 1100);
@@ -147,7 +165,6 @@ export default function PestsDiseasesPage() {
       <PageHeader
         title="Pest & Disease Advisory"
         subtitle="Identify crop symptoms, prevention protocols, and simulated field assessment"
-        badge={<DemoLabel label="Educational reference library" />}
       />
 
       <InfoBanner variant="warning">
@@ -162,7 +179,9 @@ export default function PestsDiseasesPage() {
           <h2 className="text-base font-bold text-[var(--color-text-primary)]">
             Simulated Crop Image Assessment Flow
           </h2>
-          <DemoLabel label="Prototype Simulator" />
+          <span className="text-[10px] font-semibold text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200">
+            Simulation
+          </span>
         </div>
         <p className="text-xs text-[var(--color-text-secondary)] mb-4">
           Test how a farmer can preview photo uploads of affected leaves. 
@@ -424,12 +443,13 @@ export default function PestsDiseasesPage() {
                   <div className="flex items-center gap-1.5 flex-wrap my-1.5">
                     <span className="text-[11px] text-[var(--color-text-muted)]">Crops:</span>
                     {affectedCrops.map(c => (
-                      <span
+                      <Link
                         key={c.id}
-                        className="text-[10px] bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] px-1.5 py-0.5 rounded shadow-xs"
+                        to={`/crops/${c.id}`}
+                        className="text-[10px] bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-primary-700)] hover:border-[var(--color-primary-300)] px-1.5 py-0.5 rounded shadow-xs transition-colors"
                       >
                         {c.name}
-                      </span>
+                      </Link>
                     ))}
                   </div>
 
@@ -471,7 +491,7 @@ export default function PestsDiseasesPage() {
       {/* Detail Protocol Modal */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl border border-[var(--color-border)] max-w-2xl w-full p-6 shadow-lg space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">

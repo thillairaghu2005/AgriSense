@@ -3,11 +3,11 @@ import { MARKET_PRICES, MSP_PRICES } from '@/data/marketPrices';
 import { CROPS } from '@/data/crops';
 import { STATES } from '@/data/locations';
 import type { MarketPrice } from '@/types';
-import { Card, PageHeader, DemoLabel, InfoBanner } from '@/components/ui/Card';
+import { Card, PageHeader, InfoBanner } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { SearchInput } from '@/components/forms/FormComponents';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { TrendingUp, Info, Wifi, Radio, RefreshCw, Key, ExternalLink, Check, AlertCircle } from 'lucide-react';
+import { TrendingUp, Info, Wifi, Radio, RefreshCw, Key, ExternalLink, Check, AlertCircle, X } from 'lucide-react';
 import {
   fetchLiveMandiPrices,
   getAgmarknetApiKey,
@@ -126,12 +126,15 @@ export default function MarketPricesPage() {
           }
           badge={
             isLive && apiKey ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 LIVE AGMARKNET
               </span>
             ) : (
-              <DemoLabel label="Illustrative — sample prices" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-neutral-100 text-neutral-700 border border-neutral-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
+                Cached Mandi Benchmark
+              </span>
             )
           }
         />
@@ -189,22 +192,23 @@ export default function MarketPricesPage() {
 
       {/* API Key Modal / Drawer */}
       {showKeyModal && (
-        <div className="p-4 rounded-xl border border-[var(--color-primary-300)] bg-[var(--color-primary-50)] text-xs animate-fade-in space-y-3">
+        <div className="p-4 rounded-lg border border-[var(--color-border)] bg-white shadow-xs text-xs animate-fade-in space-y-3">
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="text-sm font-bold text-[var(--color-primary-900)] flex items-center gap-2">
+              <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
                 <Key className="w-4 h-4 text-[var(--color-primary-700)]" />
                 Data.gov.in Agmarknet API Key
               </h3>
-              <p className="text-[var(--color-primary-800)] mt-0.5">
+              <p className="text-[var(--color-text-secondary)] mt-0.5">
                 Government of India provides free public API access to daily wholesale mandi arrivals and prices across 3,000+ markets nationwide.
               </p>
             </div>
             <button
               onClick={() => setShowKeyModal(false)}
-              className="text-neutral-500 hover:text-neutral-700 font-bold px-2 py-1"
+              className="text-neutral-500 hover:text-neutral-700 p-1 rounded-md cursor-pointer"
+              aria-label="Close API key drawer"
             >
-              ✕
+              <X className="w-4 h-4" />
             </button>
           </div>
 
@@ -303,12 +307,10 @@ export default function MarketPricesPage() {
               <TrendingUp className="w-4 h-4 text-[var(--color-primary-600)]" />
               {isLive && apiKey ? 'Live Mandi Price Comparison' : 'Sample Price Comparison'}
             </h2>
-            {isLive && apiKey ? (
-              <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+            {isLive && apiKey && (
+              <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">
                 Agmarknet Live
               </span>
-            ) : (
-              <DemoLabel />
             )}
           </div>
           <p className="text-xs text-[var(--color-text-muted)] mb-3">
@@ -335,12 +337,10 @@ export default function MarketPricesPage() {
             <h2 className="text-sm font-bold text-[var(--color-text-primary)]">Mandi Wholesale Modal & Arrival Prices</h2>
             <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Showing {filtered.length} commodity price records</p>
           </div>
-          {isLive && apiKey ? (
-            <span className="text-[11px] text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+          {isLive && apiKey && (
+            <span className="text-[11px] text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
               Live Feed
             </span>
-          ) : (
-            <DemoLabel label="Sample dataset" />
           )}
         </div>
         <div className="overflow-x-auto">
@@ -409,7 +409,7 @@ export default function MarketPricesPage() {
               ))}
             </select>
           </div>
-          <div className="flex-shrink-0 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-right shadow-xs min-w-[200px]">
+          <div className="flex-shrink-0 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-right shadow-xs min-w-[200px]">
             <p className="text-xs font-medium text-emerald-800">Estimated Gross Revenue</p>
             <p className="text-xl font-bold text-emerald-700 mt-0.5">₹{estimatedRevenue.toLocaleString('en-IN')}</p>
             <p className="text-[10px] text-emerald-600 mt-0.5">
@@ -424,7 +424,9 @@ export default function MarketPricesPage() {
         <div className="p-4 border-b border-[var(--color-border)]">
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Minimum Support Price (MSP) Benchmark</h2>
-            <DemoLabel label="CACP / CCEA statutory reference" />
+            <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+              CACP / CCEA Statutory Reference
+            </span>
           </div>
           <p className="text-xs text-[var(--color-text-muted)]">MSP is the statutory benchmark price announced by the Government of India via CCEA.</p>
         </div>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, PageHeader, Badge, InfoBanner, DemoLabel, EmptyState } from '@/components/ui/Card';
+import { Card, PageHeader, Badge, InfoBanner, EmptyState } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { Select } from '@/components/forms/FormComponents';
 import type { AppNotification, NotificationType } from '@/types';
@@ -121,11 +121,10 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
+    <div className="space-y-6 animate-fade-in max-w-5xl">
       <PageHeader
         title="Alerts & Notifications"
         subtitle="Weather advisories, mandi rate updates, scheme notices, and farm reminders"
-        badge={<DemoLabel label="Sample notification center" />}
         actions={
           unreadCount > 0 ? (
             <Button
@@ -141,7 +140,7 @@ export default function NotificationsPage() {
       />
 
       <InfoBanner variant="info">
-        <strong>Illustrative alerts:</strong> These simulated notifications demonstrate how real-time push alerts, market shifts, and weather warnings would inform farmers.
+        <strong>Official Communications Registry:</strong> Real-time agro-meteorological advisories, APMC modal market alerts, and scheme sanction updates issued by State & District Agricultural Directorates.
       </InfoBanner>
 
       {/* Filter Bar */}

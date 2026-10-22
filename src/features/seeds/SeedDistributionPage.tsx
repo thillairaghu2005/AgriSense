@@ -1,22 +1,72 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { SEED_VARIETIES, SEED_FARMS, searchSeedVarieties } from '@/data/seeds';
 import { Card, PageHeader } from '@/components/ui/Card';
 import { SearchInput } from '@/components/forms/FormComponents';
 import Button from '@/components/ui/Button';
 import { useApp } from '@/app/providers';
+import { storageGet, storageSet } from '@/lib/storage';
 import type { SeedVariety } from '@/types';
 import {
   Sprout, Droplets, ShieldCheck, CheckCircle2,
   Calendar, Layers, MapPin, Phone, Building2,
-  X, Check, Sparkles
+  X, Check, Printer, Trash2
 } from 'lucide-react';
+
+interface SeedRequisitionRecord {
+  id: string;
+  varietyId: string;
+  cropName: string;
+  varietyName: string;
+  farmId: string;
+  farmName: string;
+  farmContact: string;
+  quantityKg: number;
+  totalCost: number;
+  subsidyAmount: number;
+  farmerPayable: number;
+  bookedDate: string;
+  status: 'confirmed' | 'ready_for_pickup' | 'collected';
+}
+
+const DEFAULT_REQUISITIONS: SeedRequisitionRecord[] = [
+  {
+    id: 'SEED-2026-88412',
+    varietyId: 'seed-rice-co51',
+    cropName: 'Paddy (Rice)',
+    varietyName: 'CO 51 (High Yielding)',
+    farmId: 'farm-1',
+    farmName: 'District Agricultural Farm, Sakkottai',
+    farmContact: '04362-220412',
+    quantityKg: 50,
+    totalCost: 2400,
+    subsidyAmount: 1200,
+    farmerPayable: 1200,
+    bookedDate: '2026-03-15',
+    status: 'ready_for_pickup',
+  },
+];
 
 export default function SeedDistributionPage() {
   const { t, profile } = useApp();
+  const [searchParams] = useSearchParams();
+  const cropParam = searchParams.get('crop');
+
   const [query, setQuery] = useState('');
   const [seasonFilter, setSeasonFilter] = useState('');
-  const [cropFilter, setCropFilter] = useState('');
-  const [activeTab, setActiveTab] = useState<'catalog' | 'farms'>('catalog');
+  const [cropFilter, setCropFilter] = useState(() => cropParam || '');
+  const [activeTab, setActiveTab] = useState<'catalog' | 'farms' | 'requisitions'>('catalog');
+
+  const [requisitions, setRequisitions] = useState<SeedRequisitionRecord[]>(() =>
+    storageGet('agrisense_seed_requisitions', DEFAULT_REQUISITIONS)
+  );
+
+  useEffect(() => {
+    if (cropParam) {
+      setCropFilter(cropParam);
+      setActiveTab('catalog');
+    }
+  }, [cropParam]);
 
   // Booking Modal State
   const [bookingVariety, setBookingVariety] = useState<SeedVariety | null>(null);
@@ -41,11 +91,41 @@ export default function SeedDistributionPage() {
     const reqQty = Math.ceil(bookingVariety.seedRateKgPerAcre * acreage);
     const totalCost = reqQty * bookingVariety.pricePerKg;
     const subsidy = (totalCost * bookingVariety.subsidyPercentage) / 100;
+    const payable = totalCost - subsidy;
     const refCode = `SEED-2026-${Math.floor(10000 + Math.random() * 90000)}`;
 
+    const selectedFarm = bookingVariety.stockAvailability.find(s => s.farmOrSupplierId === selectedFarmId) ||
+      bookingVariety.stockAvailability[0];
+
+    const newRequisition: SeedRequisitionRecord = {
+      id: refCode,
+      varietyId: bookingVariety.id,
+      cropName: bookingVariety.cropName,
+      varietyName: bookingVariety.varietyName,
+      farmId: selectedFarm?.farmOrSupplierId || 'farm-1',
+      farmName: selectedFarm?.farmName || 'District Seed Farm',
+      farmContact: SEED_FARMS.find(f => f.id === selectedFarm?.farmOrSupplierId)?.contactNumber || '04362-220412',
+      quantityKg: reqQty,
+      totalCost,
+      subsidyAmount: subsidy,
+      farmerPayable: payable,
+      bookedDate: new Date().toISOString().split('T')[0],
+      status: 'ready_for_pickup',
+    };
+
+    const updated = [newRequisition, ...requisitions];
+    setRequisitions(updated);
+    storageSet('agrisense_seed_requisitions', updated);
+
     setBookingSuccess(
-      `Requisition ${refCode} booked! Required: ${reqQty} kg. Total: ₹${totalCost.toLocaleString()}, Subsidy: ₹${subsidy.toLocaleString()}, You pay at farm: ₹${(totalCost - subsidy).toLocaleString()}.`
+      `Requisition ${refCode} booked! Required: ${reqQty} kg. Total: ₹${totalCost.toLocaleString()}, Subsidy: ₹${subsidy.toLocaleString()}, You pay at farm: ₹${payable.toLocaleString()}.`
     );
+  }
+
+  function handleCancelRequisition(id: string) {
+    const updated = requisitions.filter(r => r.id !== id);
+    setRequisitions(updated);
+    storageSet('agrisense_seed_requisitions', updated);
   }
 
   return (
@@ -71,10 +151,10 @@ export default function SeedDistributionPage() {
               National Seeds Corporation (NSC), and Agricultural University centres with authentic seed tags.
             </p>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setActiveTab('catalog')}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'catalog'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
@@ -84,13 +164,23 @@ export default function SeedDistributionPage() {
             </button>
             <button
               onClick={() => setActiveTab('farms')}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'farms'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
               }`}
             >
-              Government Seed Farms ({SEED_FARMS.length})
+              Government Farms ({SEED_FARMS.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('requisitions')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                activeTab === 'requisitions'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
+              }`}
+            >
+              My Requisitions ({requisitions.length})
             </button>
           </div>
         </div>
@@ -249,7 +339,7 @@ export default function SeedDistributionPage() {
                     <Button
                       variant="primary"
                       size="sm"
-                      leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+                      leftIcon={<Sprout className="w-3.5 h-3.5" />}
                       onClick={() => handleOpenBooking(variety)}
                     >
                       {t('seeds.bookSeed')}
@@ -323,6 +413,127 @@ export default function SeedDistributionPage() {
         </div>
       )}
 
+      {/* Requisitions Tab */}
+      {activeTab === 'requisitions' && (
+        <div className="space-y-4">
+          {requisitions.length === 0 ? (
+            <div className="bg-white rounded-xl border border-[var(--color-border)] p-12 text-center space-y-3">
+              <Sprout className="w-10 h-10 text-[var(--color-text-muted)] mx-auto" />
+              <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                No Active Seed Requisitions
+              </h3>
+              <p className="text-xs text-[var(--color-text-secondary)] max-w-md mx-auto">
+                You have not booked any certified seeds yet. Browse the catalog to view NFSM subsidized seeds and book your seasonal quota.
+              </p>
+              <Button variant="primary" size="sm" onClick={() => setActiveTab('catalog')}>
+                Browse Seed Catalog
+              </Button>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-[var(--color-border)] overflow-hidden shadow-xs">
+              <div className="p-4 border-b border-[var(--color-border)] flex flex-wrap items-center justify-between gap-3 bg-[var(--color-surface-1)]">
+                <div>
+                  <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
+                    Active Seed Quotas & Counter Requisitions ({requisitions.length})
+                  </h3>
+                  <p className="text-xs text-[var(--color-text-muted)]">
+                    Present requisition reference code and Aadhaar ID at the designated Government Seed Farm counter.
+                  </p>
+                </div>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<Printer className="w-3.5 h-3.5" />}
+                  onClick={() => window.print()}
+                >
+                  Print All Vouchers
+                </Button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="table-clean w-full text-left text-xs">
+                  <thead>
+                    <tr>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Requisition ID</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Variety & Crop</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Distribution Center</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Allocated Qty</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Payable at Counter</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Status</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)] text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {requisitions.map(req => (
+                      <tr key={req.id} className="border-t border-[var(--color-border)] hover:bg-[var(--color-surface-1)] transition-colors">
+                        <td className="py-3 px-4 font-mono font-semibold text-[var(--color-text-primary)]">
+                          {req.id}
+                          <span className="block text-[10px] font-normal text-[var(--color-text-muted)]">
+                            Booked: {req.bookedDate}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="font-semibold text-[var(--color-text-primary)] block">
+                            {req.varietyName}
+                          </span>
+                          <span className="text-[11px] text-[var(--color-text-muted)]">
+                            {req.cropName}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="font-medium text-[var(--color-text-primary)] block">
+                            {req.farmName}
+                          </span>
+                          <span className="text-[11px] text-[var(--color-text-muted)] flex items-center gap-1 mt-0.5">
+                            <Phone className="w-3 h-3 text-[var(--color-text-muted)]" />
+                            {req.farmContact}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 font-semibold text-[var(--color-text-primary)]">
+                          {req.quantityKg} kg
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="font-bold text-emerald-700 block">
+                            ₹{req.farmerPayable.toLocaleString()}
+                          </span>
+                          <span className="text-[10px] text-[var(--color-text-muted)]">
+                            (Govt Subsidy: ₹{req.subsidyAmount.toLocaleString()})
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            Ready for Pickup
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => window.print()}
+                              className="p-1.5 rounded-md hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
+                              title="Print Voucher"
+                            >
+                              <Printer className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleCancelRequisition(req.id)}
+                              className="p-1.5 rounded-md hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
+                              title="Cancel Requisition"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Seed Requisition Modal */}
       {bookingVariety && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
@@ -362,7 +573,16 @@ export default function SeedDistributionPage() {
                     Government subsidy is deducted at the counter automatically.
                   </p>
                 </div>
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setBookingVariety(null);
+                      setActiveTab('requisitions');
+                    }}
+                  >
+                    View My Requisitions
+                  </Button>
                   <Button variant="primary" onClick={() => setBookingVariety(null)}>
                     {t('common.close')}
                   </Button>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, PageHeader, DemoLabel } from '@/components/ui/Card';
+import { Card, PageHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { FormField, Input, Select } from '@/components/forms/FormComponents';
 import { useApp } from '@/app/providers';
@@ -95,15 +95,14 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
+    <div className="space-y-6 animate-fade-in max-w-5xl">
       <PageHeader
         title="Farmer Profile & Regional Settings"
         subtitle="Customise your location, farm holding characteristics, and accessibility preferences"
-        badge={<DemoLabel label="Local demo profile" />}
       />
 
       {savedSuccess && (
-        <div className="p-3.5 bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] text-[var(--color-primary-900)] rounded-xl text-xs flex items-center gap-2">
+        <div className="p-3.5 bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] text-[var(--color-primary-900)] rounded-lg text-xs flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           <span>Profile preferences saved successfully to your browser storage!</span>
         </div>
@@ -310,7 +309,7 @@ export default function ProfilePage() {
       {/* Confirmation Modal for Resetting Demo Data */}
       {confirmResetOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-[var(--color-border)] space-y-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-lg border border-[var(--color-border)] space-y-4">
             <div className="w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600">
               <AlertTriangle className="w-6 h-6" />
             </div>

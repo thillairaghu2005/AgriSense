@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchSchemes } from '@/data/schemes';
 import { Card, Badge, PageHeader, InfoBanner } from '@/components/ui/Card';
 import { SearchInput } from '@/components/forms/FormComponents';
@@ -10,7 +10,7 @@ import type { Scheme } from '@/types';
 import { storageGet, storageSet, STORAGE_KEYS } from '@/lib/storage';
 import {
   ExternalLink, CheckSquare, Square, ChevronDown, ChevronUp,
-  AlertCircle, ShieldCheck, Sparkles,
+  AlertCircle, ShieldCheck,
   CheckCircle2, ArrowRight
 } from 'lucide-react';
 
@@ -48,14 +48,20 @@ function SchemeCard({
   checklist,
   onToggle,
   onApply,
+  isInitialExpanded = false,
 }: {
   scheme: Scheme;
   eligibility: EligibilityResult;
   checklist: string[];
   onToggle: (item: string) => void;
   onApply: (schemeId: string) => void;
+  isInitialExpanded?: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(isInitialExpanded);
+
+  useEffect(() => {
+    if (isInitialExpanded) setExpanded(true);
+  }, [isInitialExpanded]);
 
   const levelLabel = scheme.level === 'central' ? 'Central Scheme' : 'State Scheme';
   const catLabel = scheme.category.replace(/_/g, ' ');
@@ -79,17 +85,17 @@ function SchemeCard({
             <Badge variant="neutral">
               {catLabel}
             </Badge>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${matchColor}`}>
-              <Sparkles className="w-3 h-3 text-emerald-600" />
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border flex items-center gap-1 ${matchColor}`}>
+              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
               {eligibility.matchScore}% Match
             </span>
             {scheme.isVerified ? (
-              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3" />
                 Verified MoA&FW
               </span>
             ) : (
-              <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md">
                 Sample
               </span>
             )}
@@ -317,6 +323,9 @@ function SchemeCard({
 export default function SchemesPage() {
   const { t, profile } = useApp();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const targetSchemeId = searchParams.get('scheme');
+
   const [query, setQuery] = useState('');
   const [levelFilter, setLevelFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -336,8 +345,16 @@ export default function SchemesPage() {
       result = result.filter(s => evaluateEligibility(profile, s).isEligible);
     }
 
+    // If targetSchemeId is provided, bring it to top if not filtered out
+    if (targetSchemeId) {
+      const target = result.find(s => s.id === targetSchemeId);
+      if (target) {
+        result = [target, ...result.filter(s => s.id !== targetSchemeId)];
+      }
+    }
+
     return result;
-  }, [query, levelFilter, categoryFilter, onlyEligible, profile]);
+  }, [query, levelFilter, categoryFilter, onlyEligible, profile, targetSchemeId]);
 
   function handleApply(schemeId: string) {
     navigate(`/applications?apply=${schemeId}`);
@@ -407,7 +424,7 @@ export default function SchemesPage() {
               : 'bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] shadow-xs hover:bg-[var(--color-surface-2)] hover:border-[var(--color-primary-300)]'
           }`}
         >
-          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+          <ShieldCheck className={`w-3.5 h-3.5 ${onlyEligible ? 'text-white' : 'text-emerald-700'}`} />
           My Eligible Schemes Only
         </button>
       </div>
@@ -429,6 +446,7 @@ export default function SchemesPage() {
               checklist={checklists[scheme.id] ?? []}
               onToggle={item => toggleItem(scheme.id, item)}
               onApply={handleApply}
+              isInitialExpanded={scheme.id === targetSchemeId}
             />
           );
         })}

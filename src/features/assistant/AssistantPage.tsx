@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Card, PageHeader, InfoBanner } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import { Bot, Send, Trash2, User, Mic, MicOff, Volume2, Sparkles, AlertCircle } from 'lucide-react';
+import { Bot, Send, Trash2, User, Mic, MicOff, Volume2, AlertCircle } from 'lucide-react';
 import { useApp } from '@/app/providers';
 
 interface Message {
@@ -26,9 +26,13 @@ const SIMULATED_RESPONSES: Record<string, string> = {
   cotton: "For Cotton, monitor for Pink Bollworm from 45 DAS onwards using pheromone traps (5 traps/acre). Avoid excessive urea which causes lush vegetative growth attracting sucking pests like jassids and whiteflies.",
 };
 
+function createMessage(id: string, role: 'user' | 'assistant', content: string): Message {
+  return { id, role, content, timestamp: new Date() };
+}
+
 export default function AssistantPage() {
   const { profile, state, t } = useApp();
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<Message[]>(() => [
     {
       id: 'welcome',
       role: 'assistant',
@@ -41,6 +45,7 @@ export default function AssistantPage() {
   const [isListening, setIsListening] = useState(false);
   const [speakingId, setSpeakingId] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const msgCountRef = useRef(1);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -64,17 +69,19 @@ export default function AssistantPage() {
 
   function sendMessage(text: string) {
     if (!text.trim()) return;
-    const userMsg: Message = { id: `u-${Date.now()}`, role: 'user', content: text, timestamp: new Date() };
+    msgCountRef.current += 1;
+    const count = msgCountRef.current;
+    const userMsg = createMessage(`u-${count}`, 'user', text);
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
 
     setTimeout(() => {
       const response = getResponse(text);
-      const assistantMsg: Message = { id: `a-${Date.now()}`, role: 'assistant', content: response, timestamp: new Date() };
+      const assistantMsg = createMessage(`a-${count}`, 'assistant', response);
       setMessages(prev => [...prev, assistantMsg]);
       setIsTyping(false);
-    }, 700 + Math.random() * 500);
+    }, 800);
   }
 
   // Speech-to-Text handler
@@ -202,10 +209,10 @@ export default function AssistantPage() {
             </div>
 
             <div
-              className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
+              className={`p-3.5 rounded-lg text-xs leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-[var(--color-primary-700)] text-white shadow-xs rounded-tr-none'
-                  : 'bg-[var(--color-surface-1)] text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs rounded-tl-none'
+                  ? 'bg-[var(--color-primary-700)] text-white shadow-xs'
+                  : 'bg-[var(--color-surface-1)] text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs'
               }`}
             >
               <p>{msg.content}</p>
@@ -240,7 +247,7 @@ export default function AssistantPage() {
             <div className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[var(--color-primary-600)] shadow-xs shrink-0 mt-0.5">
               <Bot className="w-4 h-4" />
             </div>
-            <div className="bg-[var(--color-surface-1)] border border-[var(--color-border)] p-3 rounded-2xl rounded-tl-none text-xs text-[var(--color-text-muted)] flex items-center shadow-xs">
+            <div className="bg-[var(--color-surface-1)] border border-[var(--color-border)] p-3 rounded-lg text-xs text-[var(--color-text-muted)] flex items-center shadow-xs">
               <span className="text-[11px] text-[var(--color-text-secondary)] font-medium">Preparing agricultural guidance…</span>
             </div>
           </div>
@@ -254,20 +261,19 @@ export default function AssistantPage() {
           <button
             key={s}
             onClick={() => sendMessage(s)}
-            className="text-[11px] px-3.5 py-1.5 rounded-full bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-emerald-50 hover:text-[var(--color-primary-800)] hover:border-emerald-300 shadow-xs whitespace-nowrap transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer"
+            className="text-[11px] px-3 py-1.5 rounded-md bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] shadow-xs whitespace-nowrap transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer"
           >
-            <Sparkles className="w-3 h-3 text-[var(--color-primary-600)]" />
             <span>{s}</span>
           </button>
         ))}
       </div>
 
       {/* Input Bar with Voice Microphone */}
-      <div className="flex items-center gap-2 bg-white p-2 border border-[var(--color-border)] rounded-2xl shadow-sm focus-within:border-[var(--color-primary-500)] focus-within:ring-2 focus-within:ring-[var(--color-primary-100)] transition-all">
+      <div className="flex items-center gap-2 bg-white p-2 border border-[var(--color-border)] rounded-lg shadow-xs focus-within:border-[var(--color-primary-600)] transition-all">
         <button
           type="button"
           onClick={toggleSpeechRecognition}
-          className={`flex items-center justify-center w-10 h-10 rounded-xl cursor-pointer transition-all ${
+          className={`flex items-center justify-center w-9 h-9 rounded-md cursor-pointer transition-all ${
             isListening
               ? 'bg-[var(--color-primary-600)] text-white shadow-xs'
               : 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-3)] hover:text-[var(--color-text-primary)]'
@@ -275,7 +281,7 @@ export default function AssistantPage() {
           aria-label={isListening ? 'Stop listening' : 'Start speaking'}
           title={isListening ? 'Listening… click to stop' : 'Speak your question'}
         >
-          {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 text-neutral-700" />}
+          {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-neutral-700" />}
         </button>
 
         <input

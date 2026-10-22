@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useApp } from '@/app/providers';
 import { getWeatherForRegion, type RegionWeather } from '@/data/weather';
 import { STATES, getLocationCoordinates } from '@/data/locations';
-import { Card, PageHeader, DemoLabel, Badge, InfoBanner } from '@/components/ui/Card';
+import { Card, PageHeader, Badge, InfoBanner } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import {
   CloudSun,
@@ -140,12 +140,15 @@ export default function WeatherPage() {
           }
           badge={
             isLive ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 LIVE OPEN-METEO
               </span>
             ) : (
-              <DemoLabel label={t('demo.notLive')} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-neutral-100 text-neutral-700 border border-neutral-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
+                {t('demo.notLive')}
+              </span>
             )
           }
         />
@@ -218,7 +221,7 @@ export default function WeatherPage() {
       )}
 
       {/* Agricultural Spraying & Field Operation Index */}
-      <div className={`p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${sprayStyles.bg}`}>
+      <div className={`p-4 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${sprayStyles.bg}`}>
         <div className="flex items-start gap-3">
           <div className="p-2 bg-white/80 rounded-lg shadow-xs mt-0.5">
             {sprayStyles.icon}
@@ -246,29 +249,29 @@ export default function WeatherPage() {
       {/* Current conditions cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card className="text-center p-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-2 shadow-xs">
-            <WeatherIcon condition={weather.forecast[0]?.condition || 'sunny'} className="w-7 h-7 text-[var(--color-primary-600)]" />
+          <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center mx-auto mb-2 shadow-xs">
+            <WeatherIcon condition={weather.forecast[0]?.condition || 'sunny'} className="w-6 h-6 text-[var(--color-primary-600)]" />
           </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.currentTempC}°C</p>
           <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{weather.currentCondition}</p>
         </Card>
         <Card className="text-center p-4">
-          <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center mx-auto mb-2 shadow-xs">
-            <Droplets className="w-6 h-6 text-sky-600" />
+          <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center mx-auto mb-2 shadow-xs">
+            <Droplets className="w-5 h-5 text-sky-600" />
           </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.humidity}%</p>
           <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{t('weather.humidity')}</p>
         </Card>
         <Card className="text-center p-4">
-          <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center mx-auto mb-2 shadow-xs">
-            <Wind className="w-6 h-6 text-teal-600" />
+          <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center mx-auto mb-2 shadow-xs">
+            <Wind className="w-5 h-5 text-teal-600" />
           </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.windSpeedKmh}</p>
           <p className="text-xs text-[var(--color-text-muted)] mt-0.5">km/h {t('weather.wind')}</p>
         </Card>
         <Card className="text-center p-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto mb-2 shadow-xs">
-            <Thermometer className="w-6 h-6 text-amber-600" />
+          <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center mx-auto mb-2 shadow-xs">
+            <Thermometer className="w-5 h-5 text-amber-600" />
           </div>
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">
             {weather.forecast[0]?.maxTempC}° / {weather.forecast[0]?.minTempC}°C

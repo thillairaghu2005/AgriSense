@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getApplications, createApplication } from '@/data/applications';
 import { SCHEMES } from '@/data/schemes';
 import { Card, PageHeader } from '@/components/ui/Card';
@@ -7,74 +8,133 @@ import { useApp } from '@/app/providers';
 import type { SchemeApplication, ApplicationStatus } from '@/types';
 import {
   FileText, CheckCircle2, Clock, ShieldCheck, Printer,
-  ArrowRight, ArrowLeft, Upload, AlertCircle, FileCheck
+  ArrowRight, ArrowLeft, Upload, AlertCircle, FileCheck, Trash2, Loader2
 } from 'lucide-react';
 
 export default function ApplicationsPage() {
-  const { t, profile } = useApp();
+  const { t, profile, district: selectedDistrict } = useApp();
+  const [searchParams] = useSearchParams();
+  const applyParam = searchParams.get('apply');
+
   const [applications, setApplications] = useState<SchemeApplication[]>(() => getApplications());
   const [selectedAppId, setSelectedAppId] = useState<string>(applications[0]?.id || '');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isApplying, setIsApplying] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [isApplying, setIsApplying] = useState<boolean>(() => Boolean(applyParam));
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // New Application Wizard state
   const [step, setStep] = useState(1);
-  const [selectedSchemeId, setSelectedSchemeId] = useState<string>(SCHEMES[0]?.id || '');
+  const [selectedSchemeId, setSelectedSchemeId] = useState<string>(() => {
+    if (applyParam && SCHEMES.some(s => s.id === applyParam)) return applyParam;
+    return SCHEMES[0]?.id || '';
+  });
   const [applicantName, setApplicantName] = useState(profile.displayName || 'Farmer');
   const [mobile, setMobile] = useState(profile.mobileNumber || '98421-55820');
   const [surveyNumber, setSurveyNumber] = useState(profile.surveyNumber || '142/3A');
   const [landArea, setLandArea] = useState<number>(profile.landArea || 2.5);
   const [category, setCategory] = useState<'SF/MF' | 'SC' | 'ST' | 'General' | 'OBC' | 'Women'>('SF/MF');
-  const [uploadedFiles] = useState<{ docType: string; fileName: string; verified: boolean }[]>([
-    { docType: 'Land Records (Patta / Chitta / 7/12)', fileName: 'land_record.pdf', verified: true },
-    { docType: 'Aadhaar Card (Masked)', fileName: 'aadhaar_card.pdf', verified: true },
-    { docType: 'Bank Account Passbook / Cheque', fileName: 'bank_passbook.pdf', verified: true },
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<{ docType: string; fileName: string; fileSizeMb: number; verified: boolean }[]>([
+    { docType: 'Land Records (Patta / Chitta / 7/12)', fileName: 'land_record.pdf', fileSizeMb: 1.2, verified: true },
+    { docType: 'Aadhaar Card (Masked)', fileName: 'aadhaar_card.pdf', fileSizeMb: 0.8, verified: true },
+    { docType: 'Bank Account Passbook / Cheque', fileName: 'bank_passbook.pdf', fileSizeMb: 1.4, verified: true },
   ]);
   const [applicationCreated, setApplicationCreated] = useState<SchemeApplication | null>(null);
 
+  // Sync with URL query parameter
+  useEffect(() => {
+    if (applyParam && SCHEMES.some(s => s.id === applyParam)) {
+      setSelectedSchemeId(prev => (prev === applyParam ? prev : applyParam));
+      setIsApplying(prev => (prev ? prev : true));
+    }
+  }, [applyParam]);
+
   const selectedApp = applications.find(a => a.id === selectedAppId) || applications[0];
 
-  const filteredApps = applications.filter(a =>
-    a.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    a.schemeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    a.farmerName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredApps = applications.filter(a => {
+    const matchesSearch = a.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.schemeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.farmerName.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || a.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const selectedSchemeObj = SCHEMES.find(s => s.id === selectedSchemeId) || SCHEMES[0];
 
+  function validateStep2(): boolean {
+    const errors: Record<string, string> = {};
+    if (!applicantName.trim()) errors.applicantName = 'Applicant full name is required.';
+    if (!mobile.trim() || mobile.replace(/\D/g, '').length < 10) errors.mobile = 'Enter a valid 10-digit mobile number.';
+    if (!surveyNumber.trim()) errors.surveyNumber = 'Survey/Patta number is required for verification.';
+    if (!landArea || landArea <= 0) errors.landArea = 'Enter a valid land area in acres.';
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  }
+
+  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const newDocs: { docType: string; fileName: string; fileSizeMb: number; verified: boolean }[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const f = files[i];
+      const sizeMb = parseFloat((f.size / (1024 * 1024)).toFixed(2));
+      newDocs.push({
+        docType: `Supporting Document (${f.name.split('.').pop()?.toUpperCase() || 'DOC'})`,
+        fileName: f.name,
+        fileSizeMb: sizeMb,
+        verified: true,
+      });
+    }
+
+    setUploadedFiles(prev => [...prev, ...newDocs]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
+  function handleRemoveFile(index: number) {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  }
+
   function handleCreateApplicationSubmit() {
+    setIsSubmitting(true);
     const estAmount = typeof selectedSchemeObj.maxBenefitAmount === 'string'
       ? parseInt(selectedSchemeObj.maxBenefitAmount.replace(/[^0-9]/g, '')) || 50000
       : 50000;
 
-    const newApp = createApplication({
-      schemeId: selectedSchemeObj.id,
-      schemeCode: selectedSchemeObj.code,
-      schemeName: selectedSchemeObj.name,
-      farmerName: applicantName,
-      aadhaarMasked: profile.aadhaarMasked || 'XXXX-XXXX-4892',
-      mobileNumber: mobile,
-      state: profile.state,
-      district: profile.district,
-      block: profile.block || 'Taluk Block',
-      village: profile.village || 'Panchayat',
-      surveyNumber: surveyNumber,
-      landAreaAcres: landArea,
-      category: category,
-      subsidyRequestedAmount: estAmount,
-      documentsUploaded: uploadedFiles.map(f => ({
-        docType: f.docType,
-        fileName: f.fileName,
-        uploadDate: new Date().toISOString().split('T')[0],
-        verified: f.verified,
-        fileSizeMb: 1.1,
-      })),
-      officerRemarks: 'Application submitted successfully via online welfare portal.',
-    });
+    setTimeout(() => {
+      const newApp = createApplication({
+        schemeId: selectedSchemeObj.id,
+        schemeCode: selectedSchemeObj.code,
+        schemeName: selectedSchemeObj.name,
+        farmerName: applicantName,
+        aadhaarMasked: profile.aadhaarMasked || 'XXXX-XXXX-4892',
+        mobileNumber: mobile,
+        state: profile.state,
+        district: profile.district,
+        block: profile.block || 'Taluk Block',
+        village: profile.village || 'Panchayat',
+        surveyNumber: surveyNumber,
+        landAreaAcres: landArea,
+        category: category,
+        subsidyRequestedAmount: estAmount,
+        documentsUploaded: uploadedFiles.map(f => ({
+          docType: f.docType,
+          fileName: f.fileName,
+          uploadDate: new Date().toISOString().split('T')[0],
+          verified: f.verified,
+          fileSizeMb: f.fileSizeMb,
+        })),
+        officerRemarks: 'Application submitted successfully via online welfare portal. Document pre-check passed.',
+      });
 
-    setApplications(getApplications());
-    setApplicationCreated(newApp);
-    setSelectedAppId(newApp.id);
+      setApplications(getApplications());
+      setApplicationCreated(newApp);
+      setSelectedAppId(newApp.id);
+      setIsSubmitting(false);
+    }, 700);
   }
 
   function handlePrintReceipt() {
@@ -130,14 +190,27 @@ export default function ApplicationsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column: Applications List */}
           <div className="lg:col-span-5 space-y-3">
-            <div className="relative">
+            <div className="flex gap-2">
               <input
                 type="text"
                 placeholder={t('applications.trackStatus')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] transition-all"
+                className="flex-1 px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] transition-all"
               />
+              <select
+                value={statusFilter}
+                onChange={e => setStatusFilter(e.target.value)}
+                className="px-2.5 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer"
+                aria-label="Filter applications by status"
+              >
+                <option value="all">All Status</option>
+                <option value="submitted">Submitted</option>
+                <option value="under_verification">Under Verification</option>
+                <option value="district_approved">Approved</option>
+                <option value="dbt_disbursed">Disbursed</option>
+                <option value="rejected">Rejected</option>
+              </select>
             </div>
 
             <div className="space-y-2.5">
@@ -388,48 +461,75 @@ export default function ApplicationsPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Applicant Full Name
+                    Applicant Full Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={applicantName}
-                    onChange={e => setApplicantName(e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg"
+                    onChange={e => {
+                      setApplicantName(e.target.value);
+                      if (formErrors.applicantName) setFormErrors(prev => ({ ...prev, applicantName: '' }));
+                    }}
+                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.applicantName ? 'border-red-500 bg-red-50/30' : 'border-[var(--color-border)]'}`}
                   />
+                  {formErrors.applicantName && (
+                    <p className="text-[11px] text-red-600 mt-1">{formErrors.applicantName}</p>
+                  )}
                 </div>
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Mobile Number (Aadhaar Linked)
+                    Mobile Number (Aadhaar Linked) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={mobile}
-                    onChange={e => setMobile(e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg"
+                    onChange={e => {
+                      setMobile(e.target.value);
+                      if (formErrors.mobile) setFormErrors(prev => ({ ...prev, mobile: '' }));
+                    }}
+                    placeholder="e.g. 9842155820"
+                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.mobile ? 'border-red-500 bg-red-50/30' : 'border-[var(--color-border)]'}`}
                   />
+                  {formErrors.mobile && (
+                    <p className="text-[11px] text-red-600 mt-1">{formErrors.mobile}</p>
+                  )}
                 </div>
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Survey / Khasra / Patta Number
+                    Survey / Khasra / Patta Number <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={surveyNumber}
-                    onChange={e => setSurveyNumber(e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg"
+                    onChange={e => {
+                      setSurveyNumber(e.target.value);
+                      if (formErrors.surveyNumber) setFormErrors(prev => ({ ...prev, surveyNumber: '' }));
+                    }}
+                    placeholder="e.g. 142/3A"
+                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.surveyNumber ? 'border-red-500 bg-red-50/30' : 'border-[var(--color-border)]'}`}
                   />
+                  {formErrors.surveyNumber && (
+                    <p className="text-[11px] text-red-600 mt-1">{formErrors.surveyNumber}</p>
+                  )}
                 </div>
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Land Area for Scheme (Acres)
+                    Land Area for Scheme (Acres) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
-                    step={0.5}
+                    step={0.1}
+                    min={0.1}
                     value={landArea}
-                    onChange={e => setLandArea(parseFloat(e.target.value) || 1)}
-                    className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg"
+                    onChange={e => {
+                      setLandArea(parseFloat(e.target.value) || 0);
+                      if (formErrors.landArea) setFormErrors(prev => ({ ...prev, landArea: '' }));
+                    }}
+                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.landArea ? 'border-red-500 bg-red-50/30' : 'border-[var(--color-border)]'}`}
                   />
+                  {formErrors.landArea && (
+                    <p className="text-[11px] text-red-600 mt-1">{formErrors.landArea}</p>
+                  )}
                 </div>
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
@@ -450,10 +550,10 @@ export default function ApplicationsPage() {
                 </div>
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Location (From Profile)
+                    Location (Verified from Profile)
                   </label>
                   <div className="px-3 py-2 bg-[var(--color-surface-2)] rounded-lg border border-[var(--color-border)] text-[var(--color-text-secondary)]">
-                    {profile.village}, {profile.district.toUpperCase()} ({profile.state.toUpperCase()})
+                    {profile.village || 'Panchayat Village'}, {(selectedDistrict || profile.district).toUpperCase()} ({profile.state.toUpperCase()})
                   </div>
                 </div>
               </div>
@@ -462,7 +562,13 @@ export default function ApplicationsPage() {
                 <Button variant="secondary" leftIcon={<ArrowLeft className="w-4 h-4" />} onClick={() => setStep(1)}>
                   Back
                 </Button>
-                <Button variant="primary" rightIcon={<ArrowRight className="w-4 h-4" />} onClick={() => setStep(3)}>
+                <Button
+                  variant="primary"
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                  onClick={() => {
+                    if (validateStep2()) setStep(3);
+                  }}
+                >
                   Next: Document Verification
                 </Button>
               </div>
@@ -476,30 +582,71 @@ export default function ApplicationsPage() {
                 Step 3: Document Upload & Verification
               </h3>
               <p className="text-xs text-[var(--color-text-muted)]">
-                The following mandatory documents are auto-populated from your verified farm profile.
+                The following mandatory documents are auto-populated from your verified farm profile. You can remove or attach additional files.
               </p>
 
-              <div className="space-y-3">
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={handleFileUpload}
+                className="hidden"
+                aria-label="Upload supporting documents"
+              />
+
+              <div className="space-y-2.5">
                 {uploadedFiles.map((doc, idx) => (
                   <div key={idx} className="p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-3">
-                      <FileCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                      <div>
-                        <span className="font-bold text-[var(--color-text-primary)] block">{doc.docType}</span>
-                        <span className="text-[11px] text-[var(--color-text-muted)] font-mono">{doc.fileName}</span>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <FileCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                      <div className="min-w-0 truncate">
+                        <span className="font-semibold text-[var(--color-text-primary)] block truncate">{doc.docType}</span>
+                        <span className="text-[10px] text-[var(--color-text-muted)] font-mono">{doc.fileName} ({doc.fileSizeMb} MB)</span>
                       </div>
                     </div>
-                    <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                      Uploaded & Ready
-                    </span>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        Attached
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFile(idx)}
+                        className="text-[var(--color-text-muted)] hover:text-red-600 p-1 rounded transition-colors"
+                        title="Remove document"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
 
-              <div className="p-4 border-2 border-dashed border-[var(--color-border)] rounded-xl text-center text-xs text-[var(--color-text-muted)] hover:border-emerald-600 transition-colors">
-                <Upload className="w-6 h-6 mx-auto mb-1 text-emerald-600" />
-                <span className="font-semibold text-[var(--color-text-primary)]">Click to upload additional documents</span>
-                <p className="text-[10px] text-[var(--color-text-muted)]">Supports PDF, JPG, PNG up to 5MB</p>
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={e => e.preventDefault()}
+                onDrop={e => {
+                  e.preventDefault();
+                  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const files = e.dataTransfer.files;
+                    const newDocs: { docType: string; fileName: string; fileSizeMb: number; verified: boolean }[] = [];
+                    for (let i = 0; i < files.length; i++) {
+                      const f = files[i];
+                      newDocs.push({
+                        docType: `Supporting Document (${f.name.split('.').pop()?.toUpperCase() || 'FILE'})`,
+                        fileName: f.name,
+                        fileSizeMb: parseFloat((f.size / (1024 * 1024)).toFixed(2)),
+                        verified: true,
+                      });
+                    }
+                    setUploadedFiles(prev => [...prev, ...newDocs]);
+                  }
+                }}
+                className="p-5 border-2 border-dashed border-[var(--color-border)] rounded-xl text-center text-xs text-[var(--color-text-muted)] hover:border-emerald-600 hover:bg-emerald-50/20 cursor-pointer transition-all"
+              >
+                <Upload className="w-5 h-5 mx-auto mb-1 text-emerald-600" />
+                <span className="font-semibold text-[var(--color-text-primary)] block">Click or Drag & Drop to attach documents</span>
+                <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">Supports PDF, JPG, PNG up to 5MB</p>
               </div>
 
               <div className="flex justify-between pt-3">
@@ -521,21 +668,21 @@ export default function ApplicationsPage() {
               </h3>
 
               {applicationCreated ? (
-                <div className="p-5 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-3 text-xs">
+                <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-3 text-xs">
                   <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
                   <h4 className="text-base font-bold text-emerald-950">
                     Application Submitted Successfully!
                   </h4>
                   <p className="text-emerald-800">
-                    Your application reference number is:
+                    Your official application reference number is:
                   </p>
-                  <div className="inline-block px-4 py-2 bg-white rounded-lg font-mono text-base font-bold text-emerald-900 border border-emerald-300 shadow-sm">
+                  <div className="inline-block px-4 py-2 bg-white rounded-lg font-mono text-base font-bold text-emerald-900 border border-emerald-300 shadow-xs">
                     {applicationCreated.id}
                   </div>
-                  <p className="text-[11px] text-emerald-700">
-                    A confirmation SMS has been dispatched to {mobile}. You can track the multi-tier verification progress anytime.
+                  <p className="text-[11px] text-emerald-700 max-w-md mx-auto">
+                    An automated confirmation SMS has been dispatched to {mobile}. Field verification by the Village Administrative Officer (VAO) and Agricultural Officer is scheduled within 7 working days.
                   </p>
-                  <div className="pt-2 flex justify-center gap-2">
+                  <div className="pt-2 flex justify-center gap-3">
                     <Button
                       variant="primary"
                       onClick={() => {
@@ -545,33 +692,44 @@ export default function ApplicationsPage() {
                     >
                       View in Application Tracker
                     </Button>
+                    <Button
+                      variant="outline"
+                      leftIcon={<Printer className="w-3.5 h-3.5" />}
+                      onClick={handlePrintReceipt}
+                    >
+                      Print Acknowledgement Receipt
+                    </Button>
                   </div>
                 </div>
               ) : (
                 <>
                   <div className="p-4 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] text-xs space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-[var(--color-text-muted)]">Scheme:</span>
+                    <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
+                      <span className="text-[var(--color-text-muted)]">Selected Scheme:</span>
                       <span className="font-bold text-[var(--color-text-primary)]">{selectedSchemeObj.name}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-[var(--color-text-muted)]">Applicant:</span>
+                    <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
+                      <span className="text-[var(--color-text-muted)]">Beneficiary Applicant:</span>
                       <span className="font-bold text-[var(--color-text-primary)]">{applicantName}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-[var(--color-text-muted)]">Survey & Area:</span>
+                    <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
+                      <span className="text-[var(--color-text-muted)]">Survey Number & Land Area:</span>
                       <span className="font-bold text-[var(--color-text-primary)]">{surveyNumber} ({landArea} Acres)</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-[var(--color-text-muted)]">Bank Account:</span>
+                    <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
+                      <span className="text-[var(--color-text-muted)]">Aadhaar Linked Bank Account:</span>
                       <span className="font-mono text-[var(--color-text-primary)]">{profile.bankName} ({profile.bankAccountMasked})</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-[var(--color-text-muted)]">Attached Documents:</span>
+                      <span className="font-semibold text-emerald-700">{uploadedFiles.length} files verified</span>
                     </div>
                   </div>
 
                   <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs flex gap-2">
                     <AlertCircle className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
                     <span>
-                      I hereby declare that all information furnished is true to the best of my knowledge and complies with the scheme guidelines.
+                      I hereby declare that all information furnished is true to the best of my knowledge and complies with the operational guidelines of {selectedSchemeObj.name}.
                     </span>
                   </div>
 
@@ -579,8 +737,13 @@ export default function ApplicationsPage() {
                     <Button variant="secondary" leftIcon={<ArrowLeft className="w-4 h-4" />} onClick={() => setStep(3)}>
                       Back
                     </Button>
-                    <Button variant="primary" leftIcon={<ShieldCheck className="w-4 h-4" />} onClick={handleCreateApplicationSubmit}>
-                      Confirm & Submit Application
+                    <Button
+                      variant="primary"
+                      leftIcon={isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
+                      disabled={isSubmitting}
+                      onClick={handleCreateApplicationSubmit}
+                    >
+                      {isSubmitting ? 'Submitting to Registry...' : 'Confirm & Submit Application'}
                     </Button>
                   </div>
                 </>

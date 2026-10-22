@@ -6,8 +6,7 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend
 } from 'recharts';
 import {
-  Download, Printer, TrendingUp, Users, DollarSign,
-  CheckCircle
+  Download, Printer
 } from 'lucide-react';
 
 const DISTRICT_DATA = [
@@ -91,55 +90,39 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Overview Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center shrink-0 shadow-xs">
-            <DollarSign className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase block">
-              Total Funds Disbursed
-            </span>
-            <span className="text-xl font-bold text-emerald-700">₹4,780 Lakhs</span>
-          </div>
-        </Card>
+      {/* Overview Stat Strip */}
+      <div className="bg-white rounded-lg border border-[var(--color-border)] p-4 shadow-xs grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--color-border)]">
+        <div className="p-3 lg:p-0 lg:pr-4">
+          <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
+            Total Funds Disbursed
+          </span>
+          <span className="text-2xl font-bold text-emerald-700 font-mono mt-0.5 block">₹4,780 Lakhs</span>
+          <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">Cumulative DBT sanctions</span>
+        </div>
 
-        <Card className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-200 text-sky-700 flex items-center justify-center shrink-0 shadow-xs">
-            <Users className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase block">
-              Verified Beneficiaries
-            </span>
-            <span className="text-xl font-bold text-[var(--color-text-primary)]">23,800</span>
-          </div>
-        </Card>
+        <div className="p-3 lg:p-0 lg:px-4">
+          <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
+            Verified Beneficiaries
+          </span>
+          <span className="text-2xl font-bold text-[var(--color-text-primary)] font-mono mt-0.5 block">23,800</span>
+          <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">Aadhaar seeded accounts</span>
+        </div>
 
-        <Card className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200 text-teal-700 flex items-center justify-center shrink-0 shadow-xs">
-            <CheckCircle className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase block">
-              Application Clearance Rate
-            </span>
-            <span className="text-xl font-bold text-emerald-700">92.4%</span>
-          </div>
-        </Card>
+        <div className="p-3 lg:p-0 lg:px-4">
+          <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
+            Sanction Clearance Rate
+          </span>
+          <span className="text-2xl font-bold text-emerald-700 font-mono mt-0.5 block">92.4%</span>
+          <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">Within 21-day service charter</span>
+        </div>
 
-        <Card className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center shrink-0 shadow-xs">
-            <TrendingUp className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase block">
-              Average Disbursal Speed
-            </span>
-            <span className="text-xl font-bold text-[var(--color-text-primary)]">18.5 Days</span>
-          </div>
-        </Card>
+        <div className="p-3 lg:p-0 lg:pl-4">
+          <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
+            Average Disbursal Speed
+          </span>
+          <span className="text-2xl font-bold text-[var(--color-text-primary)] font-mono mt-0.5 block">18.5 Days</span>
+          <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">Application to PFMS credit</span>
+        </div>
       </div>
 
       {/* Main Charts Grid */}

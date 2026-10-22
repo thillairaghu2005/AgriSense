@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Card, PageHeader, Badge, InfoBanner, DemoLabel, EmptyState, StatCard } from '@/components/ui/Card';
+import { Card, PageHeader, Badge, InfoBanner, EmptyState, StatCard } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { FormField, Input, Select, Textarea } from '@/components/forms/FormComponents';
 import { CROPS } from '@/data/crops';
@@ -113,7 +113,7 @@ export default function FinancesPage() {
   const [formType, setFormType] = useState<TransactionType>('expense');
   const [formCategory, setFormCategory] = useState<string>('seed');
   const [formAmount, setFormAmount] = useState<string>('');
-  const [formDate, setFormDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [formDate, setFormDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
   const [formCropId, setFormCropId] = useState<string>('rice');
   const [formNotes, setFormNotes] = useState<string>('');
   const [formError, setFormError] = useState<string>('');
@@ -247,7 +247,6 @@ export default function FinancesPage() {
       <PageHeader
         title="Farm Finances & Profit Calculator"
         subtitle="Track seasonal cultivation expenses, crop sales, and estimate profit margins"
-        badge={<DemoLabel label="Local ledger & estimator" />}
         actions={
           <div className="flex items-center gap-2">
             <Button
@@ -568,7 +567,9 @@ export default function FinancesPage() {
                 <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
                   Projected Financial Outcome (Estimates)
                 </h3>
-                <DemoLabel label="Mathematical model estimate" />
+                <span className="text-[10px] font-semibold text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200">
+                  ICAR Model Estimate
+                </span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-4">
@@ -646,7 +647,7 @@ export default function FinancesPage() {
       {/* Transaction Entry Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-xl border border-[var(--color-border)] max-w-md w-full p-6 shadow-xl space-y-4">
+          <div className="bg-white rounded-xl border border-[var(--color-border)] max-w-md w-full p-6 shadow-lg space-y-4">
             <div className="flex items-center justify-between pb-2">
               <h3 className="text-base font-bold text-[var(--color-text-primary)]">
                 Record Financial Entry

@@ -4,17 +4,56 @@ import { Card, PageHeader } from '@/components/ui/Card';
 import { SearchInput } from '@/components/forms/FormComponents';
 import Button from '@/components/ui/Button';
 import { useApp } from '@/app/providers';
+import { storageGet, storageSet } from '@/lib/storage';
 import type { PlantationProgram } from '@/types';
 import {
   TreeDeciduous, ShieldCheck, CheckCircle2,
-  MapPin, Phone,
-  X, Check, Sparkles, TrendingUp
+  MapPin, Phone, Printer, Trash2,
+  X, Check, TrendingUp
 } from 'lucide-react';
+
+interface SaplingOrderRecord {
+  id: string;
+  programId: string;
+  programName: string;
+  speciesName: string;
+  nurseryId: string;
+  nurseryName: string;
+  nurseryContact: string;
+  saplingCount: number;
+  totalCost: number;
+  subsidyAmount: number;
+  farmerPayable: number;
+  bookingDate: string;
+  status: 'ready_for_pickup' | 'collected';
+}
+
+const DEFAULT_ORDERS: SaplingOrderRecord[] = [
+  {
+    id: 'SAPL-2026-44129',
+    programId: 'midh-mango-01',
+    programName: 'High Density Mango Orchard (Alphonso / Banganapalli)',
+    speciesName: 'Mangifera indica',
+    nurseryId: 'nur-01',
+    nurseryName: 'State Horticulture Development Farm, Madurai',
+    nurseryContact: '0452-2438100',
+    saplingCount: 120,
+    totalCost: 7200,
+    subsidyAmount: 3240,
+    farmerPayable: 3960,
+    bookingDate: '2026-03-20',
+    status: 'ready_for_pickup',
+  },
+];
 
 export default function PlantationsPage() {
   const { t } = useApp();
   const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'orchard' | 'timber' | 'nurseries'>('orchard');
+  const [activeTab, setActiveTab] = useState<'orchard' | 'timber' | 'nurseries' | 'orders'>('orchard');
+
+  const [orders, setOrders] = useState<SaplingOrderRecord[]>(() =>
+    storageGet('agrisense_sapling_orders', DEFAULT_ORDERS)
+  );
 
   // Sapling Booking State
   const [bookingProgram, setBookingProgram] = useState<PlantationProgram | null>(null);
@@ -52,9 +91,38 @@ export default function PlantationsPage() {
     const payable = totalCost - estSubsidy;
     const refCode = `SAPL-2026-${Math.floor(10000 + Math.random() * 90000)}`;
 
+    const selectedNursery = bookingProgram.participatingNurseries.find(n => n.id === selectedNurseryId) ||
+      bookingProgram.participatingNurseries[0];
+
+    const newOrder: SaplingOrderRecord = {
+      id: refCode,
+      programId: bookingProgram.id,
+      programName: bookingProgram.name,
+      speciesName: bookingProgram.speciesName,
+      nurseryId: selectedNursery?.id || 'nur-01',
+      nurseryName: selectedNursery?.name || 'District Horticulture Nursery',
+      nurseryContact: selectedNursery?.contact || '0452-2438100',
+      saplingCount,
+      totalCost,
+      subsidyAmount: estSubsidy,
+      farmerPayable: payable,
+      bookingDate: new Date().toISOString().split('T')[0],
+      status: 'ready_for_pickup',
+    };
+
+    const updated = [newOrder, ...orders];
+    setOrders(updated);
+    storageSet('agrisense_sapling_orders', updated);
+
     setBookingSuccess(
       `Order ${refCode} confirmed! Saplings: ${saplingCount} of ${bookingProgram.speciesName}. Total Cost: ₹${totalCost.toLocaleString()}, Government Subsidy: ₹${estSubsidy.toLocaleString()}, Balance Payable at Nursery: ₹${payable.toLocaleString()}.`
     );
+  }
+
+  function handleCancelOrder(id: string) {
+    const updated = orders.filter(o => o.id !== id);
+    setOrders(updated);
+    storageSet('agrisense_sapling_orders', updated);
   }
 
   return (
@@ -80,10 +148,10 @@ export default function PlantationsPage() {
               fast-growing Malabar Neem, Teak, and Bamboo. Receive multi-year maintenance incentives linked to plant survival.
             </p>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setActiveTab('orchard')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'orchard'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
@@ -93,7 +161,7 @@ export default function PlantationsPage() {
             </button>
             <button
               onClick={() => setActiveTab('timber')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'timber'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
@@ -103,19 +171,148 @@ export default function PlantationsPage() {
             </button>
             <button
               onClick={() => setActiveTab('nurseries')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'nurseries'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
               }`}
             >
-              Certified Nurseries
+              Certified Nurseries ({allNurseries.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                activeTab === 'orders'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
+              }`}
+            >
+              My Bookings ({orders.length})
             </button>
           </div>
         </div>
       </div>
 
-      {activeTab !== 'nurseries' ? (
+      {activeTab === 'orders' ? (
+        /* Orders & Gate Pass Tab */
+        <div className="space-y-4">
+          {orders.length === 0 ? (
+            <div className="bg-white rounded-xl border border-[var(--color-border)] p-12 text-center space-y-3">
+              <TreeDeciduous className="w-10 h-10 text-[var(--color-text-muted)] mx-auto" />
+              <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                No Active Sapling Bookings
+              </h3>
+              <p className="text-xs text-[var(--color-text-secondary)] max-w-md mx-auto">
+                You have not booked any certified saplings yet. Explore high-density orchard packages and commercial timber programs to order saplings with government subsidies.
+              </p>
+              <Button variant="primary" size="sm" onClick={() => setActiveTab('orchard')}>
+                Explore Orchard Programs
+              </Button>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-[var(--color-border)] overflow-hidden shadow-xs">
+              <div className="p-4 border-b border-[var(--color-border)] flex flex-wrap items-center justify-between gap-3 bg-[var(--color-surface-1)]">
+                <div>
+                  <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
+                    Certified Sapling Orders & Counter Gate Passes ({orders.length})
+                  </h3>
+                  <p className="text-xs text-[var(--color-text-muted)]">
+                    Carry the booking slip and identity proof to collect saplings from the allotted government nursery.
+                  </p>
+                </div>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<Printer className="w-3.5 h-3.5" />}
+                  onClick={() => window.print()}
+                >
+                  Print Gate Passes
+                </Button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="table-clean w-full text-left text-xs">
+                  <thead>
+                    <tr>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Order ID</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Species & Program</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Certified Nursery</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Saplings</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Payable at Counter</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)]">Status</th>
+                      <th className="py-2.5 px-4 font-semibold text-[var(--color-text-muted)] text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map(order => (
+                      <tr key={order.id} className="border-t border-[var(--color-border)] hover:bg-[var(--color-surface-1)] transition-colors">
+                        <td className="py-3 px-4 font-mono font-semibold text-[var(--color-text-primary)]">
+                          {order.id}
+                          <span className="block text-[10px] font-normal text-[var(--color-text-muted)]">
+                            {order.bookingDate}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="font-semibold text-[var(--color-text-primary)] block">
+                            {order.programName}
+                          </span>
+                          <span className="text-[11px] text-[var(--color-text-muted)] italic">
+                            {order.speciesName}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="font-medium text-[var(--color-text-primary)] block">
+                            {order.nurseryName}
+                          </span>
+                          <span className="text-[11px] text-[var(--color-text-muted)] flex items-center gap-1 mt-0.5">
+                            <Phone className="w-3 h-3 text-[var(--color-text-muted)]" />
+                            {order.nurseryContact}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 font-semibold text-[var(--color-text-primary)]">
+                          {order.saplingCount} saplings
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="font-bold text-emerald-700 block">
+                            ₹{order.farmerPayable.toLocaleString()}
+                          </span>
+                          <span className="text-[10px] text-[var(--color-text-muted)]">
+                            (Subsidy: ₹{order.subsidyAmount.toLocaleString()})
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            Ready for Pickup
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => window.print()}
+                              className="p-1.5 rounded-md hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
+                              title="Print Pass"
+                            >
+                              <Printer className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleCancelOrder(order.id)}
+                              className="p-1.5 rounded-md hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
+                              title="Cancel Order"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : activeTab !== 'nurseries' ? (
         <>
           <div className="flex flex-col sm:flex-row gap-3">
             <SearchInput
@@ -240,7 +437,7 @@ export default function PlantationsPage() {
                   <Button
                     variant="primary"
                     size="sm"
-                    leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+                    leftIcon={<TreeDeciduous className="w-3.5 h-3.5" />}
                     onClick={() => handleOpenBooking(program)}
                   >
                     Order Certified Saplings
@@ -338,7 +535,16 @@ export default function PlantationsPage() {
                     Government subsidy under {bookingProgram.subsidyScheme} is directly deducted.
                   </p>
                 </div>
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setBookingProgram(null);
+                      setActiveTab('orders');
+                    }}
+                  >
+                    View My Bookings
+                  </Button>
                   <Button variant="primary" onClick={() => setBookingProgram(null)}>
                     {t('common.close')}
                   </Button>

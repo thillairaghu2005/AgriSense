@@ -9,16 +9,16 @@ export default function NotFoundPage() {
     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 animate-fade-in">
       <Sprout className="w-12 h-12 text-[var(--color-primary-600)] mb-4" />
 
-      <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-primary-800)] bg-[var(--color-primary-50)] px-2.5 py-1 rounded-full mb-2 border border-[var(--color-primary-200)]">
-        Error 404 — Page Not Found
+      <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-primary-800)] bg-[var(--color-primary-50)] px-2.5 py-1 rounded-md mb-3 border border-[var(--color-primary-200)]">
+        Error 404 — Record Not Found
       </span>
 
       <h1 className="text-2xl font-bold text-[var(--color-text-primary)] mt-1">
-        We couldn&apos;t find this field
+        Page Not Found
       </h1>
 
       <p className="text-xs sm:text-sm text-[var(--color-text-muted)] max-w-md mt-2 mb-6">
-        The page you requested might have been moved or does not exist. You can return to your farming dashboard or explore the crop library.
+        The requested portal page, scheme record, or agricultural resource does not exist or has been relocated.
       </p>
 
       <div className="flex items-center gap-3">

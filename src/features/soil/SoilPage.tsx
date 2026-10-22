@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Card, PageHeader, InfoBanner, DemoLabel, EmptyState } from '@/components/ui/Card';
+import { Card, PageHeader, InfoBanner, EmptyState } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { FormField, Input, Select } from '@/components/forms/FormComponents';
 import type { SoilTest, SoilType } from '@/types';
@@ -18,7 +18,6 @@ import {
   X,
   Printer,
   Calculator,
-  Sparkles,
   CheckCircle2,
 } from 'lucide-react';
 
@@ -124,7 +123,7 @@ export default function SoilPage() {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   // Form State
-  const [formDate, setFormDate] = useState(new Date().toISOString().split('T')[0]);
+  const [formDate, setFormDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [formSoilType, setFormSoilType] = useState<SoilType>('alluvial');
   const [formPh, setFormPh] = useState<string>('7.0');
   const [formN, setFormN] = useState<'low' | 'medium' | 'high'>('medium');
@@ -255,7 +254,6 @@ export default function SoilPage() {
       <PageHeader
         title="Soil Health & Fertiliser Management"
         subtitle="Record certified laboratory tests, calculate tailored N-P-K fertilizer doses, and print health cards"
-        badge={<DemoLabel label="Soil health module" />}
         actions={
           <div className="flex items-center gap-2">
             <Button
@@ -286,7 +284,7 @@ export default function SoilPage() {
       </InfoBanner>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-xl w-fit flex-wrap" role="tablist">
+      <div className="flex gap-1 p-1 bg-[var(--color-surface-2)] rounded-lg w-fit flex-wrap" role="tablist">
         <button
           role="tab"
           aria-selected={activeTab === 'profile'}
@@ -706,11 +704,11 @@ export default function SoilPage() {
                     </div>
 
                     {/* General Amendment Advisory */}
-                    <div className="bg-[var(--color-primary-50)] p-3.5 rounded-xl border border-[var(--color-primary-200)] text-xs text-[var(--color-primary-900)] space-y-1">
-                      <p className="font-semibold text-[var(--color-primary-900)] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary-700)]" /> Agronomic Soil Health Advisory:
+                    <div className="bg-[var(--color-surface-1)] p-3.5 rounded-lg border border-[var(--color-border)] text-xs text-[var(--color-text-primary)] space-y-1">
+                      <p className="font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
+                        <FlaskConical className="w-3.5 h-3.5 text-[var(--color-primary-700)]" /> Agronomic Soil Health Advisory:
                       </p>
-                      <ul className="list-disc list-inside space-y-0.5 text-[var(--color-primary-800)] text-[11px] leading-relaxed">
+                      <ul className="list-disc list-inside space-y-0.5 text-[var(--color-text-secondary)] text-[11px] leading-relaxed">
                         {isAcidic && <li>Soil pH is acidic (&lt; 6.5). Apply agricultural lime (calcium carbonate) at 100 kg/acre to restore nutrient bioavailability.</li>}
                         {isAlkaline && <li>Soil pH is alkaline (&gt; 7.8). Apply gypsum (200 kg/acre) and incorporate green manure (Dhaincha) to reduce sodicity.</li>}
                         {isNeutral && <li>Soil pH is in the optimal range (6.5–7.5) for nutrient bioavailability and root health.</li>}

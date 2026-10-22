@@ -13,7 +13,6 @@ import {
   BookmarkCheck,
   Tag,
   Share2,
-  Sparkles,
   Info,
 } from 'lucide-react';
 
@@ -101,7 +100,7 @@ export default function ArticleDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={toggleBookmark}
-            className={`px-4 py-2 text-xs font-semibold rounded-xl border flex items-center gap-2 transition-all ${
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md border flex items-center gap-2 transition-all cursor-pointer ${
               isSaved
                 ? 'bg-[var(--color-primary-600)] text-white border-[var(--color-primary-600)] shadow-xs'
                 : 'bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] hover:bg-[var(--color-surface-2)]'
@@ -113,7 +112,7 @@ export default function ArticleDetailPage() {
 
           <button
             onClick={handleShare}
-            className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-xl border border-[var(--color-border)] bg-white hover:bg-[var(--color-surface-2)] transition-colors relative"
+            className="p-1.5 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-md border border-[var(--color-border)] bg-white hover:bg-[var(--color-surface-2)] transition-colors relative cursor-pointer"
             title="Copy article link"
             aria-label="Share article"
           >
@@ -127,12 +126,12 @@ export default function ArticleDetailPage() {
         </div>
       </div>
 
-      {/* Main Article Card with Generous Whitespace */}
-      <article className="card p-8 sm:p-12 md:p-14 shadow-sm rounded-2xl">
+      {/* Main Article Container */}
+      <article className="card p-6 sm:p-8 shadow-xs rounded-lg">
         {/* Article Meta Header */}
-        <header className="space-y-6 pb-10">
+        <header className="space-y-4 pb-6 border-b border-[var(--color-border)]">
           <div className="flex items-center gap-3 flex-wrap">
-            <Badge className="px-3.5 py-1 text-xs uppercase font-bold tracking-wider">
+            <Badge className="px-2.5 py-0.5 text-xs uppercase font-bold tracking-wider">
               {article.category.replace('_', ' ')}
             </Badge>
             {article.sourceLabel && (
@@ -142,11 +141,11 @@ export default function ArticleDetailPage() {
             )}
           </div>
 
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[var(--color-text-primary)] leading-tight tracking-tight mt-3 mb-5">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)] leading-tight tracking-tight mt-2 mb-3">
             {article.title}
           </h1>
 
-          <div className="flex items-center gap-6 text-xs sm:text-sm text-[var(--color-text-muted)] flex-wrap pt-1">
+          <div className="flex items-center gap-4 text-xs text-[var(--color-text-muted)] flex-wrap pt-1">
             <span className="flex items-center gap-1.5 font-medium">
               <Calendar className="w-4 h-4 text-[var(--color-text-muted)]" />
               Published: {formatDate(article.publishedDate)}
@@ -158,11 +157,11 @@ export default function ArticleDetailPage() {
           </div>
 
           {/* Key Summary Callout Box */}
-          <div className="mt-8 p-6 sm:p-7 bg-[var(--color-primary-50)] rounded-2xl border border-[var(--color-primary-200)]">
-            <p className="text-xs uppercase font-bold tracking-wider text-[var(--color-primary-900)] mb-2.5 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[var(--color-primary-700)]" /> Executive Summary
+          <div className="mt-4 p-4 sm:p-5 bg-[var(--color-surface-1)] rounded-lg border border-[var(--color-border)]">
+            <p className="text-xs uppercase font-bold tracking-wider text-[var(--color-text-primary)] mb-1.5 flex items-center gap-2">
+              <Info className="w-4 h-4 text-[var(--color-primary-700)]" /> Executive Summary
             </p>
-            <p className="text-base sm:text-lg text-[var(--color-primary-900)] font-medium leading-relaxed sm:leading-8">
+            <p className="text-sm sm:text-base text-[var(--color-text-secondary)] font-medium leading-relaxed">
               {article.summary}
             </p>
           </div>
@@ -209,9 +208,9 @@ export default function ArticleDetailPage() {
                       return (
                         <div
                           key={bIdx}
-                          className="my-8 p-6 sm:p-7 bg-neutral-50 rounded-2xl border border-neutral-200 text-neutral-800 text-base leading-relaxed sm:leading-8 flex items-start gap-4 shadow-xs"
+                          className="my-6 p-4 sm:p-5 bg-neutral-50 rounded-lg border border-neutral-200 text-neutral-800 text-sm leading-relaxed flex items-start gap-3 shadow-xs"
                         >
-                          <Info className="w-5 h-5 text-neutral-700 flex-shrink-0 mt-1" />
+                          <Info className="w-5 h-5 text-neutral-700 flex-shrink-0 mt-0.5" />
                           <div className="italic">
                             {formatInlineMarkdown(trimmed.replace(/^>\s*/, ''))}
                           </div>

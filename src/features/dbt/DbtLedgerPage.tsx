@@ -5,9 +5,37 @@ import { SearchInput } from '@/components/forms/FormComponents';
 import Button from '@/components/ui/Button';
 import { useApp } from '@/app/providers';
 import {
-  ShieldCheck, CheckCircle2, Building,
-  CreditCard, Download
+  CheckCircle2, Download
 } from 'lucide-react';
+
+function exportCsv(records: ReturnType<typeof searchDbtRecords>) {
+  const headers = ['ID', 'Farmer Name', 'Village', 'District', 'State', 'Scheme', 'Installment', 'Amount (INR)', 'Bank', 'Account', 'UTR Reference', 'Date', 'Status'];
+  const rows = records.map(r => [
+    r.id,
+    r.farmerName,
+    r.village,
+    r.district,
+    r.state.toUpperCase(),
+    r.schemeCode,
+    `"${r.installmentNo}"`,
+    r.amount,
+    r.bankName,
+    r.accountMasked,
+    r.utrNumber,
+    r.disbursedDate,
+    r.status,
+  ]);
+
+  const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement('a');
+  const dateStr = new Date().toISOString().split('T')[0];
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', `AgriSense_DBT_Ledger_${dateStr}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 
 export default function DbtLedgerPage() {
   const { t } = useApp();
@@ -18,34 +46,6 @@ export default function DbtLedgerPage() {
   const filteredRecords = searchDbtRecords(query, schemeFilter || undefined, stateFilter || undefined);
 
   const totalDisbursed = filteredRecords.reduce((sum, r) => sum + r.amount, 0);
-
-  function handleExportCsv() {
-    const headers = ['ID', 'Farmer Name', 'Village', 'District', 'State', 'Scheme', 'Installment', 'Amount (INR)', 'Bank', 'Account', 'UTR Reference', 'Date', 'Status'];
-    const rows = filteredRecords.map(r => [
-      r.id,
-      r.farmerName,
-      r.village,
-      r.district,
-      r.state.toUpperCase(),
-      r.schemeCode,
-      `"${r.installmentNo}"`,
-      r.amount,
-      r.bankName,
-      r.accountMasked,
-      r.utrNumber,
-      r.disbursedDate,
-      r.status,
-    ]);
-
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `AgriSense_DBT_Ledger_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -58,55 +58,50 @@ export default function DbtLedgerPage() {
           variant="secondary"
           size="sm"
           leftIcon={<Download className="w-3.5 h-3.5" />}
-          onClick={handleExportCsv}
+          onClick={() => exportCsv(filteredRecords)}
         >
           {t('common.exportCsv')}
         </Button>
       </div>
 
       {/* KPI Stats Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center shrink-0 shadow-xs">
-            <CreditCard className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[11px] text-[var(--color-text-muted)] font-semibold uppercase block">
-              {t('dbt.totalDisbursed')}
-            </span>
-            <span className="text-xl font-bold text-emerald-700">
-              ₹{totalDisbursed.toLocaleString()}
-            </span>
-          </div>
-        </Card>
+      <div className="bg-white rounded-lg border border-[var(--color-border)] p-4 shadow-xs grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)]">
+        <div className="sm:pr-4 py-2 sm:py-0">
+          <span className="text-[11px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
+            {t('dbt.totalDisbursed')}
+          </span>
+          <span className="text-2xl font-bold text-emerald-700 font-mono mt-0.5 block">
+            ₹{totalDisbursed.toLocaleString()}
+          </span>
+          <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">
+            Across active DBT schemes
+          </span>
+        </div>
 
-        <Card className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-200 text-sky-700 flex items-center justify-center shrink-0 shadow-xs">
-            <Building className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[11px] text-[var(--color-text-muted)] font-semibold uppercase block">
-              {t('dbt.totalBeneficiaries')}
-            </span>
-            <span className="text-xl font-bold text-[var(--color-text-primary)]">
-              {filteredRecords.length} Transactions
-            </span>
-          </div>
-        </Card>
+        <div className="sm:px-4 py-2 sm:py-0">
+          <span className="text-[11px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
+            {t('dbt.totalBeneficiaries')}
+          </span>
+          <span className="text-2xl font-bold text-[var(--color-text-primary)] font-mono mt-0.5 block">
+            {filteredRecords.length}
+          </span>
+          <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">
+            Direct transactions tracked
+          </span>
+        </div>
 
-        <Card className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200 text-teal-700 flex items-center justify-center shrink-0 shadow-xs">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[11px] text-[var(--color-text-muted)] font-semibold uppercase block">
-              Payment Gateway Mode
-            </span>
-            <span className="text-sm font-bold text-[var(--color-text-primary)]">
-              Aadhaar Payment Bridge (APB) / PFMS
-            </span>
-          </div>
-        </Card>
+        <div className="sm:pl-4 py-2 sm:py-0">
+          <span className="text-[11px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
+            Disbursement Route
+          </span>
+          <span className="text-sm font-bold text-[var(--color-text-primary)] mt-1 block">
+            Aadhaar Payment Bridge (APB) / PFMS
+          </span>
+          <span className="text-[11px] text-emerald-700 font-medium mt-0.5 flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+            100% Direct bank settlement
+          </span>
+        </div>
       </div>
 
       {/* Search and Filters */}

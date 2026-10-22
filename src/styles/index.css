@@ -22,15 +22,15 @@
   --color-accent-500: #22c55e;
   --color-accent-600: #16a34a;
 
-  /* Neutral & Light Green surfaces */
-  --color-surface-0: #f2f9f5;
+  /* Neutral & Crisp surfaces */
+  --color-surface-0: #ffffff;
   --color-surface-1: #f8fafc;
-  --color-surface-2: #e8f5ec;
-  --color-surface-3: #f1f5f9;
+  --color-surface-2: #f1f5f9;
+  --color-surface-3: #e2e8f0;
 
-  /* Card Light Green Surface & Border */
-  --color-card-bg: #f2f9f5;
-  --color-card-border: #d1fae5;
+  /* Card Surface & Border - Clean White & Subtle Slate */
+  --color-card-bg: #ffffff;
+  --color-card-border: #e2e8f0;
 
   /* Text - Crisp Slate & Neutral Tones for Accessible Contrast */
   --color-text-primary: #0f172a;
@@ -140,45 +140,119 @@ article li {
   transition: all 0.15s ease;
   cursor: pointer;
   border: 1px solid transparent;
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sidebar-link:hover {
-  background-color: var(--color-surface-2);
-  color: var(--color-primary-800);
+  background-color: var(--color-surface-3);
+  color: var(--color-text-primary);
+  border-color: transparent;
+}
+
+.sidebar-link:active {
+  background-color: var(--color-border);
+  color: var(--color-text-primary);
+  border-color: transparent;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sidebar-link:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sidebar-link:focus-visible {
+  outline: 2px solid var(--color-border-strong) !important;
+  outline-offset: 1px;
+  box-shadow: none !important;
 }
 
 .sidebar-link.active {
-  background-color: var(--color-primary-50);
-  color: var(--color-primary-800);
+  background-color: var(--color-surface-3);
+  color: var(--color-text-primary);
   font-weight: 600;
-  border-color: var(--color-primary-200);
+  border-color: var(--color-border);
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sidebar-link.active:hover {
+  background-color: var(--color-border);
+}
+
+.sidebar-link.active:active {
+  background-color: var(--color-border-strong);
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .card {
-  background: var(--color-surface-0);
-  border: 1px solid var(--color-card-border);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 1px 3px 0 rgba(16, 185, 129, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .card:hover {
-  border-color: var(--color-primary-300);
+  border-color: var(--color-border-strong);
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.table-clean {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.table-clean th {
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface-1);
+}
+
+.table-clean td {
+  padding: 0.75rem 0.875rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  vertical-align: middle;
+}
+
+.table-clean tr:last-child td {
+  border-bottom: none;
+}
+
+.table-clean tr:hover td {
+  background-color: var(--color-surface-1);
 }
 
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2.5px 8px;
-  border-radius: 6px;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 4px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
-  background-color: var(--color-primary-50);
-  color: var(--color-primary-800);
-  border: 1px solid var(--color-primary-200);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
 }
 
 .badge-green {

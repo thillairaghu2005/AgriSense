@@ -19,6 +19,7 @@ export default function ConfirmDialog({
   message,
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
+  variant = 'warning',
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -50,11 +51,11 @@ export default function ConfirmDialog({
     >
       <div
         ref={dialogRef}
-        className="w-full max-w-md bg-white rounded-xl shadow-xl border border-[var(--color-border)] p-6 space-y-4 animate-scale-up"
+        className="w-full max-w-md bg-white rounded-xl shadow-lg border border-[var(--color-border)] p-6 space-y-4 animate-scale-up"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0 mt-0.5" />
+          <AlertTriangle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${variant === 'danger' ? 'text-red-600' : variant === 'warning' ? 'text-amber-600' : 'text-[var(--color-text-primary)]'}`} />
           <div className="flex-1 min-w-0">
             <h3 id="confirm-dialog-title" className="text-sm font-semibold text-[var(--color-text-primary)]">
               {title}
@@ -65,7 +66,7 @@ export default function ConfirmDialog({
           </div>
           <button
             onClick={onCancel}
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-1 rounded"
+            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-1 rounded cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="w-4 h-4" />
@@ -77,7 +78,7 @@ export default function ConfirmDialog({
             {cancelLabel}
           </Button>
           <Button
-            variant="primary"
+            variant={variant === 'danger' ? 'danger' : 'primary'}
             size="sm"
             onClick={() => {
               onConfirm();

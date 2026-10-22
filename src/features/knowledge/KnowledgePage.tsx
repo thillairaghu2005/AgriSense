@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, PageHeader, Badge, InfoBanner, DemoLabel, EmptyState } from '@/components/ui/Card';
+import { Card, PageHeader, Badge, InfoBanner, EmptyState } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { SearchInput, Select } from '@/components/forms/FormComponents';
 import { ARTICLES } from '@/data/articles';
@@ -71,7 +71,6 @@ export default function KnowledgePage() {
       <PageHeader
         title="Knowledge Centre & Field Guides"
         subtitle="Practical guides, crop protection techniques, and seasonal advisories"
-        badge={<DemoLabel label="Extension library" />}
       />
 
       <InfoBanner variant="info">
@@ -179,7 +178,7 @@ export default function KnowledgePage() {
                     {article.tags.slice(0, 3).map(tag => (
                       <span
                         key={tag}
-                        className="text-[10px] bg-[var(--color-surface-2)] text-[var(--color-text-muted)] px-2 py-0.5 rounded-full flex items-center gap-1"
+                        className="text-[10px] bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)] px-2 py-0.5 rounded-md flex items-center gap-1"
                       >
                         <Tag className="w-2.5 h-2.5" />
                         {tag}

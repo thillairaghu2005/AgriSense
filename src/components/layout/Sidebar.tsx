@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, Leaf, Sparkles, CalendarDays, TrendingUp,
+  LayoutDashboard, Leaf, CalendarDays, TrendingUp,
   CloudSun, Bot, BookOpen, Bug, Beaker, Wallet, Library,
   Bell, UserCircle, Sprout, FileText, Receipt, ShieldAlert,
   Trees, BarChart3, Building2, PackageCheck
@@ -30,7 +30,7 @@ const NAV_GROUPS = [
     sectionKey: 'nav.section.farm',
     items: [
       { to: '/crops', icon: Leaf, labelKey: 'nav.crops' },
-      { to: '/recommendations', icon: Sparkles, labelKey: 'nav.recommendations' },
+      { to: '/recommendations', icon: Sprout, labelKey: 'nav.recommendations' },
       { to: '/calendar', icon: CalendarDays, labelKey: 'nav.calendar' },
       { to: '/market-prices', icon: TrendingUp, labelKey: 'nav.market' },
       { to: '/soil', icon: Beaker, labelKey: 'nav.soil' },

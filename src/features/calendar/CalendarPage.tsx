@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Card, PageHeader, Badge, DemoLabel, EmptyState } from '@/components/ui/Card';
+import { Card, PageHeader, Badge, EmptyState } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { FormField, Input, Select, Textarea } from '@/components/forms/FormComponents';
 import { CROPS } from '@/data/crops';
@@ -20,7 +20,7 @@ import {
   Edit2,
   X,
   Filter,
-  Sparkles,
+  FlaskConical,
   Droplets,
   Sprout,
   ShieldAlert,
@@ -35,7 +35,7 @@ import {
 const TASK_TYPE_ICONS: Record<TaskType, React.ReactNode> = {
   sowing: <Sprout className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
   irrigation: <Droplets className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
-  fertiliser: <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
+  fertiliser: <FlaskConical className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
   pesticide: <ShieldAlert className="w-3.5 h-3.5 text-neutral-700" />,
   weeding: <Scissors className="w-3.5 h-3.5 text-neutral-700" />,
   harvest: <CalendarDays className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
@@ -122,6 +122,7 @@ export default function CalendarPage() {
 
   // Month navigation for Grid view
   const [currentDate, setCurrentDate] = useState(() => new Date());
+  const [todayStr] = useState(() => new Date().toISOString().split('T')[0]);
 
   // Modal / Form state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -344,7 +345,6 @@ export default function CalendarPage() {
       <PageHeader
         title={t('calendar.title')}
         subtitle="Schedule sowing, irrigation schedules, fertiliser splits, and harvest activities"
-        badge={<DemoLabel label="Farm management planner" />}
         actions={
           <div className="flex items-center gap-2">
             <div className="flex items-center p-0.5 bg-[var(--color-surface-2)] rounded-lg border border-[var(--color-border)]">
@@ -386,19 +386,19 @@ export default function CalendarPage() {
         }
       />
 
-      {/* 1-Click Crop Schedule Generator Bar */}
-      <Card className="p-4 bg-emerald-50/80 border border-emerald-200 shadow-xs">
+      {/* Crop Growth Schedule Generator Bar */}
+      <Card className="p-4 bg-white border border-[var(--color-border)] shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 border border-emerald-300 flex items-center justify-center shrink-0">
-              <Sparkles className="w-4 h-4 text-emerald-700" />
+            <div className="w-8 h-8 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center shrink-0">
+              <Sprout className="w-4 h-4 text-[var(--color-primary-700)]" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-emerald-950 uppercase tracking-wide">
-                Auto-Generate Crop Stage Schedule
+              <h3 className="text-xs font-bold text-[var(--color-text-primary)] uppercase tracking-wide">
+                Populate Crop Stage Schedule
               </h3>
-              <p className="text-[11px] text-emerald-800 mt-0.5 font-medium">
-                Automatically populates ICAR growth-stage tasks from sowing to harvest.
+              <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5 font-medium">
+                Standard ICAR growth-stage timeline and field interventions from sowing to harvest.
               </p>
             </div>
           </div>
@@ -528,7 +528,7 @@ export default function CalendarPage() {
           {/* Days Grid */}
           <div className="grid grid-cols-7 gap-1.5">
             {calendarDays.map((cell, idx) => {
-              const isToday = cell.dateStr === new Date().toISOString().split('T')[0];
+              const isToday = cell.dateStr === todayStr;
 
               return (
                 <div
@@ -717,7 +717,7 @@ export default function CalendarPage() {
           onClick={() => setIsModalOpen(false)}
         >
           <div
-            className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-[var(--color-border)] p-6 space-y-4 animate-scale-up"
+            className="w-full max-w-lg bg-white rounded-xl shadow-lg border border-[var(--color-border)] p-6 space-y-4 animate-scale-up"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-2">

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Leaf, ChevronRight } from 'lucide-react';
+import { Leaf, ChevronRight, LayoutGrid, TableProperties, ArrowRight } from 'lucide-react';
 import { searchCrops } from '@/data/crops';
-import { Card, Badge, PageHeader } from '@/components/ui/Card';
 import { SearchInput } from '@/components/forms/FormComponents';
 import { EmptyState } from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import type { Season, CropCategory } from '@/types';
 
 const SEASON_LABELS: Record<Season, string> = { kharif: 'Kharif', rabi: 'Rabi', zaid: 'Zaid', annual: 'Annual' };
@@ -18,6 +18,7 @@ export default function CropCataloguePage() {
   const [query, setQuery] = useState('');
   const [seasonFilter, setSeasonFilter] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const navigate = useNavigate();
 
   const filteredCrops = searchCrops(query).filter(c =>
@@ -26,25 +27,65 @@ export default function CropCataloguePage() {
   );
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <PageHeader
-        title="Crop Catalogue"
-        subtitle="Browse guidance for major Indian crops by season and category."
-      />
+    <div className="space-y-6 animate-fade-in pb-12">
+      {/* Header */}
+      <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                Indian Council of Agricultural Research (ICAR) Reference
+              </span>
+            </div>
+            <h1 className="text-xl font-bold text-[var(--color-text-primary)] mt-1.5 tracking-tight">
+              Major Indian Crop Agronomic Catalogue
+            </h1>
+            <p className="text-xs text-[var(--color-text-secondary)] mt-1 max-w-3xl leading-relaxed">
+              Standard agronomic guidelines, duration baselines, water budgeting, and soil pH tolerances across Kharif, Rabi, and Zaid cultivation cycles.
+            </p>
+          </div>
+
+          {/* View Toggle */}
+          <div className="flex items-center gap-1 bg-[var(--color-surface-2)] p-1 rounded-lg border border-[var(--color-border)] shrink-0">
+            <button
+              onClick={() => setViewMode('table')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 cursor-pointer ${
+                viewMode === 'table'
+                  ? 'bg-white text-[var(--color-text-primary)] font-semibold shadow-xs border border-[var(--color-border)]'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
+              }`}
+            >
+              <TableProperties className="w-3.5 h-3.5" />
+              Agronomic Table
+            </button>
+            <button
+              onClick={() => setViewMode('cards')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 cursor-pointer ${
+                viewMode === 'cards'
+                  ? 'bg-white text-[var(--color-text-primary)] font-semibold shadow-xs border border-[var(--color-border)]'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              Card View
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <SearchInput
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="Search crops…"
+          placeholder="Search crops by name or type..."
           className="flex-1"
           aria-label="Search crops"
         />
         <select
           value={seasonFilter}
           onChange={e => setSeasonFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-border-strong)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)] cursor-pointer"
           aria-label="Filter by season"
         >
           <option value="">All Seasons</option>
@@ -53,7 +94,7 @@ export default function CropCataloguePage() {
         <select
           value={categoryFilter}
           onChange={e => setCategoryFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-border-strong)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary-600)] cursor-pointer"
           aria-label="Filter by category"
         >
           <option value="">All Categories</option>
@@ -62,53 +103,134 @@ export default function CropCataloguePage() {
       </div>
 
       {/* Results count */}
-      <p className="text-xs text-[var(--color-text-muted)]">{filteredCrops.length} crop{filteredCrops.length !== 1 ? 's' : ''} found</p>
+      <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)]">
+        <span>Showing {filteredCrops.length} crop profile{filteredCrops.length !== 1 ? 's' : ''}</span>
+      </div>
 
-      {/* Grid */}
+      {/* Empty State */}
       {filteredCrops.length === 0 ? (
         <EmptyState
           icon={<Leaf className="w-10 h-10" />}
           title="No crops found"
-          description="Try adjusting your search or filters."
+          description="No crops match your search term or selected season/category filters."
+          action={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setQuery('');
+                setSeasonFilter('');
+                setCategoryFilter('');
+              }}
+            >
+              Reset Filters
+            </Button>
+          }
         />
+      ) : viewMode === 'table' ? (
+        /* Agronomic Comparison Table View */
+        <div className="bg-white border border-[var(--color-border)] rounded-lg overflow-hidden shadow-xs">
+          <div className="overflow-x-auto">
+            <table className="table-clean" aria-label="Crop Agronomic Catalogue">
+              <thead>
+                <tr>
+                  <th>Crop Name</th>
+                  <th>Category</th>
+                  <th>Sowing Seasons</th>
+                  <th className="text-right">Duration (Days)</th>
+                  <th className="text-right">Soil pH Range</th>
+                  <th className="text-right">Water Need</th>
+                  <th>Suitable Soils</th>
+                  <th className="text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCrops.map(crop => (
+                  <tr
+                    key={crop.id}
+                    onClick={() => navigate(`/crops/${crop.id}`)}
+                    className="cursor-pointer hover:bg-[var(--color-surface-1)] transition-colors"
+                  >
+                    <td className="font-bold text-[var(--color-text-primary)]">
+                      {crop.name}
+                    </td>
+                    <td className="capitalize text-[var(--color-text-secondary)]">
+                      {CATEGORY_LABELS[crop.category]}
+                    </td>
+                    <td>
+                      <div className="flex gap-1 flex-wrap">
+                        {crop.seasons.map(s => (
+                          <span key={s} className="px-1.5 py-0.5 text-[10px] rounded bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] font-medium">
+                            {SEASON_LABELS[s]}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="text-right font-mono font-medium">
+                      {crop.durationDays[0]}–{crop.durationDays[1]}
+                    </td>
+                    <td className="text-right font-mono">
+                      pH {crop.idealPhRange[0]}–{crop.idealPhRange[1]}
+                    </td>
+                    <td className="text-right font-mono text-[var(--color-text-secondary)]">
+                      {crop.waterNeedsMmPerSeason[0]}–{crop.waterNeedsMmPerSeason[1]} mm
+                    </td>
+                    <td className="text-xs text-[var(--color-text-muted)] max-w-xs truncate">
+                      {crop.suitableSoils.join(', ')}
+                    </td>
+                    <td className="text-right">
+                      <span className="text-xs font-semibold text-emerald-800 hover:underline inline-flex items-center gap-1">
+                        Profile <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       ) : (
+        /* Card View */
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredCrops.map(crop => (
-            <Card
+            <div
               key={crop.id}
               onClick={() => navigate(`/crops/${crop.id}`)}
-              className="hover:shadow-md transition-all cursor-pointer group"
+              className="bg-white border border-[var(--color-border)] rounded-lg p-4 hover:border-[var(--color-border-strong)] transition-all cursor-pointer group shadow-xs"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap mb-2">
-                    <Badge variant="blue">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
                       {CATEGORY_LABELS[crop.category]}
-                    </Badge>
+                    </span>
                     {crop.seasons.map(s => (
-                      <Badge key={s} variant="green">{SEASON_LABELS[s]}</Badge>
+                      <span key={s} className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        {SEASON_LABELS[s]}
+                      </span>
                     ))}
                   </div>
-                  <h2 className="text-sm font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary-700)] transition-colors">{crop.name}</h2>
+                  <h2 className="text-sm font-bold text-[var(--color-text-primary)] group-hover:text-emerald-800 transition-colors">
+                    {crop.name}
+                  </h2>
                   <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                    {crop.durationDays[0]}–{crop.durationDays[1]} days
-                    &nbsp;·&nbsp; pH {crop.idealPhRange[0]}–{crop.idealPhRange[1]}
+                    {crop.durationDays[0]}–{crop.durationDays[1]} days &nbsp;·&nbsp; pH {crop.idealPhRange[0]}–{crop.idealPhRange[1]}
                   </p>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5 truncate">
                     Soils: {crop.suitableSoils.join(', ')}
                   </p>
                 </div>
-                <div className="w-7 h-7 rounded-lg bg-[var(--color-surface-2)] flex items-center justify-center shrink-0 group-hover:bg-[var(--color-primary-50)] group-hover:text-[var(--color-primary-700)] transition-colors mt-1">
-                  <ChevronRight className="w-4 h-4 text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-700)]" />
+                <div className="w-6 h-6 rounded bg-[var(--color-surface-2)] flex items-center justify-center shrink-0 group-hover:bg-emerald-50 text-[var(--color-text-muted)] group-hover:text-emerald-800 transition-colors mt-1">
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </div>
               </div>
 
               <div className="mt-3 pt-2.5 border-t border-[var(--color-border)]">
                 <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
-                  {crop.sowingGuidance.slice(0, 100)}…
+                  {crop.sowingGuidance.slice(0, 110)}…
                 </p>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       )}

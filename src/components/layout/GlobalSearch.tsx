@@ -38,12 +38,12 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
     const schemeResults: SearchResult[] = SCHEMES
       .filter(s => s.name.toLowerCase().includes(q) || s.shortDescription.toLowerCase().includes(q))
       .slice(0, 3)
-      .map(s => ({ type: 'scheme', id: s.id, title: s.name, subtitle: s.level, route: `/schemes` }));
+      .map(s => ({ type: 'scheme', id: s.id, title: s.name, subtitle: s.level, route: `/schemes?scheme=${s.id}` }));
 
     const pestResults: SearchResult[] = PESTS_DISEASES
       .filter(p => p.name.toLowerCase().includes(q))
       .slice(0, 2)
-      .map(p => ({ type: 'pest', id: p.id, title: p.name, subtitle: p.type, route: `/pests-diseases` }));
+      .map(p => ({ type: 'pest', id: p.id, title: p.name, subtitle: p.type, route: `/pests-diseases?id=${p.id}` }));
 
     const articleResults: SearchResult[] = ARTICLES
       .filter(a => a.title.toLowerCase().includes(q) || a.tags.some(t => t.includes(q)))
@@ -67,7 +67,7 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4 bg-black/40 backdrop-blur-xs animate-fade-in" onClick={onClose}>
-      <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-[var(--color-border)] p-2 animate-scale-up" onClick={e => e.stopPropagation()}>
+      <div className="w-full max-w-xl bg-white rounded-xl shadow-lg border border-[var(--color-border)] p-2 animate-scale-up" onClick={e => e.stopPropagation()}>
         {/* Input */}
         <div className="flex items-center gap-3 px-3 py-2.5 border-b border-[var(--color-border)]">
           <Search className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0" />

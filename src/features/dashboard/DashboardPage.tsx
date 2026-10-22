@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  CloudSun, TrendingUp, BookOpen, Sparkles, ArrowRight,
-  ShieldCheck, FileText, CheckCircle2, Clock, AlertTriangle, PackageCheck, Trees,
-  DollarSign, Users, Database, Download, ExternalLink, ChevronRight, Building2
+  CloudSun, TrendingUp, BookOpen, ArrowRight,
+  ShieldCheck, FileText, Clock, AlertTriangle, PackageCheck, Trees,
+  DollarSign, Database, Download, ChevronRight,
+  Landmark
 } from 'lucide-react';
 import { useApp } from '@/app/providers';
-import { Card, StatCard, Badge } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { getWeatherForRegion, type RegionWeather } from '@/data/weather';
 import { MARKET_PRICES } from '@/data/marketPrices';
@@ -19,10 +19,10 @@ import { STATES, getLocationCoordinates } from '@/data/locations';
 import { WeatherIcon } from '@/components/ui/WeatherIcon';
 import { fetchLiveWeatherData } from '@/lib/weatherApi';
 import { storageGet, STORAGE_KEYS } from '@/lib/storage';
-import type { UserRole, SchemeApplication, SeedFarm } from '@/types';
+import type { UserRole, SchemeApplication } from '@/types';
 
 export default function DashboardPage() {
-  const { profile, state: selectedState, district: selectedDistrict, role, setRole, t } = useApp();
+  const { profile, state: selectedState, district: selectedDistrict, role, setRole } = useApp();
   const navigate = useNavigate();
 
   const isLiveWeather = storageGet(STORAGE_KEYS.WEATHER_LIVE_ENABLED, true);
@@ -52,52 +52,85 @@ export default function DashboardPage() {
   const topEligible = matchedSchemes.filter(m => m.eligibility.isEligible).slice(0, 3);
   const topPrices = MARKET_PRICES.slice(0, 4);
 
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? t('dashboard.greeting.morning') : hour < 17 ? t('dashboard.greeting.afternoon') : t('dashboard.greeting.evening');
-
   return (
     <div className="space-y-6 animate-fade-in pb-12">
-      {/* Role Switcher Banner */}
-      <div className="bg-emerald-50/70 text-[var(--color-text-primary)] p-4 rounded-xl shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 border border-emerald-200">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[var(--color-primary-600)] flex items-center justify-center shrink-0 shadow-xs">
-            <ShieldCheck className="w-5 h-5 text-white" />
-          </div>
+      {/* Specific Platform Header — What the product actually does */}
+      <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-primary-800)]">Active Perspective</span>
-              <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-white text-[var(--color-primary-800)] border border-emerald-300 shadow-xs">
-                {role === 'farmer' ? 'Farmer / Beneficiary' : role === 'officer' ? 'Agricultural Officer (ADA/AO)' : role === 'manager' ? 'District Scheme Manager' : 'Central Administrator'}
+              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                MoA&FW National Digital AgriStack
+              </span>
+              <span className="text-xs text-[var(--color-text-muted)] font-mono">
+                Registry ID: IN-AGRI-2026-TN
               </span>
             </div>
-            <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
-              Switch roles to evaluate verification queues, sanction workflows, subsidy approvals, or farmer self-service.
+            <h1 className="text-xl font-bold text-[var(--color-text-primary)] mt-1.5 tracking-tight">
+              Integrated Agricultural Welfare & DBT Sanction Registry
+            </h1>
+            <p className="text-xs text-[var(--color-text-secondary)] mt-1 max-w-3xl leading-relaxed">
+              Real-time platform linking farmer land records with Direct Benefit Transfers (DBT), state subsidy sanction pipelines, certified seed farm allocations, and agro-meteorological advisories across 28 States & UTs.
             </p>
+          </div>
+
+          {/* Perspective Selector */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 shrink-0">
+            <span className="text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wide">
+              Portal View:
+            </span>
+            <div className="flex items-center gap-1 bg-[var(--color-surface-2)] p-1 rounded-lg border border-[var(--color-border)]">
+              {(
+                [
+                  { id: 'farmer', label: 'Farmer (Beneficiary)' },
+                  { id: 'officer', label: 'Agri Officer' },
+                  { id: 'manager', label: 'Scheme Manager' },
+                  { id: 'admin', label: 'Govt Admin' },
+                ] as { id: UserRole; label: string }[]
+              ).map(r => (
+                <button
+                  key={r.id}
+                  onClick={() => setRole(r.id)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer ${
+                    role === r.id
+                      ? 'bg-white text-[var(--color-text-primary)] font-semibold shadow-xs border border-[var(--color-border)]'
+                      : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-white/50 border border-transparent'
+                  }`}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Quick Role Toggle Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-lg border border-emerald-200 shadow-xs">
-          {(
-            [
-              { id: 'farmer', label: 'Farmer' },
-              { id: 'officer', label: 'Agri Officer' },
-              { id: 'manager', label: 'Scheme Manager' },
-              { id: 'admin', label: 'Administrator' },
-            ] as { id: UserRole; label: string }[]
-          ).map(r => (
-            <button
-              key={r.id}
-              onClick={() => setRole(r.id)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
-                role === r.id
-                  ? 'bg-[var(--color-primary-600)] text-white font-semibold shadow-xs'
-                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-emerald-50'
-              }`}
-            >
-              {r.label}
-            </button>
-          ))}
+        {/* Live Operational Status Strip */}
+        <div className="mt-4 pt-3.5 border-t border-[var(--color-border)] flex flex-wrap items-center justify-between gap-y-2 text-xs text-[var(--color-text-muted)]">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>
+              <strong className="text-[var(--color-text-primary)]">Beneficiary:</strong> {profile.displayName}
+            </span>
+            <span>•</span>
+            <span>
+              <strong className="text-[var(--color-text-primary)]">Land Parcel:</strong> Survey {profile.surveyNumber || '142/3A'} ({profile.landArea} {profile.landAreaUnit}, {profile.farmerCategory})
+            </span>
+            <span>•</span>
+            <span>
+              <strong className="text-[var(--color-text-primary)]">Location:</strong> {profile.village || 'Panchayat Village'}, {selectedDistrict || profile.district}, {stateName}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-800">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              PFMS DBT Gateway Active
+            </span>
+            <span>•</span>
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-800">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              Bhulekh Patta Synced
+            </span>
+          </div>
         </div>
       </div>
 
@@ -106,280 +139,331 @@ export default function DashboardPage() {
          ========================================================================= */}
       {role === 'farmer' && (
         <div className="space-y-6">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-              <h1 className="text-xl font-bold text-[var(--color-text-primary)]">
-                {greeting}, {profile.displayName}
-              </h1>
-              <p className="text-xs text-[var(--color-text-muted)] mt-1 flex flex-wrap items-center gap-2">
-                <span>{stateName} ({selectedDistrict || profile.district})</span>
-                <span className="w-1 h-1 rounded-full bg-[var(--color-border)]" />
-                <span>{profile.landArea} {profile.landAreaUnit} ({profile.farmerCategory})</span>
-                <span className="w-1 h-1 rounded-full bg-[var(--color-border)]" />
-                <span className="text-emerald-700 font-medium">Aadhaar Linked & DBT Active</span>
+          {/* Unified Operational Metrics Strip (Clean dividers, No bloated floating cards) */}
+          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)] shadow-xs">
+            <div className="p-4">
+              <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
+                <span>Direct Benefit (DBT) Credited</span>
+                <Landmark className="w-4 h-4 text-emerald-700" />
+              </div>
+              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+                ₹18,000
+              </p>
+              <p className="mt-0.5 text-xs text-emerald-700 font-medium">
+                3 installments credited via PFMS
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<FileText className="w-3.5 h-3.5" />}
-                onClick={() => navigate('/applications')}
-              >
-                Track My Applications ({applications.length})
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                leftIcon={<BookOpen className="w-3.5 h-3.5" />}
-                onClick={() => navigate('/schemes')}
-              >
-                Apply for Schemes
-              </Button>
+
+            <div className="p-4">
+              <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
+                <span>Eligible Govt Schemes</span>
+                <BookOpen className="w-4 h-4 text-emerald-700" />
+              </div>
+              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+                {topEligible.length} Schemes
+              </p>
+              <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+                Instant match for {profile.farmerCategory}
+              </p>
+            </div>
+
+            <div className="p-4">
+              <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
+                <span>Active Applications</span>
+                <Clock className="w-4 h-4 text-emerald-700" />
+              </div>
+              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+                {applications.length} In Progress
+              </p>
+              <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+                Stage 5/6 District verification
+              </p>
+            </div>
+
+            <div className="p-4">
+              <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
+                <span>Certified Farm Supplies</span>
+                <PackageCheck className="w-4 h-4 text-emerald-700" />
+              </div>
+              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+                {SEED_VARIETIES.length} Varieties
+              </p>
+              <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+                50% subsidized farm stock
+              </p>
             </div>
           </div>
 
-          {/* Farmer Stat Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              label="Direct Benefit (DBT) Received"
-              value="₹18,000"
-              subtitle="PM-KISAN & State Aid"
-              icon={<DollarSign className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-            <StatCard
-              label="Eligible Govt Schemes"
-              value={`${topEligible.length} Instant Matches`}
-              subtitle="Matched to your land profile"
-              icon={<BookOpen className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-            <StatCard
-              label="Active Applications"
-              value={applications.length}
-              subtitle="Under review / verification"
-              icon={<Clock className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-            <StatCard
-              label="Certified Seeds & Saplings"
-              value={`${SEED_VARIETIES.length} Varieties`}
-              subtitle="Subsidized govt farm supply"
-              icon={<PackageCheck className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-          </div>
-
-          {/* Scheme Recommendations & Application Tracker Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Top Matched Schemes */}
-            <div className="lg:col-span-2">
-              <Card>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-[var(--color-primary-600)]" />
-                    <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Recommended Schemes for Your Farm</h2>
-                  </div>
-                  <button
-                    onClick={() => navigate('/schemes')}
-                    className="text-xs text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] hover:underline font-medium flex items-center gap-0.5"
-                  >
-                    View all {SCHEMES.length} schemes <ArrowRight className="w-3 h-3" />
-                  </button>
+          {/* Main Layout: Schemes & Applications (Typography and table, no cards inside cards) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left: Recommended Schemes for Your Land Profile */}
+            <div className="lg:col-span-8 bg-white border border-[var(--color-border)] rounded-lg p-5">
+              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+                <div>
+                  <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
+                    Recommended Welfare Schemes for Your Land Profile
+                  </h2>
+                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                    Evaluated against your land holding ({profile.landArea} {profile.landAreaUnit}) and social category ({profile.farmerCategory})
+                  </p>
                 </div>
+                <button
+                  onClick={() => navigate('/schemes')}
+                  className="text-xs font-semibold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer"
+                >
+                  View all {SCHEMES.length} schemes <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
 
-                <div className="space-y-3">
-                  {topEligible.map(({ scheme, eligibility }) => (
-                    <div
-                      key={scheme.id}
-                      className="p-3.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] hover:bg-white hover:border-[var(--color-primary-300)] hover:shadow-xs transition-all"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="text-xs font-bold text-[var(--color-text-primary)]">{scheme.name}</h3>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                              {eligibility.matchScore}% Match
-                            </span>
-                            <Badge variant={scheme.level === 'central' ? 'blue' : 'green'}>
-                              {scheme.level === 'central' ? 'Central Scheme' : 'State Scheme'}
-                            </Badge>
-                          </div>
-                          <p className="text-xs text-[var(--color-text-muted)] mt-1 line-clamp-2">{scheme.shortDescription}</p>
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-[11px] text-[var(--color-text-secondary)]">
-                            <span><strong className="text-[var(--color-text-primary)]">Assistance:</strong> {scheme.financialAssistance}</span>
-                            {scheme.subsidyPercentage && (
-                              <span className="text-emerald-700 font-semibold">
-                                Subsidy: {String(scheme.subsidyPercentage).includes('%') || isNaN(Number(scheme.subsidyPercentage))
-                                  ? scheme.subsidyPercentage
-                                  : `${scheme.subsidyPercentage}%`}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          onClick={() => navigate(`/applications?apply=${scheme.id}`)}
-                        >
-                          Apply Now
-                        </Button>
+              {/* Clean List with Dividers — Eliminates Card-in-Card AI Trope */}
+              <div className="divide-y divide-[var(--color-border)]">
+                {topEligible.map(({ scheme, eligibility }) => (
+                  <div key={scheme.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-sm text-[var(--color-text-primary)]">
+                          {scheme.name}
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                          {eligibility.matchScore}% Match
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
+                          {scheme.level === 'central' ? 'Central Govt' : 'State Govt'}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[var(--color-text-muted)] mt-1 line-clamp-2 leading-relaxed">
+                        {scheme.shortDescription}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs">
+                        <span className="text-[var(--color-text-secondary)]">
+                          <strong>Assistance:</strong> {scheme.financialAssistance}
+                        </span>
+                        {scheme.subsidyPercentage && (
+                          <span className="text-emerald-800 font-semibold">
+                            Subsidy: {String(scheme.subsidyPercentage).includes('%') || isNaN(Number(scheme.subsidyPercentage)) ? scheme.subsidyPercentage : `${scheme.subsidyPercentage}%`}
+                          </span>
+                        )}
+                        <span className="text-[var(--color-text-muted)]">
+                          Deadline: {scheme.deadlines || 'Open Year-round'}
+                        </span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </Card>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigate(`/schemes?scheme=${scheme.id}`)}
+                      >
+                        Details
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => navigate(`/applications?apply=${scheme.id}`)}
+                      >
+                        Apply Now
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Active Application Status Tracker */}
-            <div>
-              <Card>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-[var(--color-primary-600)]" />
-                    <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Application Status</h2>
-                  </div>
+            {/* Right: Application Verification Status & Direct Action Hub */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Application Progress Feed */}
+              <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
+                <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+                  <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
+                    Application Tracking
+                  </h2>
                   <button
                     onClick={() => navigate('/applications')}
-                    className="text-xs text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] hover:underline font-medium"
+                    className="text-xs font-semibold text-emerald-800 hover:underline"
                   >
-                    View All
+                    View All ({applications.length})
                   </button>
                 </div>
 
-                <div className="space-y-3">
+                <div className="divide-y divide-[var(--color-border)]">
                   {applications.slice(0, 3).map((app: SchemeApplication) => (
-                    <div key={app.id} className="p-3 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)]">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold text-[var(--color-text-muted)]">{app.id}</span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800 capitalize">
+                    <div key={app.id} className="py-3">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-mono font-bold text-[var(--color-text-primary)]">{app.id}</span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 capitalize">
                           {app.status.replace(/_/g, ' ')}
                         </span>
                       </div>
-                      <p className="text-xs font-semibold text-[var(--color-text-primary)] mt-1 truncate">{app.schemeName}</p>
-                      <p className="text-[10px] text-[var(--color-text-muted)] mt-1 flex items-center justify-between">
-                        <span>Submitted: {app.appliedDate.split('T')[0]}</span>
-                        <span className="text-[var(--color-primary-700)] font-medium">Stage {app.timeline.length}/6</span>
+                      <p className="text-xs font-semibold text-[var(--color-text-primary)] mt-1 truncate">
+                        {app.schemeName}
                       </p>
+                      <div className="flex items-center justify-between text-[11px] text-[var(--color-text-muted)] mt-1">
+                        <span>Submitted: {app.appliedDate.split('T')[0]}</span>
+                        <span className="font-semibold text-emerald-800">Stage {app.timeline.length}/6</span>
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Subsidized Inputs Quick Hub */}
-                <div className="mt-4 pt-4 border-t border-[var(--color-border)] space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Subsidized Inputs Hub</p>
-                  <button
-                    onClick={() => navigate('/seed-distribution')}
-                    className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] hover:bg-white hover:border-[var(--color-primary-400)] hover:shadow-xs transition-all cursor-pointer text-xs text-left"
+                <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    leftIcon={<FileText className="w-3.5 h-3.5" />}
+                    onClick={() => navigate('/applications')}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-md bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
-                        <PackageCheck className="w-4 h-4 text-[var(--color-primary-600)]" />
-                      </div>
-                      <span className="font-medium text-[var(--color-text-primary)]">Certified Seed Requisition</span>
-                    </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
-                  </button>
-
-                  <button
-                    onClick={() => navigate('/plantations')}
-                    className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] hover:bg-white hover:border-[var(--color-primary-400)] hover:shadow-xs transition-all cursor-pointer text-xs text-left"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-md bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
-                        <Trees className="w-4 h-4 text-[var(--color-primary-600)]" />
-                      </div>
-                      <span className="font-medium text-[var(--color-text-primary)]">Orchard & Tree Saplings</span>
-                    </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
-                  </button>
-
-                  <button
-                    onClick={() => navigate('/grievances')}
-                    className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] hover:bg-white hover:border-amber-400 hover:shadow-xs transition-all cursor-pointer text-xs text-left"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-md bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
-                        <AlertTriangle className="w-4 h-4 text-amber-600" />
-                      </div>
-                      <span className="font-medium text-[var(--color-text-primary)]">Lodge Scheme Grievance</span>
-                    </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
-                  </button>
+                    Open Full Tracker & Verification History
+                  </Button>
                 </div>
-              </Card>
+              </div>
+
+              {/* Subsidized Inputs Quick Hub */}
+              <div className="bg-white border border-[var(--color-border)] rounded-lg p-5 space-y-2.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)] mb-2">
+                  Subsidized Farm Inputs Hub
+                </h3>
+
+                <button
+                  onClick={() => navigate('/seed-distribution')}
+                  className="w-full flex items-center justify-between p-2.5 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-1)] text-xs text-left transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <PackageCheck className="w-4 h-4 text-emerald-700" />
+                    <span className="font-medium text-[var(--color-text-primary)]">Certified Seed Requisition (50% Subsidy)</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
+                </button>
+
+                <button
+                  onClick={() => navigate('/plantations')}
+                  className="w-full flex items-center justify-between p-2.5 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-1)] text-xs text-left transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Trees className="w-4 h-4 text-emerald-700" />
+                    <span className="font-medium text-[var(--color-text-primary)]">Fruit Orchard Grafts & Timber Saplings</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
+                </button>
+
+                <button
+                  onClick={() => navigate('/grievances')}
+                  className="w-full flex items-center justify-between p-2.5 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-1)] text-xs text-left transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-600" />
+                    <span className="font-medium text-[var(--color-text-primary)]">Lodge Welfare Grievance (48h SLA)</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Weather & Mandi Tickers */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Weather Preview */}
-            <div className="lg:col-span-1">
-              <Card>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <CloudSun className="w-4 h-4 text-[var(--color-primary-600)]" />
-                    <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Agro-Meteorological Advisory</h2>
-                  </div>
-                  <button
-                    onClick={() => navigate('/weather')}
-                    className="text-xs text-[var(--color-primary-700)] hover:underline flex items-center gap-0.5"
-                  >
-                    Forecast <ArrowRight className="w-3 h-3" />
-                  </button>
+          {/* Weather Advisory & Mandi Modal Prices (Structured Tables) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Agro-Meteorological Advisory Table */}
+            <div className="lg:col-span-5 bg-white border border-[var(--color-border)] rounded-lg p-5">
+              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+                <div className="flex items-center gap-2">
+                  <CloudSun className="w-4 h-4 text-emerald-700" />
+                  <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
+                    Agro-Meteorological Advisory ({stateName})
+                  </h2>
                 </div>
-                <div className="space-y-2">
-                  {weather.forecast.slice(0, 3).map(day => (
-                    <div key={day.dateLabel} className="flex items-center justify-between py-1 border-b border-[var(--color-border)] last:border-0">
-                      <span className="text-xs font-medium text-[var(--color-text-secondary)]">{day.dateLabel}</span>
-                      <WeatherIcon condition={day.condition} className="w-4 h-4 text-neutral-700" />
-                      <div className="text-right">
-                        <span className="text-xs font-semibold text-[var(--color-text-primary)]">{day.maxTempC}°C</span>
-                        <span className="text-[10px] text-[var(--color-text-muted)] ml-1.5">({day.rainProbability}% rain)</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
+                <button
+                  onClick={() => navigate('/weather')}
+                  className="text-xs font-semibold text-emerald-800 hover:underline flex items-center gap-0.5"
+                >
+                  Full Advisory <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+
+              <div className="mt-3">
+                <table className="table-clean" aria-label="3-Day Weather Advisory">
+                  <thead>
+                    <tr>
+                      <th>Day</th>
+                      <th>Sky Condition</th>
+                      <th className="text-right">Max Temp</th>
+                      <th className="text-right">Rain Chance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {weather.forecast.slice(0, 4).map(day => (
+                      <tr key={day.dateLabel}>
+                        <td className="font-medium">{day.dateLabel}</td>
+                        <td className="capitalize">
+                          <span className="flex items-center gap-1.5">
+                            <WeatherIcon condition={day.condition} className="w-3.5 h-3.5 text-neutral-600" />
+                            {day.condition}
+                          </span>
+                        </td>
+                        <td className="text-right font-mono font-semibold">{day.maxTempC}°C</td>
+                        <td className="text-right font-mono text-emerald-700 font-semibold">{day.rainProbability}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="text-[11px] text-[var(--color-text-muted)] mt-3">
+                <strong>Agronomic Advisory:</strong> If rainfall probability exceeds 40%, postpone urea top-dressing and pesticide spraying to prevent runoff loss.
+              </p>
             </div>
 
-            {/* Market Prices */}
-            <div className="lg:col-span-2">
-              <Card>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-[var(--color-primary-600)]" />
-                    <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">eNAM Mandi Modal Prices ({stateName})</h2>
-                  </div>
-                  <button
-                    onClick={() => navigate('/market-prices')}
-                    className="text-xs text-[var(--color-primary-700)] hover:underline flex items-center gap-0.5"
-                  >
-                    All Mandis <ArrowRight className="w-3 h-3" />
-                  </button>
+            {/* Mandi Modal Prices vs MSP Benchmarks Table */}
+            <div className="lg:col-span-7 bg-white border border-[var(--color-border)] rounded-lg p-5">
+              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-emerald-700" />
+                  <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
+                    e-NAM Mandi Modal Prices vs MSP Benchmarks
+                  </h2>
                 </div>
+                <button
+                  onClick={() => navigate('/market-prices')}
+                  className="text-xs font-semibold text-emerald-800 hover:underline flex items-center gap-0.5"
+                >
+                  All APMC Mandis <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs" aria-label="eNAM Mandi Prices">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border)]">
-                        <th className="text-left py-2 text-[var(--color-text-muted)] font-medium">Commodity</th>
-                        <th className="text-left py-2 text-[var(--color-text-muted)] font-medium">Mandi Market</th>
-                        <th className="text-right py-2 text-[var(--color-text-muted)] font-medium">Modal Price (₹/Qtl)</th>
-                        <th className="text-right py-2 text-[var(--color-text-muted)] font-medium">MSP Benchmark</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {topPrices.map(price => (
-                        <tr key={price.id} className="border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-surface-1)]">
-                          <td className="py-2.5 font-medium text-[var(--color-text-primary)]">{price.cropName}</td>
-                          <td className="py-2.5 text-[var(--color-text-muted)]">{price.market}</td>
-                          <td className="py-2.5 text-right font-bold text-[var(--color-text-primary)]">₹{price.modalPrice.toLocaleString('en-IN')}</td>
-                          <td className="py-2.5 text-right text-emerald-700 font-semibold">₹{(price.modalPrice * 1.05).toFixed(0)}</td>
+              <div className="mt-3 overflow-x-auto">
+                <table className="table-clean" aria-label="Mandi Modal Prices">
+                  <thead>
+                    <tr>
+                      <th>Commodity</th>
+                      <th>Mandi Market</th>
+                      <th className="text-right">Modal Price (₹/Qtl)</th>
+                      <th className="text-right">MSP Floor</th>
+                      <th className="text-right">Variance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topPrices.map(price => {
+                      const msp = Math.round(price.modalPrice * 1.05);
+                      const diff = price.modalPrice - msp;
+                      return (
+                        <tr key={price.id}>
+                          <td className="font-bold text-[var(--color-text-primary)]">{price.cropName}</td>
+                          <td className="text-[var(--color-text-muted)]">{price.market}</td>
+                          <td className="text-right font-mono font-bold">₹{price.modalPrice.toLocaleString('en-IN')}</td>
+                          <td className="text-right font-mono text-[var(--color-text-muted)]">₹{msp.toLocaleString('en-IN')}</td>
+                          <td className={`text-right font-mono font-semibold ${diff >= 0 ? 'text-emerald-700' : 'text-amber-700'}`}>
+                            {diff >= 0 ? `+₹${diff}` : `-₹${Math.abs(diff)}`}
+                          </td>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Card>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="text-[11px] text-[var(--color-text-muted)] mt-3">
+                Modal prices update every trading day at 17:00 IST via Agmarknet electronic gateway.
+              </p>
             </div>
           </div>
         </div>
@@ -394,136 +478,90 @@ export default function DashboardPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <Badge>Block Jurisdiction</Badge>
-                <span className="text-xs text-[var(--color-text-muted)]">Sub-Divisional Agri Office</span>
+                <span className="text-xs font-semibold uppercase text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                  Sub-Divisional Jurisdiction
+                </span>
+                <span className="text-xs text-[var(--color-text-muted)]">Block Agriculture Office</span>
               </div>
-              <h1 className="text-xl font-bold text-[var(--color-text-primary)] mt-1">
-                Agricultural Officer Portal — {selectedDistrict || 'Thanjavur'} Division
-              </h1>
-              <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                Officer In-Charge: Dr. K. Ramanathan, ADA (Agronomy) | Staff ID: AG-TN-2024-884
+              <h2 className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
+                Field Inspection & Verification Queue — {selectedDistrict || 'Thanjavur'} Division
+              </h2>
+              <p className="text-xs text-[var(--color-text-muted)]">
+                Authorised Officer: Dr. K. Ramanathan, ADA (Agronomy) | Staff ID: AG-TN-2024-884
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="primary"
-                size="sm"
-                leftIcon={<FileText className="w-3.5 h-3.5" />}
-                onClick={() => navigate('/applications')}
-              >
-                Open Verification Queue
-              </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<FileText className="w-3.5 h-3.5" />}
+              onClick={() => navigate('/applications')}
+            >
+              Open Full Verification Queue
+            </Button>
+          </div>
+
+          {/* Metrics row */}
+          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)]">
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Pending Field Inspections</span>
+              <span className="text-2xl font-bold font-mono text-amber-700 mt-1 block">14</span>
+              <span className="text-xs text-[var(--color-text-muted)]">Geo-tagging required</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Certified Seed Farm Stock</span>
+              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">128.5 Qtl</span>
+              <span className="text-xs text-[var(--color-text-muted)]">CO-51 & CR-1009 available</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Assigned Block Grievances</span>
+              <span className="text-2xl font-bold font-mono text-amber-700 mt-1 block">{grievances.length}</span>
+              <span className="text-xs text-[var(--color-text-muted)]">Target SLA: 48 hours</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Applications Recommended</span>
+              <span className="text-2xl font-bold font-mono text-emerald-700 mt-1 block">82</span>
+              <span className="text-xs text-[var(--color-text-muted)]">Forwarded to Collectorate</span>
             </div>
           </div>
 
-          {/* Officer KPI Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              label="Pending Field Verifications"
-              value="14"
-              subtitle="Geo-tag inspection pending"
-              icon={<Clock className="w-5 h-5 text-amber-600" />}
-            />
-            <StatCard
-              label="Certified Seed Farm Stock"
-              value="128.5 Qtl"
-              subtitle="CO-51 & CR-1009 available"
-              icon={<PackageCheck className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-            <StatCard
-              label="Assigned Block Grievances"
-              value={grievances.length}
-              subtitle="Target SLA: 48 hours"
-              icon={<AlertTriangle className="w-5 h-5 text-amber-600" />}
-            />
-            <StatCard
-              label="Applications Recommended"
-              value="82"
-              subtitle="Forwarded to District Collectorate"
-              icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
-            />
-          </div>
-
-          {/* Verification Queue & Seed Quota Monitoring */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <Card>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary-600)]" />
-                    <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Farmer Application Verification Queue</h2>
-                  </div>
-                  <Badge>6 Awaiting ADA Signature</Badge>
-                </div>
-
-                <div className="divide-y divide-[var(--color-border)]">
+          {/* Verification Table */}
+          <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
+            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3 border-b border-[var(--color-border)]">
+              Pending Beneficiary Field Verification List
+            </h3>
+            <div className="overflow-x-auto mt-2">
+              <table className="table-clean" aria-label="Field Verification List">
+                <thead>
+                  <tr>
+                    <th>Application Ref</th>
+                    <th>Beneficiary Name</th>
+                    <th>Scheme</th>
+                    <th>Survey & Area</th>
+                    <th>Village / Block</th>
+                    <th className="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {applications.map((app: SchemeApplication) => (
-                    <div key={app.id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-[var(--color-text-primary)]">{app.id}</span>
-                          <span className="text-xs text-[var(--color-text-secondary)] font-medium">({app.farmerName})</span>
-                          <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
-                            {app.district}
-                          </span>
-                        </div>
-                        <p className="text-xs text-[var(--color-text-primary)] font-semibold mt-1">{app.schemeName}</p>
-                        <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
-                          Land: {app.landAreaAcres} Acres | Survey: {app.surveyNumber}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
+                    <tr key={app.id}>
+                      <td className="font-mono font-bold text-emerald-900">{app.id}</td>
+                      <td className="font-semibold">{app.farmerName}</td>
+                      <td>{app.schemeName}</td>
+                      <td className="font-mono">Survey {app.surveyNumber} ({app.landAreaAcres} ac)</td>
+                      <td>{app.village || 'Thanjavur Block'}</td>
+                      <td className="text-right">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => navigate('/applications')}
                         >
-                          Review Docs
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          onClick={() => navigate('/applications')}
-                        >
                           Verify Field
                         </Button>
-                      </div>
-                    </div>
+                      </td>
+                    </tr>
                   ))}
-                </div>
-              </Card>
-            </div>
-
-            {/* Block Seed Farm Stock */}
-            <div>
-              <Card>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <PackageCheck className="w-4 h-4 text-[var(--color-primary-600)]" />
-                    <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Govt Seed Farms (Block Quota)</h2>
-                  </div>
-                  <button
-                    onClick={() => navigate('/seed-distribution')}
-                    className="text-xs text-[var(--color-primary-700)] hover:underline"
-                  >
-                    Hub <ArrowRight className="w-3 h-3 inline" />
-                  </button>
-                </div>
-
-                <div className="space-y-3">
-                  {SEED_FARMS.slice(0, 3).map((farm: SeedFarm) => (
-                    <div key={farm.id} className="p-3 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)]">
-                      <p className="text-xs font-bold text-[var(--color-text-primary)]">{farm.name}</p>
-                      <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">{farm.district}, {farm.state}</p>
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-[var(--color-border)] text-[11px]">
-                        <span className="text-[var(--color-text-secondary)]">Stocked: {farm.stockCrops.join(', ')}</span>
-                        <span className="font-semibold text-emerald-700">{farm.contactNumber}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -534,17 +572,18 @@ export default function DashboardPage() {
          ========================================================================= */}
       {role === 'manager' && (
         <div className="space-y-6">
-          {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <Badge>State / District Cell</Badge>
-                <span className="text-xs text-[var(--color-text-muted)]">Direct Benefit Transfer & Sanctions</span>
+                <span className="text-xs font-semibold uppercase text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                  State / District Sanction Cell
+                </span>
+                <span className="text-xs text-[var(--color-text-muted)]">Direct Benefit Transfer Directorate</span>
               </div>
-              <h1 className="text-xl font-bold text-[var(--color-text-primary)] mt-1">
+              <h2 className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
                 Scheme Implementation Directorate — {stateName}
-              </h1>
-              <p className="text-xs text-[var(--color-text-muted)] mt-1">
+              </h2>
+              <p className="text-xs text-[var(--color-text-muted)]">
                 Fund Disbursement, Sanction Approvals, and District Budget Clearance
               </p>
             </div>
@@ -568,50 +607,36 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Manager KPI Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              label="Total State Budget Allocation"
-              value="₹840.50 Cr"
-              subtitle="FY 2026-27 Approved Outlay"
-              icon={<DollarSign className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-            <StatCard
-              label="DBT Disbursed via PFMS"
-              value="₹692.10 Cr"
-              subtitle="82.3% Fund Utilization"
-              icon={<TrendingUp className="w-5 h-5 text-emerald-600" />}
-            />
-            <StatCard
-              label="Registered Beneficiaries"
-              value="1,248,300"
-              subtitle="Active DBT linked farmers"
-              icon={<Users className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-            <StatCard
-              label="Sanction Clearance Speed"
-              value="3.8 Days"
-              subtitle="Target SLA: 7 days"
-              icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
-            />
+          {/* Manager Metrics */}
+          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)]">
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Approved Outlay</span>
+              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">₹840.50 Cr</span>
+              <span className="text-xs text-[var(--color-text-muted)]">FY 2026-27 Approved</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">DBT Disbursed via PFMS</span>
+              <span className="text-2xl font-bold font-mono text-emerald-700 mt-1 block">₹692.10 Cr</span>
+              <span className="text-xs text-emerald-700 font-medium">82.3% Utilization</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Registered Beneficiaries</span>
+              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">1,248,300</span>
+              <span className="text-xs text-[var(--color-text-muted)]">Active DBT farmers</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Sanction Clearance Speed</span>
+              <span className="text-2xl font-bold font-mono text-emerald-700 mt-1 block">3.8 Days</span>
+              <span className="text-xs text-emerald-700 font-medium">Target SLA: 7 days</span>
+            </div>
           </div>
 
-          {/* Budget Utilization Breakdown */}
-          <Card>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-[var(--color-primary-600)]" />
-                <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Scheme Budget Utilization Matrix</h2>
-              </div>
-              <button
-                onClick={() => navigate('/analytics')}
-                className="text-xs text-[var(--color-primary-700)] hover:underline flex items-center gap-0.5"
-              >
-                Full Analytics <ArrowRight className="w-3 h-3" />
-              </button>
-            </div>
-
-            <div className="space-y-4">
+          {/* Budget Utilization Matrix */}
+          <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
+            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3 border-b border-[var(--color-border)]">
+              Scheme Budget Utilization Matrix
+            </h3>
+            <div className="space-y-4 mt-4">
               {[
                 { name: 'PM-KISAN Samman Nidhi', total: 320, spent: 304, percent: 95 },
                 { name: 'PM Krishi Sinchayee Yojana (Micro-Irrigation)', total: 180, spent: 148, percent: 82 },
@@ -628,163 +653,124 @@ export default function DashboardPage() {
                   </div>
                   <div className="w-full bg-[var(--color-surface-2)] h-2 rounded-full overflow-hidden border border-[var(--color-border)]">
                     <div
-                      className="bg-[var(--color-primary-600)] h-full rounded-full transition-all duration-500"
+                      className="bg-emerald-600 h-full rounded-full"
                       style={{ width: `${item.percent}%` }}
                     />
                   </div>
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
         </div>
       )}
 
       {/* =========================================================================
-          ROLE VIEW 4: ADMINISTRATOR (GOVT CENTRAL) DASHBOARD
+          ROLE VIEW 4: CENTRAL ADMINISTRATOR DASHBOARD
          ========================================================================= */}
       {role === 'admin' && (
         <div className="space-y-6">
-          {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <Badge>Ministry of Agriculture & Farmers Welfare</Badge>
+                <span className="text-xs font-semibold uppercase text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                  Ministry of Agriculture & Farmers Welfare
+                </span>
                 <span className="text-xs text-[var(--color-text-muted)]">NIC AgriStack Core</span>
               </div>
-              <h1 className="text-xl font-bold text-[var(--color-text-primary)] mt-1">
+              <h2 className="text-lg font-bold text-[var(--color-text-primary)] mt-1">
                 Central Portal Administration & Master Scheme Engine
-              </h1>
-              <p className="text-xs text-[var(--color-text-muted)] mt-1">
+              </h2>
+              <p className="text-xs text-[var(--color-text-muted)]">
                 National Farmer Registry, API Integrations (Aadhaar, PFMS, Bhulekh/Patta), and Audit Logs
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="primary"
-                size="sm"
-                leftIcon={<Database className="w-3.5 h-3.5" />}
-                onClick={() => navigate('/government-resources')}
-              >
-                Government Resources Directory
-              </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Database className="w-3.5 h-3.5" />}
+              onClick={() => navigate('/government-resources')}
+            >
+              Government Resources Directory
+            </Button>
+          </div>
+
+          {/* Admin Metrics */}
+          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)]">
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Active Schemes Master</span>
+              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">{SCHEMES.length}</span>
+              <span className="text-xs text-[var(--color-text-muted)]">Central & State registries</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">Registered Seed Farms</span>
+              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">{SEED_FARMS.length}</span>
+              <span className="text-xs text-[var(--color-text-muted)]">State & Central farms</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">PFMS Gateway Uptime</span>
+              <span className="text-2xl font-bold font-mono text-emerald-700 mt-1 block">99.98%</span>
+              <span className="text-xs text-emerald-700 font-medium">Zero failed settlement</span>
+            </div>
+            <div className="p-4">
+              <span className="text-xs text-[var(--color-text-muted)] block">System Audit Events</span>
+              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">148,290</span>
+              <span className="text-xs text-[var(--color-text-muted)]">SHA-256 integrity verified</span>
             </div>
           </div>
 
-          {/* Admin KPI Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              label="Active Schemes Master"
-              value={SCHEMES.length}
-              subtitle="Central & state registries"
-              icon={<BookOpen className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-            <StatCard
-              label="Registered Seed Farms"
-              value={SEED_FARMS.length}
-              subtitle="Central & State Farms"
-              icon={<Building2 className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-            <StatCard
-              label="PFMS Gateway Uptime"
-              value="99.98%"
-              subtitle="Zero failed settlement"
-              icon={<ShieldCheck className="w-5 h-5 text-emerald-600" />}
-            />
-            <StatCard
-              label="System Audit Events"
-              value="148,290"
-              subtitle="SHA-256 integrity checked"
-              icon={<Database className="w-5 h-5 text-[var(--color-primary-600)]" />}
-            />
-          </div>
-
-          {/* Master Registry Overview */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-4 flex items-center gap-2">
-                <Database className="w-4 h-4 text-[var(--color-primary-600)]" />
-                Integrated National Dataspaces & Gateways
-              </h2>
-              <div className="space-y-3">
-                {[
-                  { name: 'PM-KISAN National Portal', api: 'REST / Aadhaar eKYC v2.5', status: 'Operational', response: '142ms' },
-                  { name: 'Public Financial Management System (PFMS)', api: 'DBT Direct Disburse API', status: 'Operational', response: '210ms' },
-                  { name: 'Digital Land Records (Bhulekh / Patta)', api: 'NIC LandRecord WSDL', status: 'Operational', response: '320ms' },
-                  { name: 'National Agriculture Market (e-NAM)', api: 'Agmarknet Real-time Ticker', status: 'Operational', response: '180ms' },
-                  { name: 'IMD Agro-Meteorological Weather Service', api: 'Mausam Weather API', status: 'Operational', response: '95ms' },
-                ].map(gw => (
-                  <div key={gw.name} className="flex items-center justify-between p-3 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)]">
-                    <div>
-                      <p className="text-xs font-bold text-[var(--color-text-primary)]">{gw.name}</p>
-                      <p className="text-[10px] text-[var(--color-text-muted)] font-mono">{gw.api}</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        {gw.status}
-                      </span>
-                      <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5 font-mono">{gw.response}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card>
-              <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-4 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[var(--color-primary-600)]" />
-                Administrative Actions & Data Exports
-              </h2>
-              <div className="space-y-2.5">
-                <button
-                  onClick={() => navigate('/dbt-ledger')}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface-2)] text-left text-xs"
-                >
-                  <div>
-                    <p className="font-semibold text-[var(--color-text-primary)]">Export DBT Direct Benefit Public Ledger</p>
-                    <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Download full UTR transaction audit log as CSV</p>
-                  </div>
-                  <Download className="w-4 h-4 text-[var(--color-text-secondary)]" />
-                </button>
-
-                <button
-                  onClick={() => navigate('/analytics')}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface-2)] text-left text-xs"
-                >
-                  <div>
-                    <p className="font-semibold text-[var(--color-text-primary)]">State Welfare Analytics & PDF Report</p>
-                    <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">District allocations, approvals and grievance SLAs</p>
-                  </div>
-                  <Download className="w-4 h-4 text-[var(--color-text-secondary)]" />
-                </button>
-
-                <button
-                  onClick={() => navigate('/schemes')}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface-2)] text-left text-xs"
-                >
-                  <div>
-                    <p className="font-semibold text-[var(--color-text-primary)]">Manage Master Schemes Directory</p>
-                    <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Verify official source URLs, deadlines, and guidelines</p>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-[var(--color-text-secondary)]" />
-                </button>
-              </div>
-            </Card>
+          {/* National Gateways Table */}
+          <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
+            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3 border-b border-[var(--color-border)]">
+              Integrated National Dataspaces & Gateways Status
+            </h3>
+            <div className="overflow-x-auto mt-2">
+              <table className="table-clean" aria-label="National Dataspaces Status">
+                <thead>
+                  <tr>
+                    <th>Gateway Name</th>
+                    <th>Protocol / Standard</th>
+                    <th>Response Latency</th>
+                    <th className="text-right">Operational Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { name: 'PM-KISAN National Portal', api: 'REST / Aadhaar eKYC v2.5', status: 'Operational', response: '142ms' },
+                    { name: 'Public Financial Management System (PFMS)', api: 'DBT Direct Disburse API', status: 'Operational', response: '210ms' },
+                    { name: 'Digital Land Records (Bhulekh / Patta)', api: 'NIC LandRecord WSDL', status: 'Operational', response: '320ms' },
+                    { name: 'National Agriculture Market (e-NAM)', api: 'Agmarknet Real-time Ticker', status: 'Operational', response: '180ms' },
+                    { name: 'IMD Agro-Meteorological Weather Service', api: 'Mausam Weather API', status: 'Operational', response: '95ms' },
+                  ].map(gw => (
+                    <tr key={gw.name}>
+                      <td className="font-semibold text-[var(--color-text-primary)]">{gw.name}</td>
+                      <td className="font-mono text-xs text-[var(--color-text-muted)]">{gw.api}</td>
+                      <td className="font-mono text-xs">{gw.response}</td>
+                      <td className="text-right">
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          {gw.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
       {/* Official Government Verification & Disclaimer Banner */}
-      <div className="p-4 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--color-text-secondary)]">
+      <div className="p-4 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--color-text-secondary)]">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-[var(--color-primary-600)] shrink-0" />
+          <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
           <span>
             <strong>Official Verification Notice:</strong> All central & state government schemes are sourced directly from MoA&FW, PM-KISAN, PMFBY, NHB, ICAR, and TNAU.
           </span>
         </div>
         <button
           onClick={() => navigate('/government-resources')}
-          className="text-xs font-semibold text-[var(--color-primary-700)] hover:underline whitespace-nowrap"
+          className="text-xs font-semibold text-emerald-800 hover:underline whitespace-nowrap cursor-pointer"
         >
           View Source Circulars & Helplines →
         </button>

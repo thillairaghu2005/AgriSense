@@ -28,17 +28,17 @@ export default function GovernmentResourcesPage() {
       />
 
       {/* Official Directory Header Banner */}
-      <div className="bg-emerald-50/90 text-[var(--color-text-primary)] rounded-xl p-5 shadow-xs border border-emerald-200">
+      <div className="bg-white text-[var(--color-text-primary)] rounded-lg p-5 shadow-xs border border-[var(--color-border)]">
         <div className="flex items-center gap-2 mb-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
-            <ShieldCheck className="w-4 h-4 text-emerald-700" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--color-primary-50)] text-[var(--color-primary-800)] border border-[var(--color-primary-200)]">
+            <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-primary-700)]" />
             Verified Ministry of Agriculture & Farmers Welfare Directory
           </span>
         </div>
-        <h2 className="text-base font-bold text-emerald-950">
+        <h2 className="text-base font-bold text-[var(--color-text-primary)]">
           Central & State Official Portals, Implementation Guidelines & Direct Helplines
         </h2>
-        <p className="text-xs text-emerald-800/90 mt-1 max-w-3xl leading-relaxed">
+        <p className="text-xs text-[var(--color-text-secondary)] mt-1 max-w-3xl leading-relaxed">
           Access authoritative portals, official gazette circulars, scheme guidelines, downloadable forms,
           and 24x7 toll-free farmer helplines directly. Every single link and contact is officially verified with audit timestamps.
         </p>
