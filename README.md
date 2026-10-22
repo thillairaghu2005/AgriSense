@@ -1,4 +1,4 @@
-# AgriSense 🌱
+# AgriSense
 ### National Agriculture Schemes & Farmer Welfare Management System for India
 
 > **AgriSense** is a comprehensive, production-ready digital agriculture welfare and farm management platform for India. Built to bridge the gap between farmers and government administration, it integrates central and state welfare schemes, certified seed distribution, high-density plantation programs, direct benefit transfer (DBT) tracking, grievance redressal, multi-role administration, and complete 12-language multilingual accessibility.
@@ -7,17 +7,17 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-16a34a?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Languages](https://img.shields.io/badge/Languages-12_Indian_Languages-16a34a)](#-multilingual-support)
-[![Authoritative Sources](https://img.shields.io/badge/Data-MoA%26FW_%7C_ICAR_%7C_TNAU-15803d)](#-authoritative-data-sources)
+[![Languages](https://img.shields.io/badge/Languages-12_Indian_Languages-16a34a)](#10-complete-12-language-multilingual-core)
+[![Authoritative Sources](https://img.shields.io/badge/Data-MoA%26FW_%7C_ICAR_%7C_TNAU-15803d)](#authoritative-data-sources)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [Executive Summary](#-executive-summary)
-- [System Architecture](#-system-architecture)
-- [Core Functional Modules](#-core-functional-modules)
+- [Executive Summary](#executive-summary)
+- [System Architecture](#system-architecture)
+- [Core Functional Modules](#core-functional-modules)
   - [1. Government Schemes & Eligibility Engine](#1-government-schemes--eligibility-engine)
   - [2. Certified Seed Distribution & Farm Hub](#2-certified-seed-distribution--farm-hub)
   - [3. Plantation & Agroforestry Programs](#3-plantation--agroforestry-programs)
@@ -29,17 +29,17 @@
   - [9. Official Government Resources Directory](#9-official-government-resources-directory)
   - [10. Complete 12-Language Multilingual Core](#10-complete-12-language-multilingual-core)
   - [11. Agronomic Farm Management Suite](#11-agronomic-farm-management-suite)
-- [Design System & Typography](#-design-system--typography)
-- [Tech Stack](#-tech-stack)
-- [Project Directory Structure](#-project-directory-structure)
-- [Getting Started](#-getting-started)
-- [Available Scripts](#-available-scripts)
-- [Authoritative Data Sources](#-authoritative-data-sources)
-- [License & Disclaimer](#-license--disclaimer)
+- [Design System & Typography](#design-system--typography)
+- [Tech Stack](#tech-stack)
+- [Project Directory Structure](#project-directory-structure)
+- [Getting Started](#getting-started)
+- [Available Scripts](#available-scripts)
+- [Authoritative Data Sources](#authoritative-data-sources)
+- [License & Disclaimer](#license--disclaimer)
 
 ---
 
-## 🌾 Executive Summary
+## Executive Summary
 
 Indian agriculture sustains over 140 million farming households, yet small and marginal farmers frequently encounter fragmented information, complex subsidy procedures, and language barriers. 
 
@@ -53,7 +53,7 @@ Indian agriculture sustains over 140 million farming households, yet small and m
 
 ---
 
-## 🏛️ System Architecture
+## System Architecture
 
 ```mermaid
 graph TD
@@ -83,7 +83,7 @@ graph TD
 
 ---
 
-## 🚀 Core Functional Modules
+## Core Functional Modules
 
 ### 1. Government Schemes & Eligibility Engine
 - **Extensive Scheme Coverage:** 15+ central and state schemes including:
@@ -182,7 +182,7 @@ Full localization covering 100% of the UI across 12 Indian languages:
 
 ---
 
-## 🎨 Design System & Typography
+## Design System & Typography
 
 AgriSense implements a clean, professional, modern government-service design system:
 - **Strict Color Palette:** 
@@ -201,7 +201,7 @@ AgriSense implements a clean, professional, modern government-service design sys
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category | Technology |
 | :--- | :--- |
@@ -217,7 +217,7 @@ AgriSense implements a clean, professional, modern government-service design sys
 
 ---
 
-## 📂 Project Directory Structure
+## Project Directory Structure
 
 ```text
 agrisense/
@@ -292,7 +292,7 @@ agrisense/
 
 ---
 
-## ⚡ Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -320,7 +320,7 @@ agrisense/
 
 ---
 
-## 📜 Available Scripts
+## Available Scripts
 
 | Command | Purpose |
 | :--- | :--- |
@@ -332,7 +332,7 @@ agrisense/
 
 ---
 
-## 🏛️ Authoritative Data Sources
+## Authoritative Data Sources
 
 AgriSense adheres strictly to authoritative public datasets published by the Government of India and State Agricultural Departments:
 
@@ -351,7 +351,7 @@ AgriSense adheres strictly to authoritative public datasets published by the Gov
 
 ---
 
-## 📄 License & Disclaimer
+## License & Disclaimer
 
 - **License:** Distributed under the open-source [MIT License](LICENSE).
 - **Disclaimer:** All scheme criteria, subsidy calculations, and contact directories are synthesized from published official central and state government guidelines. Farmer profile data, sample applications, and grievance tickets are illustrative for demonstration and verification purposes. Always verify final application submissions on official government portals (`.gov.in` / `.nic.in`).

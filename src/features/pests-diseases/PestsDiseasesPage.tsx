@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card, PageHeader, Badge, InfoBanner, EmptyState } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -33,14 +33,16 @@ export default function PestsDiseasesPage() {
     return null;
   });
 
-  useEffect(() => {
+  const [prevPestIdParam, setPrevPestIdParam] = useState(pestIdParam);
+  if (pestIdParam !== prevPestIdParam) {
+    setPrevPestIdParam(pestIdParam);
     if (pestIdParam) {
       const match = PESTS_DISEASES.find(p => p.id === pestIdParam);
       if (match) {
-        setSelectedItem(prev => (prev?.id === match.id ? prev : match));
+        setSelectedItem(match);
       }
     }
-  }, [pestIdParam]);
+  }
 
   // Simulated Image Assessment State
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -299,7 +301,7 @@ export default function PestsDiseasesPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between pb-2">
                   <div className="flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <CheckCircle className="w-4 h-4 text-[var(--color-text-primary)]" />
                     <span className="text-xs font-bold text-[var(--color-text-primary)]">
                       Simulated Demonstration Result
                     </span>
@@ -312,7 +314,7 @@ export default function PestsDiseasesPage() {
                 <div>
                   <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
                     {simulatedResult.match.name}
-                    <Badge variant="neutral">
+                    <Badge>
                       {simulatedResult.match.type.toUpperCase()}
                     </Badge>
                   </h3>
@@ -321,9 +323,9 @@ export default function PestsDiseasesPage() {
                   </p>
                 </div>
 
-                <div className="bg-emerald-50/80 p-3 rounded-xl border border-emerald-200 text-xs text-emerald-950 space-y-1 shadow-xs">
-                  <p className="font-semibold text-emerald-900">Simulated Observations:</p>
-                  <ul className="list-disc list-inside space-y-0.5 text-[11px] text-emerald-800">
+                <div className="bg-[var(--color-surface-2)] p-3 rounded-xl border border-[var(--color-border)] text-xs text-[var(--color-text-primary)] space-y-1 shadow-xs">
+                  <p className="font-semibold text-[var(--color-text-primary)]">Simulated Observations:</p>
+                  <ul className="list-disc list-inside space-y-0.5 text-[11px] text-[var(--color-text-secondary)]">
                     {simulatedResult.observations.map((obs, i) => (
                       <li key={i}>{obs}</li>
                     ))}
@@ -427,10 +429,10 @@ export default function PestsDiseasesPage() {
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <Badge variant={item.type === 'pest' ? 'amber' : 'purple'}>
+                      <Badge>
                         {item.type === 'pest' ? 'Pest' : 'Disease'}
                       </Badge>
-                      <Badge variant={item.severity === 'high' ? 'red' : item.severity === 'medium' ? 'amber' : 'green'}>
+                      <Badge>
                         Severity: {item.severity.toUpperCase()}
                       </Badge>
                     </div>
@@ -446,7 +448,7 @@ export default function PestsDiseasesPage() {
                       <Link
                         key={c.id}
                         to={`/crops/${c.id}`}
-                        className="text-[10px] bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-primary-700)] hover:border-[var(--color-primary-300)] px-1.5 py-0.5 rounded shadow-xs transition-colors"
+                        className="text-[10px] bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-secondary)] px-1.5 py-0.5 rounded shadow-xs transition-colors"
                       >
                         {c.name}
                       </Link>
@@ -477,7 +479,7 @@ export default function PestsDiseasesPage() {
                   </span>
                   <button
                     onClick={() => setSelectedItem(item)}
-                    className="text-xs text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] hover:underline font-semibold flex items-center gap-1"
+                    className="text-xs text-[var(--color-text-primary)] hover:underline font-semibold flex items-center gap-1"
                   >
                     View Protocols <ChevronRight className="w-3.5 h-3.5" />
                   </button>

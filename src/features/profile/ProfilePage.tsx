@@ -102,8 +102,8 @@ export default function ProfilePage() {
       />
 
       {savedSuccess && (
-        <div className="p-3.5 bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] text-[var(--color-primary-900)] rounded-lg text-xs flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+        <div className="p-3.5 bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-lg text-xs flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-[var(--color-text-primary)]" />
           <span>Profile preferences saved successfully to your browser storage!</span>
         </div>
       )}
@@ -112,7 +112,7 @@ export default function ProfilePage() {
         {/* Personal & Farm Location */}
         <Card className="space-y-4">
           <div className="flex items-center gap-2 pb-2">
-            <User className="w-5 h-5 text-[var(--color-primary-600)]" />
+            <User className="w-5 h-5 text-[var(--color-text-primary)]" />
             <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
               Personal & Farm Details
             </h3>
@@ -180,7 +180,7 @@ export default function ProfilePage() {
         {/* Agricultural Holding Characteristics */}
         <Card className="space-y-4">
           <div className="flex items-center gap-2 pb-2">
-            <Sprout className="w-5 h-5 text-[var(--color-primary-600)]" />
+            <Sprout className="w-5 h-5 text-[var(--color-text-primary)]" />
             <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
               Land Holding & Soil Baseline
             </h3>
@@ -227,7 +227,7 @@ export default function ProfilePage() {
         {/* Language & Accessibility */}
         <Card className="space-y-4">
           <div className="flex items-center gap-2 pb-2">
-            <Globe className="w-5 h-5 text-[var(--color-primary-600)]" />
+            <Globe className="w-5 h-5 text-[var(--color-text-primary)]" />
             <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
               Language & Accessibility Options
             </h3>
@@ -258,7 +258,7 @@ export default function ProfilePage() {
                 type="checkbox"
                 checked={highContrast}
                 onChange={e => setHighContrast(e.target.checked)}
-                className="w-4 h-4 rounded text-[var(--color-primary-600)] accent-[var(--color-primary-600)] focus:ring-[var(--color-primary-600)]"
+                className="w-4 h-4 rounded text-neutral-800 accent-neutral-800 focus:ring-0"
               />
               <span>High Contrast Mode (Enhances visibility under outdoor direct sunlight)</span>
             </label>
@@ -268,7 +268,7 @@ export default function ProfilePage() {
                 type="checkbox"
                 checked={largeText}
                 onChange={e => setLargeText(e.target.checked)}
-                className="w-4 h-4 rounded text-[var(--color-primary-600)] accent-[var(--color-primary-600)] focus:ring-[var(--color-primary-600)]"
+                className="w-4 h-4 rounded text-neutral-800 accent-neutral-800 focus:ring-0"
               />
               <span>Larger Text Size (Increased font scale for easy reading)</span>
             </label>
@@ -278,7 +278,7 @@ export default function ProfilePage() {
                 type="checkbox"
                 checked={reducedMotion}
                 onChange={e => setReducedMotion(e.target.checked)}
-                className="w-4 h-4 rounded text-[var(--color-primary-600)] accent-[var(--color-primary-600)] focus:ring-[var(--color-primary-600)]"
+                className="w-4 h-4 rounded text-neutral-800 accent-neutral-800 focus:ring-0"
               />
               <span>Reduce Motion & Animations (Optimised for lower-power devices)</span>
             </label>
@@ -310,9 +310,7 @@ export default function ProfilePage() {
       {confirmResetOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
           <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-lg border border-[var(--color-border)] space-y-4">
-            <div className="w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600">
-              <AlertTriangle className="w-6 h-6" />
-            </div>
+            <AlertTriangle className="w-8 h-8 text-[var(--color-text-primary)] mx-auto" />
 
             <div className="text-center space-y-2">
               <h3 className="text-base font-bold text-[var(--color-text-primary)]">

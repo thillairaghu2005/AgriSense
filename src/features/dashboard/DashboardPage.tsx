@@ -59,10 +59,10 @@ export default function DashboardPage() {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-0.5 rounded border border-[var(--color-border)]">
                 MoA&FW National Digital AgriStack
               </span>
-              <span className="text-xs text-[var(--color-text-muted)] font-mono">
+              <span className="text-xs text-[var(--color-text-muted)]">
                 Registry ID: IN-AGRI-2026-TN
               </span>
             </div>
@@ -105,7 +105,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Live Operational Status Strip */}
-        <div className="mt-4 pt-3.5 border-t border-[var(--color-border)] flex flex-wrap items-center justify-between gap-y-2 text-xs text-[var(--color-text-muted)]">
+        <div className="mt-4 pt-3.5 flex flex-wrap items-center justify-between gap-y-2 text-xs text-[var(--color-text-muted)]">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <span>
               <strong className="text-[var(--color-text-primary)]">Beneficiary:</strong> {profile.displayName}
@@ -121,13 +121,11 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-800">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="inline-flex items-center text-[11px] font-medium text-[var(--color-text-secondary)]">
               PFMS DBT Gateway Active
             </span>
             <span>•</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-800">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span className="inline-flex items-center text-[11px] font-medium text-[var(--color-text-secondary)]">
               Bhulekh Patta Synced
             </span>
           </div>
@@ -139,27 +137,27 @@ export default function DashboardPage() {
          ========================================================================= */}
       {role === 'farmer' && (
         <div className="space-y-6">
-          {/* Unified Operational Metrics Strip (Clean dividers, No bloated floating cards) */}
-          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)] shadow-xs">
-            <div className="p-4">
+          {/* Operational Metrics Strip */}
+          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 shadow-xs">
+            <div>
               <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
                 <span>Direct Benefit (DBT) Credited</span>
-                <Landmark className="w-4 h-4 text-emerald-700" />
+                <Landmark className="w-4 h-4 text-[var(--color-text-secondary)]" />
               </div>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
                 ₹18,000
               </p>
-              <p className="mt-0.5 text-xs text-emerald-700 font-medium">
+              <p className="mt-0.5 text-xs text-[var(--color-text-muted)] font-medium">
                 3 installments credited via PFMS
               </p>
             </div>
 
-            <div className="p-4">
+            <div>
               <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
                 <span>Eligible Govt Schemes</span>
-                <BookOpen className="w-4 h-4 text-emerald-700" />
+                <BookOpen className="w-4 h-4 text-[var(--color-text-secondary)]" />
               </div>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
                 {topEligible.length} Schemes
               </p>
               <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
@@ -167,12 +165,12 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            <div className="p-4">
+            <div>
               <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
                 <span>Active Applications</span>
-                <Clock className="w-4 h-4 text-emerald-700" />
+                <Clock className="w-4 h-4 text-[var(--color-text-secondary)]" />
               </div>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
                 {applications.length} In Progress
               </p>
               <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
@@ -180,12 +178,12 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            <div className="p-4">
+            <div>
               <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
                 <span>Certified Farm Supplies</span>
-                <PackageCheck className="w-4 h-4 text-emerald-700" />
+                <PackageCheck className="w-4 h-4 text-[var(--color-text-secondary)]" />
               </div>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+              <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
                 {SEED_VARIETIES.length} Varieties
               </p>
               <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
@@ -198,7 +196,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left: Recommended Schemes for Your Land Profile */}
             <div className="lg:col-span-8 bg-white border border-[var(--color-border)] rounded-lg p-5">
-              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+              <div className="flex items-center justify-between pb-3">
                 <div>
                   <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
                     Recommended Welfare Schemes for Your Land Profile
@@ -209,22 +207,22 @@ export default function DashboardPage() {
                 </div>
                 <button
                   onClick={() => navigate('/schemes')}
-                  className="text-xs font-semibold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer"
+                  className="text-xs font-semibold text-[var(--color-text-primary)] hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   View all {SCHEMES.length} schemes <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* Clean List with Dividers — Eliminates Card-in-Card AI Trope */}
-              <div className="divide-y divide-[var(--color-border)]">
+              {/* Clean List */}
+              <div className="space-y-4 pt-2">
                 {topEligible.map(({ scheme, eligibility }) => (
-                  <div key={scheme.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div key={scheme.id} className="py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-bold text-sm text-[var(--color-text-primary)]">
                           {scheme.name}
                         </span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                           {eligibility.matchScore}% Match
                         </span>
                         <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
@@ -239,7 +237,7 @@ export default function DashboardPage() {
                           <strong>Assistance:</strong> {scheme.financialAssistance}
                         </span>
                         {scheme.subsidyPercentage && (
-                          <span className="text-emerald-800 font-semibold">
+                          <span className="text-[var(--color-text-primary)] font-semibold">
                             Subsidy: {String(scheme.subsidyPercentage).includes('%') || isNaN(Number(scheme.subsidyPercentage)) ? scheme.subsidyPercentage : `${scheme.subsidyPercentage}%`}
                           </span>
                         )}
@@ -274,24 +272,24 @@ export default function DashboardPage() {
             <div className="lg:col-span-4 space-y-6">
               {/* Application Progress Feed */}
               <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
-                <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+                <div className="flex items-center justify-between pb-3">
                   <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
                     Application Tracking
                   </h2>
                   <button
                     onClick={() => navigate('/applications')}
-                    className="text-xs font-semibold text-emerald-800 hover:underline"
+                    className="text-xs font-semibold text-[var(--color-text-primary)] hover:underline"
                   >
                     View All ({applications.length})
                   </button>
                 </div>
 
-                <div className="divide-y divide-[var(--color-border)]">
+                <div className="space-y-3 pt-2">
                   {applications.slice(0, 3).map((app: SchemeApplication) => (
-                    <div key={app.id} className="py-3">
+                    <div key={app.id} className="py-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-mono font-bold text-[var(--color-text-primary)]">{app.id}</span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 capitalize">
+                        <span className="font-bold text-[var(--color-text-primary)]">{app.id}</span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)] capitalize">
                           {app.status.replace(/_/g, ' ')}
                         </span>
                       </div>
@@ -300,13 +298,13 @@ export default function DashboardPage() {
                       </p>
                       <div className="flex items-center justify-between text-[11px] text-[var(--color-text-muted)] mt-1">
                         <span>Submitted: {app.appliedDate.split('T')[0]}</span>
-                        <span className="font-semibold text-emerald-800">Stage {app.timeline.length}/6</span>
+                        <span className="font-semibold text-[var(--color-text-primary)]">Stage {app.timeline.length}/6</span>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
+                <div className="mt-4 pt-3">
                   <Button
                     variant="outline"
                     size="sm"
@@ -330,7 +328,7 @@ export default function DashboardPage() {
                   className="w-full flex items-center justify-between p-2.5 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-1)] text-xs text-left transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
-                    <PackageCheck className="w-4 h-4 text-emerald-700" />
+                    <PackageCheck className="w-4 h-4 text-[var(--color-text-secondary)]" />
                     <span className="font-medium text-[var(--color-text-primary)]">Certified Seed Requisition (50% Subsidy)</span>
                   </div>
                   <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
@@ -341,7 +339,7 @@ export default function DashboardPage() {
                   className="w-full flex items-center justify-between p-2.5 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-1)] text-xs text-left transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
-                    <Trees className="w-4 h-4 text-emerald-700" />
+                    <Trees className="w-4 h-4 text-[var(--color-text-secondary)]" />
                     <span className="font-medium text-[var(--color-text-primary)]">Fruit Orchard Grafts & Timber Saplings</span>
                   </div>
                   <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
@@ -352,7 +350,7 @@ export default function DashboardPage() {
                   className="w-full flex items-center justify-between p-2.5 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-1)] text-xs text-left transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-amber-600" />
+                    <AlertTriangle className="w-4 h-4 text-[var(--color-text-secondary)]" />
                     <span className="font-medium text-[var(--color-text-primary)]">Lodge Welfare Grievance (48h SLA)</span>
                   </div>
                   <ChevronRight className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
@@ -365,16 +363,16 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Agro-Meteorological Advisory Table */}
             <div className="lg:col-span-5 bg-white border border-[var(--color-border)] rounded-lg p-5">
-              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+              <div className="flex items-center justify-between pb-3">
                 <div className="flex items-center gap-2">
-                  <CloudSun className="w-4 h-4 text-emerald-700" />
+                  <CloudSun className="w-4 h-4 text-[var(--color-text-secondary)]" />
                   <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
                     Agro-Meteorological Advisory ({stateName})
                   </h2>
                 </div>
                 <button
                   onClick={() => navigate('/weather')}
-                  className="text-xs font-semibold text-emerald-800 hover:underline flex items-center gap-0.5"
+                  className="text-xs font-semibold text-[var(--color-text-primary)] hover:underline flex items-center gap-0.5"
                 >
                   Full Advisory <ArrowRight className="w-3 h-3" />
                 </button>
@@ -400,8 +398,8 @@ export default function DashboardPage() {
                             {day.condition}
                           </span>
                         </td>
-                        <td className="text-right font-mono font-semibold">{day.maxTempC}°C</td>
-                        <td className="text-right font-mono text-emerald-700 font-semibold">{day.rainProbability}%</td>
+                        <td className="text-right font-semibold">{day.maxTempC}°C</td>
+                        <td className="text-right font-semibold text-[var(--color-text-primary)]">{day.rainProbability}%</td>
                       </tr>
                     ))}
                   </tbody>
@@ -415,16 +413,16 @@ export default function DashboardPage() {
 
             {/* Mandi Modal Prices vs MSP Benchmarks Table */}
             <div className="lg:col-span-7 bg-white border border-[var(--color-border)] rounded-lg p-5">
-              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+              <div className="flex items-center justify-between pb-3">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-emerald-700" />
+                  <TrendingUp className="w-4 h-4 text-[var(--color-text-secondary)]" />
                   <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
                     e-NAM Mandi Modal Prices vs MSP Benchmarks
                   </h2>
                 </div>
                 <button
                   onClick={() => navigate('/market-prices')}
-                  className="text-xs font-semibold text-emerald-800 hover:underline flex items-center gap-0.5"
+                  className="text-xs font-semibold text-[var(--color-text-primary)] hover:underline flex items-center gap-0.5"
                 >
                   All APMC Mandis <ArrowRight className="w-3 h-3" />
                 </button>
@@ -449,9 +447,9 @@ export default function DashboardPage() {
                         <tr key={price.id}>
                           <td className="font-bold text-[var(--color-text-primary)]">{price.cropName}</td>
                           <td className="text-[var(--color-text-muted)]">{price.market}</td>
-                          <td className="text-right font-mono font-bold">₹{price.modalPrice.toLocaleString('en-IN')}</td>
-                          <td className="text-right font-mono text-[var(--color-text-muted)]">₹{msp.toLocaleString('en-IN')}</td>
-                          <td className={`text-right font-mono font-semibold ${diff >= 0 ? 'text-emerald-700' : 'text-amber-700'}`}>
+                          <td className="text-right font-bold text-[var(--color-text-primary)]">₹{price.modalPrice.toLocaleString('en-IN')}</td>
+                          <td className="text-right text-[var(--color-text-muted)]">₹{msp.toLocaleString('en-IN')}</td>
+                          <td className="text-right font-semibold text-[var(--color-text-primary)]">
                             {diff >= 0 ? `+₹${diff}` : `-₹${Math.abs(diff)}`}
                           </td>
                         </tr>
@@ -478,7 +476,7 @@ export default function DashboardPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                <span className="text-xs font-semibold uppercase text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-0.5 rounded border border-[var(--color-border)]">
                   Sub-Divisional Jurisdiction
                 </span>
                 <span className="text-xs text-[var(--color-text-muted)]">Block Agriculture Office</span>
@@ -501,32 +499,32 @@ export default function DashboardPage() {
           </div>
 
           {/* Metrics row */}
-          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)]">
-            <div className="p-4">
+          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Pending Field Inspections</span>
-              <span className="text-2xl font-bold font-mono text-amber-700 mt-1 block">14</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">14</span>
               <span className="text-xs text-[var(--color-text-muted)]">Geo-tagging required</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Certified Seed Farm Stock</span>
-              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">128.5 Qtl</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">128.5 Qtl</span>
               <span className="text-xs text-[var(--color-text-muted)]">CO-51 & CR-1009 available</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Assigned Block Grievances</span>
-              <span className="text-2xl font-bold font-mono text-amber-700 mt-1 block">{grievances.length}</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">{grievances.length}</span>
               <span className="text-xs text-[var(--color-text-muted)]">Target SLA: 48 hours</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Applications Recommended</span>
-              <span className="text-2xl font-bold font-mono text-emerald-700 mt-1 block">82</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">82</span>
               <span className="text-xs text-[var(--color-text-muted)]">Forwarded to Collectorate</span>
             </div>
           </div>
 
           {/* Verification Table */}
           <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
-            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3 border-b border-[var(--color-border)]">
+            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3">
               Pending Beneficiary Field Verification List
             </h3>
             <div className="overflow-x-auto mt-2">
@@ -544,10 +542,10 @@ export default function DashboardPage() {
                 <tbody>
                   {applications.map((app: SchemeApplication) => (
                     <tr key={app.id}>
-                      <td className="font-mono font-bold text-emerald-900">{app.id}</td>
+                      <td className="font-bold text-[var(--color-text-primary)]">{app.id}</td>
                       <td className="font-semibold">{app.farmerName}</td>
                       <td>{app.schemeName}</td>
-                      <td className="font-mono">Survey {app.surveyNumber} ({app.landAreaAcres} ac)</td>
+                      <td>Survey {app.surveyNumber} ({app.landAreaAcres} ac)</td>
                       <td>{app.village || 'Thanjavur Block'}</td>
                       <td className="text-right">
                         <Button
@@ -575,7 +573,7 @@ export default function DashboardPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                <span className="text-xs font-semibold uppercase text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-0.5 rounded border border-[var(--color-border)]">
                   State / District Sanction Cell
                 </span>
                 <span className="text-xs text-[var(--color-text-muted)]">Direct Benefit Transfer Directorate</span>
@@ -608,32 +606,32 @@ export default function DashboardPage() {
           </div>
 
           {/* Manager Metrics */}
-          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)]">
-            <div className="p-4">
+          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Approved Outlay</span>
-              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">₹840.50 Cr</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">₹840.50 Cr</span>
               <span className="text-xs text-[var(--color-text-muted)]">FY 2026-27 Approved</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">DBT Disbursed via PFMS</span>
-              <span className="text-2xl font-bold font-mono text-emerald-700 mt-1 block">₹692.10 Cr</span>
-              <span className="text-xs text-emerald-700 font-medium">82.3% Utilization</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">₹692.10 Cr</span>
+              <span className="text-xs text-[var(--color-text-muted)] font-medium">82.3% Utilization</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Registered Beneficiaries</span>
-              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">1,248,300</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">1,248,300</span>
               <span className="text-xs text-[var(--color-text-muted)]">Active DBT farmers</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Sanction Clearance Speed</span>
-              <span className="text-2xl font-bold font-mono text-emerald-700 mt-1 block">3.8 Days</span>
-              <span className="text-xs text-emerald-700 font-medium">Target SLA: 7 days</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">3.8 Days</span>
+              <span className="text-xs text-[var(--color-text-muted)] font-medium">Target SLA: 7 days</span>
             </div>
           </div>
 
           {/* Budget Utilization Matrix */}
           <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
-            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3 border-b border-[var(--color-border)]">
+            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3">
               Scheme Budget Utilization Matrix
             </h3>
             <div className="space-y-4 mt-4">
@@ -647,13 +645,13 @@ export default function DashboardPage() {
                 <div key={item.name} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-semibold text-[var(--color-text-primary)]">{item.name}</span>
-                    <span className="text-[var(--color-text-muted)] font-mono">
+                    <span className="text-[var(--color-text-muted)]">
                       ₹{item.spent} Cr / ₹{item.total} Cr ({item.percent}%)
                     </span>
                   </div>
                   <div className="w-full bg-[var(--color-surface-2)] h-2 rounded-full overflow-hidden border border-[var(--color-border)]">
                     <div
-                      className="bg-emerald-600 h-full rounded-full"
+                      className="bg-neutral-800 h-full rounded-full"
                       style={{ width: `${item.percent}%` }}
                     />
                   </div>
@@ -672,7 +670,7 @@ export default function DashboardPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                <span className="text-xs font-semibold uppercase text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-0.5 rounded border border-[var(--color-border)]">
                   Ministry of Agriculture & Farmers Welfare
                 </span>
                 <span className="text-xs text-[var(--color-text-muted)]">NIC AgriStack Core</span>
@@ -695,32 +693,32 @@ export default function DashboardPage() {
           </div>
 
           {/* Admin Metrics */}
-          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)]">
-            <div className="p-4">
+          <div className="bg-white border border-[var(--color-border)] rounded-lg grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Active Schemes Master</span>
-              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">{SCHEMES.length}</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">{SCHEMES.length}</span>
               <span className="text-xs text-[var(--color-text-muted)]">Central & State registries</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">Registered Seed Farms</span>
-              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">{SEED_FARMS.length}</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">{SEED_FARMS.length}</span>
               <span className="text-xs text-[var(--color-text-muted)]">State & Central farms</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">PFMS Gateway Uptime</span>
-              <span className="text-2xl font-bold font-mono text-emerald-700 mt-1 block">99.98%</span>
-              <span className="text-xs text-emerald-700 font-medium">Zero failed settlement</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">99.98%</span>
+              <span className="text-xs text-[var(--color-text-muted)] font-medium">Zero failed settlement</span>
             </div>
-            <div className="p-4">
+            <div>
               <span className="text-xs text-[var(--color-text-muted)] block">System Audit Events</span>
-              <span className="text-2xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">148,290</span>
+              <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-1 block">148,290</span>
               <span className="text-xs text-[var(--color-text-muted)]">SHA-256 integrity verified</span>
             </div>
           </div>
 
           {/* National Gateways Table */}
           <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
-            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3 border-b border-[var(--color-border)]">
+            <h3 className="text-sm font-bold text-[var(--color-text-primary)] pb-3">
               Integrated National Dataspaces & Gateways Status
             </h3>
             <div className="overflow-x-auto mt-2">
@@ -743,11 +741,10 @@ export default function DashboardPage() {
                   ].map(gw => (
                     <tr key={gw.name}>
                       <td className="font-semibold text-[var(--color-text-primary)]">{gw.name}</td>
-                      <td className="font-mono text-xs text-[var(--color-text-muted)]">{gw.api}</td>
-                      <td className="font-mono text-xs">{gw.response}</td>
+                      <td className="text-xs text-[var(--color-text-muted)]">{gw.api}</td>
+                      <td className="text-xs">{gw.response}</td>
                       <td className="text-right">
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        <span className="inline-flex items-center text-xs font-semibold text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2 py-0.5 rounded border border-[var(--color-border)]">
                           {gw.status}
                         </span>
                       </td>
@@ -763,14 +760,14 @@ export default function DashboardPage() {
       {/* Official Government Verification & Disclaimer Banner */}
       <div className="p-4 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--color-text-secondary)]">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+          <ShieldCheck className="w-4 h-4 text-[var(--color-text-secondary)] shrink-0" />
           <span>
             <strong>Official Verification Notice:</strong> All central & state government schemes are sourced directly from MoA&FW, PM-KISAN, PMFBY, NHB, ICAR, and TNAU.
           </span>
         </div>
         <button
           onClick={() => navigate('/government-resources')}
-          className="text-xs font-semibold text-emerald-800 hover:underline whitespace-nowrap cursor-pointer"
+          className="text-xs font-semibold text-[var(--color-text-primary)] hover:underline whitespace-nowrap cursor-pointer"
         >
           View Source Circulars & Helplines →
         </button>

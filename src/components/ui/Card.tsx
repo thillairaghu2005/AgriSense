@@ -44,13 +44,13 @@ export function StatCard({ label, value, icon, trend, subtitle, className = '' }
           <p className="mt-1.5 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">{value}</p>
           {subtitle && <p className="mt-0.5 text-xs text-[var(--color-text-muted)] truncate">{subtitle}</p>}
           {trend && (
-            <p className={`mt-1 text-xs font-semibold ${trend.positive ? 'text-emerald-700' : 'text-amber-700'}`}>
+            <p className="mt-1 text-xs font-semibold text-[var(--color-text-primary)]">
               {trend.positive ? '↑' : '↓'} {trend.value}
             </p>
           )}
         </div>
         {icon && (
-          <div className="flex-shrink-0 text-[var(--color-text-muted)]">
+          <div className="flex-shrink-0 text-[var(--color-text-secondary)]">
             {icon}
           </div>
         )}
@@ -91,20 +91,9 @@ interface BadgeProps {
   className?: string;
 }
 
-const BADGE_VARIANT_MAP: Record<BadgeVariant, string> = {
-  green: 'badge-green',
-  amber: 'badge-amber',
-  red: 'badge-red',
-  blue: 'badge-blue',
-  purple: 'badge-purple',
-  gray: 'badge-gray',
-  neutral: 'badge-neutral',
-};
-
-export function Badge({ children, variant = 'green', className = '' }: BadgeProps) {
-  const variantClass = BADGE_VARIANT_MAP[variant] || 'badge-green';
+export function Badge({ children, className = '' }: BadgeProps) {
   return (
-    <span className={`badge ${variantClass} ${className}`}>
+    <span className={`badge ${className}`}>
       {children}
     </span>
   );
@@ -142,10 +131,10 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
 export function ErrorState({ message = 'Something went wrong.', onRetry }: { message?: string; onRetry?: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-      <AlertTriangle className="w-8 h-8 text-amber-600 mb-3" />
+      <AlertTriangle className="w-8 h-8 text-[var(--color-text-primary)] mb-3" />
       <p className="text-sm font-medium text-[var(--color-text-primary)]">{message}</p>
       {onRetry && (
-        <button onClick={onRetry} className="mt-3 text-xs font-semibold text-[var(--color-primary-700)] hover:underline">
+        <button onClick={onRetry} className="mt-3 text-xs font-semibold text-[var(--color-text-primary)] hover:underline">
           Try again
         </button>
       )}
@@ -160,15 +149,9 @@ interface InfoBannerProps {
   className?: string;
 }
 
-export function InfoBanner({ children, variant = 'info', className = '' }: InfoBannerProps) {
-  const variantStyles = {
-    success: 'bg-emerald-50 text-emerald-950 border border-emerald-200',
-    info: 'bg-sky-50 text-sky-950 border border-sky-200',
-    warning: 'bg-amber-50 text-amber-950 border border-amber-200',
-  }[variant] || 'bg-sky-50 text-sky-950 border border-sky-200';
-
+export function InfoBanner({ children, className = '' }: InfoBannerProps) {
   return (
-    <div className={`rounded-lg p-3.5 text-xs leading-relaxed shadow-xs ${variantStyles} ${className}`}>
+    <div className={`rounded-lg p-3.5 text-xs leading-relaxed bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs ${className}`}>
       {children}
     </div>
   );
@@ -204,7 +187,7 @@ export function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
         >
           {tab.label}
           {tab.count !== undefined && (
-            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${activeTab === tab.key ? 'bg-[var(--color-surface-2)] text-[var(--color-primary-800)]' : 'bg-transparent text-[var(--color-text-muted)]'}`}>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${activeTab === tab.key ? 'bg-[var(--color-surface-2)] text-[var(--color-text-primary)]' : 'bg-transparent text-[var(--color-text-muted)]'}`}>
               {tab.count}
             </span>
           )}

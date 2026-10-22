@@ -20,10 +20,10 @@ const DISTRICT_DATA = [
 ];
 
 const CATEGORY_DATA = [
-  { name: 'Small & Marginal (SF/MF)', value: 58, color: '#16a34a' },
-  { name: 'SC / ST Farmers', value: 22, color: '#0d9488' },
-  { name: 'Women Landholders', value: 12, color: '#10b981' },
-  { name: 'General Category', value: 8, color: '#64748b' },
+  { name: 'Small & Marginal (SF/MF)', value: 58, color: '#1e293b' },
+  { name: 'SC / ST Farmers', value: 22, color: '#475569' },
+  { name: 'Women Landholders', value: 12, color: '#94a3b8' },
+  { name: 'General Category', value: 8, color: '#cbd5e1' },
 ];
 
 const MONTHLY_TREND = [
@@ -91,36 +91,36 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Overview Stat Strip */}
-      <div className="bg-white rounded-lg border border-[var(--color-border)] p-4 shadow-xs grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--color-border)]">
-        <div className="p-3 lg:p-0 lg:pr-4">
+      <div className="bg-white rounded-lg border border-[var(--color-border)] p-4 shadow-xs grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-3 lg:p-0">
           <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
             Total Funds Disbursed
           </span>
-          <span className="text-2xl font-bold text-emerald-700 font-mono mt-0.5 block">₹4,780 Lakhs</span>
+          <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-0.5 block">₹4,780 Lakhs</span>
           <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">Cumulative DBT sanctions</span>
         </div>
 
-        <div className="p-3 lg:p-0 lg:px-4">
+        <div className="p-3 lg:p-0">
           <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
             Verified Beneficiaries
           </span>
-          <span className="text-2xl font-bold text-[var(--color-text-primary)] font-mono mt-0.5 block">23,800</span>
+          <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-0.5 block">23,800</span>
           <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">Aadhaar seeded accounts</span>
         </div>
 
-        <div className="p-3 lg:p-0 lg:px-4">
+        <div className="p-3 lg:p-0">
           <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
             Sanction Clearance Rate
           </span>
-          <span className="text-2xl font-bold text-emerald-700 font-mono mt-0.5 block">92.4%</span>
+          <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-0.5 block">92.4%</span>
           <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">Within 21-day service charter</span>
         </div>
 
-        <div className="p-3 lg:p-0 lg:pl-4">
+        <div className="p-3 lg:p-0">
           <span className="text-[10px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider block">
             Average Disbursal Speed
           </span>
-          <span className="text-2xl font-bold text-[var(--color-text-primary)] font-mono mt-0.5 block">18.5 Days</span>
+          <span className="text-2xl font-bold text-[var(--color-text-primary)] mt-0.5 block">18.5 Days</span>
           <span className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 block">Application to PFMS credit</span>
         </div>
       </div>
@@ -148,7 +148,7 @@ export default function AnalyticsPage() {
                   formatter={(val: any) => [`₹${val} Lakhs`, 'Disbursed']}
                   contentStyle={{ fontSize: '11px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
                 />
-                <Bar dataKey="disbursedLakhs" fill="#16a34a" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="disbursedLakhs" fill="#334155" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -215,9 +215,9 @@ export default function AnalyticsPage() {
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ fontSize: '11px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }} />
                 <Legend wrapperStyle={{ fontSize: '10px' }} verticalAlign="top" align="right" />
-                <Line type="monotone" dataKey="applied" name="Applications Submitted" stroke="#0284c7" strokeWidth={2} dot={{ r: 3 }} />
-                <Line type="monotone" dataKey="sanctioned" name="Approved by District" stroke="#22c55e" strokeWidth={2} dot={{ r: 3 }} />
-                <Line type="monotone" dataKey="dbtDisbursed" name="DBT Disbursed" stroke="#15803d" strokeWidth={2} strokeDasharray="4 4" dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="applied" name="Applications Submitted" stroke="#0f172a" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="sanctioned" name="Approved by District" stroke="#475569" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="dbtDisbursed" name="DBT Disbursed" stroke="#94a3b8" strokeWidth={2} strokeDasharray="4 4" dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -239,13 +239,13 @@ export default function AnalyticsPage() {
               <div key={idx} className="space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="font-bold text-[var(--color-text-primary)]">{item.scheme}</span>
-                  <span className="font-semibold text-emerald-800">
+                  <span className="font-semibold text-[var(--color-text-primary)]">
                     ₹{item.spentCr.toLocaleString()} Cr / ₹{item.budgetCr.toLocaleString()} Cr ({item.percent}%)
                   </span>
                 </div>
                 <div className="w-full bg-[var(--color-surface-2)] h-2 rounded-full overflow-hidden">
                   <div
-                    className="bg-emerald-600 h-full rounded-full transition-all"
+                    className="bg-[var(--color-primary-800)] h-full rounded-full transition-all"
                     style={{ width: `${item.percent}%` }}
                   />
                 </div>

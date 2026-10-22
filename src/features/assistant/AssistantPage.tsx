@@ -198,29 +198,25 @@ export default function AssistantPage() {
           >
             <div className="flex-shrink-0 mt-0.5">
               {msg.role === 'user' ? (
-                <div className="w-7 h-7 rounded-full bg-[var(--color-primary-100)] border border-[var(--color-primary-300)] flex items-center justify-center text-[var(--color-primary-800)] shadow-xs">
-                  <User className="w-4 h-4" />
-                </div>
+                <User className="w-5 h-5 text-[var(--color-text-secondary)]" />
               ) : (
-                <div className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[var(--color-primary-600)] shadow-xs">
-                  <Bot className="w-4 h-4" />
-                </div>
+                <Bot className="w-5 h-5 text-[var(--color-text-secondary)]" />
               )}
             </div>
 
             <div
               className={`p-3.5 rounded-lg text-xs leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-[var(--color-primary-700)] text-white shadow-xs'
+                  ? 'bg-[var(--color-primary-800)] text-white shadow-xs'
                   : 'bg-[var(--color-surface-1)] text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs'
               }`}
             >
               <p>{msg.content}</p>
               <div
-                className={`flex items-center justify-between gap-2 mt-2 pt-1 border-t ${
+                className={`flex items-center justify-between gap-2 mt-2 pt-1 ${
                   msg.role === 'user'
-                    ? 'border-white/20 text-white/80'
-                    : 'border-[var(--color-border)] text-[var(--color-text-muted)]'
+                    ? 'text-white/80'
+                    : 'text-[var(--color-text-muted)]'
                 } text-[10px]`}
               >
                 <span>
@@ -229,11 +225,11 @@ export default function AssistantPage() {
                 {msg.role === 'assistant' && (
                   <button
                     onClick={() => speakMessage(msg.id, msg.content)}
-                    className="inline-flex items-center gap-1 hover:text-[var(--color-primary-700)] transition-colors p-0.5 cursor-pointer"
+                    className="inline-flex items-center gap-1 hover:text-[var(--color-text-primary)] transition-colors p-0.5 cursor-pointer"
                     aria-label="Listen to message audio"
                     title="Listen to response"
                   >
-                    <Volume2 className="w-3.5 h-3.5 text-[var(--color-primary-700)]" />
+                    <Volume2 className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />
                     <span>{speakingId === msg.id ? 'Playing…' : 'Listen'}</span>
                   </button>
                 )}
@@ -244,9 +240,7 @@ export default function AssistantPage() {
 
         {isTyping && (
           <div className="flex gap-3 max-w-xs">
-            <div className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[var(--color-primary-600)] shadow-xs shrink-0 mt-0.5">
-              <Bot className="w-4 h-4" />
-            </div>
+            <Bot className="w-5 h-5 text-[var(--color-text-secondary)] shrink-0 mt-0.5" />
             <div className="bg-[var(--color-surface-1)] border border-[var(--color-border)] p-3 rounded-lg text-xs text-[var(--color-text-muted)] flex items-center shadow-xs">
               <span className="text-[11px] text-[var(--color-text-secondary)] font-medium">Preparing agricultural guidance…</span>
             </div>

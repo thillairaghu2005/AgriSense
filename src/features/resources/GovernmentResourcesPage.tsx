@@ -30,8 +30,8 @@ export default function GovernmentResourcesPage() {
       {/* Official Directory Header Banner */}
       <div className="bg-white text-[var(--color-text-primary)] rounded-lg p-5 shadow-xs border border-[var(--color-border)]">
         <div className="flex items-center gap-2 mb-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--color-primary-50)] text-[var(--color-primary-800)] border border-[var(--color-primary-200)]">
-            <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-primary-700)]" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
+            <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-text-primary)]" />
             Verified Ministry of Agriculture & Farmers Welfare Directory
           </span>
         </div>
@@ -81,19 +81,19 @@ export default function GovernmentResourcesPage() {
           const isCentral = res.level === 'central';
 
           return (
-            <Card key={res.id} className="flex flex-col justify-between hover:border-[var(--color-primary-600)] transition-colors">
+            <Card key={res.id} className="flex flex-col justify-between hover:border-[var(--color-text-secondary)] transition-colors">
               <div className="space-y-2.5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--color-primary-50)] text-[var(--color-primary-800)] border border-[var(--color-primary-200)]">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                       {isCentral ? 'CENTRAL GOVT' : `STATE (${res.state?.toUpperCase()})`}
                     </span>
                     <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
                       {res.category}
                     </span>
                   </div>
-                  <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-semibold flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3" />
+                  <span className="text-[10px] text-[var(--color-text-secondary)] bg-[var(--color-surface-2)] px-2 py-0.5 rounded border border-[var(--color-border)] font-semibold flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-[var(--color-text-primary)]" />
                     Verified
                   </span>
                 </div>
@@ -102,7 +102,7 @@ export default function GovernmentResourcesPage() {
                   {res.title}
                 </h3>
 
-                <p className="text-[11px] text-[var(--color-primary-800)] font-medium">
+                <p className="text-[11px] text-[var(--color-text-muted)] font-medium">
                   {res.department}
                 </p>
 
@@ -112,21 +112,21 @@ export default function GovernmentResourcesPage() {
 
                 {res.helpline && (
                   <div className="p-2 bg-[var(--color-surface-1)] rounded border border-[var(--color-border)] flex items-center gap-2 text-xs">
-                    <PhoneCall className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                    <PhoneCall className="w-3.5 h-3.5 text-[var(--color-text-primary)] flex-shrink-0" />
                     <span className="font-semibold text-[var(--color-text-primary)]">{res.helpline}</span>
                   </div>
                 )}
               </div>
 
-              <div className="mt-4 pt-3 border-t border-[var(--color-border)] flex items-center justify-between">
-                <span className="text-[10px] text-[var(--color-text-muted)] font-mono">
+              <div className="mt-4 pt-3 flex items-center justify-between">
+                <span className="text-[10px] text-[var(--color-text-muted)]">
                   Verified: {res.lastVerifiedDate}
                 </span>
                 <a
                   href={res.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-900 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[var(--color-text-primary)] hover:underline transition-colors"
                 >
                   Visit Portal <ExternalLink className="w-3.5 h-3.5" />
                 </a>

@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --font-family-sans: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Geist', sans-serif;
+  --font-mono: 'Inter', sans-serif;
+  --font-primary: 'Geist', sans-serif;
+  --font-secondary: 'Inter', sans-serif;
+  --font-family-sans: 'Geist', sans-serif;
+  --font-family-mono: 'Inter', sans-serif;
 
-  /* Primary Agricultural Green Palette */
+  /* Primary Palette */
   --color-primary-50: #f0fdf4;
   --color-primary-100: #dcfce7;
   --color-primary-200: #bbf7d0;
@@ -15,24 +20,24 @@
   --color-primary-800: #166534;
   --color-primary-900: #14532d;
 
-  /* Accent Green */
+  /* Accent */
   --color-accent-50: #f0fdf4;
   --color-accent-100: #dcfce7;
   --color-accent-400: #4ade80;
   --color-accent-500: #22c55e;
   --color-accent-600: #16a34a;
 
-  /* Neutral & Crisp surfaces */
+  /* Neutral surfaces */
   --color-surface-0: #ffffff;
   --color-surface-1: #f8fafc;
   --color-surface-2: #f1f5f9;
   --color-surface-3: #e2e8f0;
 
-  /* Card Surface & Border - Clean White & Subtle Slate */
+  /* Card Surface & Border */
   --color-card-bg: #ffffff;
   --color-card-border: #e2e8f0;
 
-  /* Text - Crisp Slate & Neutral Tones for Accessible Contrast */
+  /* Text */
   --color-text-primary: #0f172a;
   --color-text-secondary: #334155;
   --color-text-muted: #64748b;
@@ -58,7 +63,8 @@
 }
 
 html {
-  font-family: var(--font-family-sans);
+  font-family: 'Geist', sans-serif;
+  font-weight: 100;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -68,12 +74,36 @@ body {
   padding: 0;
   background-color: var(--color-surface-1);
   color: var(--color-text-primary);
+  font-family: 'Geist', sans-serif;
+  font-weight: 100;
   line-height: 1.6;
 }
 
-/* Ensure headings have crisp typography and inherit container color correctly */
+/* Primary font: Geist Thin */
+.font-primary,
+.font-geist {
+  font-family: 'Geist', sans-serif;
+  font-weight: 100;
+}
+
+/* Secondary font: Inter */
+.font-secondary,
+.font-inter,
+.font-mono,
+table,
+.table-clean,
+.badge,
+button,
+input,
+select,
+textarea {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Ensure headings have crisp typography */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
+  font-family: 'Geist', sans-serif;
+  font-weight: 200;
   color: inherit;
   line-height: 1.35;
 }
@@ -222,13 +252,13 @@ article li {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-text-muted);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: none;
   background-color: var(--color-surface-1);
 }
 
 .table-clean td {
   padding: 0.75rem 0.875rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: none;
   color: var(--color-text-primary);
   vertical-align: middle;
 }
@@ -241,7 +271,14 @@ article li {
   background-color: var(--color-surface-1);
 }
 
-.badge {
+.badge,
+.badge-green,
+.badge-amber,
+.badge-red,
+.badge-blue,
+.badge-purple,
+.badge-gray,
+.badge-neutral {
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -251,45 +288,8 @@ article li {
   font-weight: 500;
   line-height: 1.25;
   background-color: var(--color-surface-2);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   border: 1px solid var(--color-border);
-}
-
-.badge-green {
-  background-color: #ecfdf5;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
-}
-
-.badge-amber {
-  background-color: #fffbeb;
-  color: #92400e;
-  border: 1px solid #fde68a;
-}
-
-.badge-red {
-  background-color: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
-}
-
-.badge-blue {
-  background-color: #eff6ff;
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
-}
-
-.badge-purple {
-  background-color: #faf5ff;
-  color: #6b21a8;
-  border: 1px solid #e9d5ff;
-}
-
-.badge-gray,
-.badge-neutral {
-  background-color: #f1f5f9;
-  color: #334155;
-  border: 1px solid #e2e8f0;
 }
 
 /* Demo data label */
@@ -297,12 +297,12 @@ article li {
   display: inline-flex;
   align-items: center;
   padding: 2.5px 8px;
-  background: var(--color-primary-50);
-  border: 1px solid var(--color-primary-200);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 11px;
-  font-weight: 600;
-  color: var(--color-primary-800);
+  font-weight: 500;
+  color: var(--color-text-secondary);
 }
 
 /* Animations */

@@ -7,7 +7,7 @@ export default function AppShell() {
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--color-surface-1)]">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:flex-shrink-0 border-r border-[var(--color-border)]">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:flex-shrink-0">
         <Sidebar />
       </aside>
 

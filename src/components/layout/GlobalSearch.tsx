@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, Leaf, BookOpen, Bug, Library } from 'lucide-react';
 import { CROPS } from '@/data/crops';
@@ -10,7 +10,7 @@ interface SearchResult {
   type: 'crop' | 'scheme' | 'pest' | 'article';
   id: string;
   title: string;
-  subtitle?: string;
+  subtitle: string;
   route: string;
 }
 
@@ -20,15 +20,14 @@ interface GlobalSearchProps {
 
 export default function GlobalSearch({ onClose }: GlobalSearchProps) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
-  useEffect(() => {
+  const results = useMemo<SearchResult[]>(() => {
     const q = query.toLowerCase().trim();
-    if (!q) { setResults([]); return; }
+    if (!q) return [];
 
     const cropResults: SearchResult[] = CROPS
       .filter(c => c.name.toLowerCase().includes(q))
@@ -50,7 +49,7 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
       .slice(0, 2)
       .map(a => ({ type: 'article', id: a.id, title: a.title, subtitle: a.category, route: `/knowledge/${a.id}` }));
 
-    setResults([...cropResults, ...schemeResults, ...pestResults, ...articleResults]);
+    return [...cropResults, ...schemeResults, ...pestResults, ...articleResults];
   }, [query]);
 
   const TypeIcon = {
@@ -69,7 +68,7 @@ export default function GlobalSearch({ onClose }: GlobalSearchProps) {
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4 bg-black/40 backdrop-blur-xs animate-fade-in" onClick={onClose}>
       <div className="w-full max-w-xl bg-white rounded-xl shadow-lg border border-[var(--color-border)] p-2 animate-scale-up" onClick={e => e.stopPropagation()}>
         {/* Input */}
-        <div className="flex items-center gap-3 px-3 py-2.5 border-b border-[var(--color-border)]">
+        <div className="flex items-center gap-3 px-3 py-2.5">
           <Search className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0" />
           <input
             ref={inputRef}

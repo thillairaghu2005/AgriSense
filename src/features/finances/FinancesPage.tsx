@@ -28,20 +28,20 @@ import {
 } from 'recharts';
 
 const EXPENSE_CATEGORIES: { id: ExpenseCategory; label: string; color: string }[] = [
-  { id: 'seed', label: 'Seeds & Seedlings', color: '#14532d' },
-  { id: 'fertiliser', label: 'Fertilisers & Manure', color: '#166534' },
-  { id: 'pesticide', label: 'Crop Protection & Bio-agents', color: '#15803d' },
-  { id: 'labour', label: 'Farm Labour & Weeding', color: '#16a34a' },
-  { id: 'irrigation', label: 'Irrigation & Diesel/Electricity', color: '#22c55e' },
-  { id: 'equipment', label: 'Tractor / Machinery Hire', color: '#4ade80' },
-  { id: 'transport', label: 'Transport & Mandi Fee', color: '#86efac' },
-  { id: 'other', label: 'Other Operational Expenses', color: '#64748b' },
+  { id: 'seed', label: 'Seeds & Seedlings', color: '#1e293b' },
+  { id: 'fertiliser', label: 'Fertilisers & Manure', color: '#334155' },
+  { id: 'pesticide', label: 'Crop Protection & Bio-agents', color: '#475569' },
+  { id: 'labour', label: 'Farm Labour & Weeding', color: '#64748b' },
+  { id: 'irrigation', label: 'Irrigation & Diesel/Electricity', color: '#94a3b8' },
+  { id: 'equipment', label: 'Tractor / Machinery Hire', color: '#cbd5e1' },
+  { id: 'transport', label: 'Transport & Mandi Fee', color: '#e2e8f0' },
+  { id: 'other', label: 'Other Operational Expenses', color: '#71717a' },
 ];
 
 const INCOME_CATEGORIES: { id: IncomeCategory; label: string; color: string }[] = [
-  { id: 'crop_sale', label: 'Crop Produce Sale', color: '#16a34a' },
-  { id: 'subsidy', label: 'Government Subsidy / DBT', color: '#22c55e' },
-  { id: 'other', label: 'Other Farm Income', color: '#4ade80' },
+  { id: 'crop_sale', label: 'Crop Produce Sale', color: '#1e293b' },
+  { id: 'subsidy', label: 'Government Subsidy / DBT', color: '#64748b' },
+  { id: 'other', label: 'Other Farm Income', color: '#94a3b8' },
 ];
 
 const DEFAULT_TRANSACTIONS: Transaction[] = [
@@ -282,19 +282,19 @@ export default function FinancesPage() {
         <StatCard
           label="Total Cultivation Expenses"
           value={formatCurrency(summaries.totalExpense)}
-          icon={<ArrowUpRight className="w-5 h-5 text-neutral-800" />}
+          icon={<ArrowUpRight className="w-5 h-5 text-[var(--color-text-primary)]" />}
           subtitle={`${transactions.filter(t => t.type === 'expense').length} expense entries recorded`}
         />
         <StatCard
           label="Total Recorded Income"
           value={formatCurrency(summaries.totalIncome)}
-          icon={<ArrowDownLeft className="w-5 h-5 text-[var(--color-primary-600)]" />}
+          icon={<ArrowDownLeft className="w-5 h-5 text-[var(--color-text-primary)]" />}
           subtitle="Produce sales & DBT subsidies"
         />
         <StatCard
           label="Current Net Balance"
           value={formatCurrency(summaries.netBalance)}
-          icon={<IndianRupee className="w-5 h-5 text-[var(--color-primary-600)]" />}
+          icon={<IndianRupee className="w-5 h-5 text-[var(--color-text-primary)]" />}
           subtitle={summaries.netBalance >= 0 ? 'Positive net cashflow' : 'Operating deficit (pre-harvest)'}
         />
       </div>
@@ -386,7 +386,7 @@ export default function FinancesPage() {
               <Card className="p-0 overflow-hidden shadow-xs border border-[var(--color-border)]">
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs text-left" aria-label="Farm transactions table">
-                    <thead className="bg-[var(--color-surface-2)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold border-b border-[var(--color-border)]">
+                    <thead className="bg-[var(--color-surface-2)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold">
                       <tr>
                         <th className="py-2.5 px-4">Date</th>
                         <th className="py-2.5 px-4">Category</th>
@@ -395,7 +395,7 @@ export default function FinancesPage() {
                         <th className="py-2.5 px-3 text-right">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[var(--color-border)]">
+                    <tbody>
                       {filteredTransactions.map(tx => {
                         const isExp = tx.type === 'expense';
                         const crop = CROPS.find(c => c.id === tx.cropId);
@@ -406,7 +406,7 @@ export default function FinancesPage() {
                               {formatDate(tx.date)}
                             </td>
                             <td className="py-3 px-4 whitespace-nowrap">
-                              <Badge variant={isExp ? 'neutral' : 'green'}>
+                              <Badge>
                                 {tx.category.replace('_', ' ')}
                               </Badge>
                             </td>
@@ -420,13 +420,13 @@ export default function FinancesPage() {
                                 </p>
                               )}
                             </td>
-                            <td className={`py-3 px-4 text-right font-semibold whitespace-nowrap ${isExp ? 'text-red-700' : 'text-emerald-700'}`}>
+                            <td className="py-3 px-4 text-right font-semibold whitespace-nowrap text-[var(--color-text-primary)]">
                               {isExp ? '-' : '+'} {formatCurrency(tx.amount)}
                             </td>
                             <td className="py-3 px-3 text-right whitespace-nowrap">
                               <button
                                 onClick={() => setDeleteTargetId(tx.id)}
-                                className="p-1.5 text-[var(--color-text-muted)] hover:text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
+                                className="p-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)] rounded-md transition-colors cursor-pointer"
                                 aria-label="Delete transaction"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -446,7 +446,7 @@ export default function FinancesPage() {
           <div className="space-y-4">
             <Card>
               <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-                <PieIcon className="w-4 h-4 text-[var(--color-primary-600)]" />
+                <PieIcon className="w-4 h-4 text-[var(--color-text-primary)]" />
                 Expense Distribution
               </h3>
 
@@ -483,7 +483,7 @@ export default function FinancesPage() {
                       <div key={item.name} className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
                           <span
-                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                            className="w-2.5 h-2.5 rounded-xs flex-shrink-0"
                             style={{ backgroundColor: item.color }}
                           />
                           <span className="text-[var(--color-text-secondary)]">{item.name}</span>
@@ -508,7 +508,7 @@ export default function FinancesPage() {
           <div className="lg:col-span-1">
             <Card className="space-y-4">
               <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-                <Calculator className="w-4 h-4 text-[var(--color-primary-600)]" />
+                <Calculator className="w-4 h-4 text-[var(--color-text-primary)]" />
                 Estimation Assumptions
               </h3>
               <p className="text-xs text-[var(--color-text-muted)]">
@@ -562,7 +562,7 @@ export default function FinancesPage() {
 
           {/* Calculated Output & Formula Breakdown */}
           <div className="lg:col-span-2 space-y-4">
-            <Card className="border-[var(--color-primary-200)] bg-[var(--color-surface-1)]">
+            <Card className="border-[var(--color-border)] bg-[var(--color-surface-1)]">
               <div className="flex items-center justify-between pb-2 mb-4">
                 <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
                   Projected Financial Outcome (Estimates)
@@ -629,7 +629,7 @@ export default function FinancesPage() {
                 <p className="font-semibold text-[var(--color-text-primary)]">
                   Calculation Formula Breakdown:
                 </p>
-                <div className="space-y-1 font-mono text-[11px] bg-[var(--color-surface-2)] border border-[var(--color-border)] p-2.5 rounded text-[var(--color-text-primary)]">
+                <div className="space-y-1 text-[11px] bg-[var(--color-surface-2)] border border-[var(--color-border)] p-2.5 rounded text-[var(--color-text-primary)]">
                   <p>1. Total Yield = {calcArea} acres × {calcExpectedYield} qtl = {calcTotalYield} qtl</p>
                   <p>2. Gross Revenue = {calcTotalYield} qtl × ₹{calcMarketPrice} = ₹{calcEstimatedRevenue.toLocaleString('en-IN')}</p>
                   <p>3. Cultivation Cost = ₹{calcCultivationCost.toLocaleString('en-IN')} ({calcCropExpenses > 0 ? 'from your recorded expenses' : 'estimated standard @ ₹18,000/acre'})</p>
@@ -661,7 +661,7 @@ export default function FinancesPage() {
             </div>
 
             {formError && (
-              <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg">
+              <div className="p-3 bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)] text-xs rounded-lg">
                 {formError}
               </div>
             )}
@@ -676,8 +676,8 @@ export default function FinancesPage() {
                   }}
                   className={`py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                     formType === 'expense'
-                      ? 'bg-red-600 text-white shadow-xs'
-                      : 'border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-red-50 hover:text-red-700'
+                      ? 'bg-[var(--color-text-primary)] text-white shadow-xs'
+                      : 'border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)]'
                   }`}
                 >
                   - Farm Expense
@@ -690,8 +690,8 @@ export default function FinancesPage() {
                   }}
                   className={`py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                     formType === 'income'
-                      ? 'bg-[var(--color-primary-600)] text-white shadow-xs'
-                      : 'border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-emerald-50 hover:text-emerald-700'
+                      ? 'bg-[var(--color-text-primary)] text-white shadow-xs'
+                      : 'border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)]'
                   }`}
                 >
                   + Farm Income

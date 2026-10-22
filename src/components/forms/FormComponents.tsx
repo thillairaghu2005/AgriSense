@@ -20,11 +20,11 @@ export function FormField({ label, htmlFor, hint, error, required, children }: F
         className="block text-xs font-semibold text-[var(--color-text-primary)]"
       >
         {label}
-        {required && <span className="text-red-500 ml-1" aria-hidden="true">*</span>}
+        {required && <span className="text-[var(--color-text-primary)] font-bold ml-1" aria-hidden="true">*</span>}
       </label>
       {children}
       {hint && !error && <p className="text-xs text-[var(--color-text-muted)]">{hint}</p>}
-      {error && <p className="text-xs text-red-600 font-medium" role="alert">{error}</p>}
+      {error && <p className="text-xs text-[var(--color-text-primary)] font-medium" role="alert">{error}</p>}
     </div>
   );
 }
@@ -47,7 +47,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         {...props}
         className={`w-full px-3 py-2 text-xs rounded-lg border bg-white text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] transition-all shadow-xs focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] focus:border-transparent disabled:opacity-50 disabled:bg-[var(--color-surface-2)] disabled:cursor-not-allowed ${
-          error ? 'border-red-500 focus:ring-red-500' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
+          error ? 'border-[var(--color-text-primary)] ring-1 ring-[var(--color-text-primary)]' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
         } ${leftIcon ? 'pl-9' : ''} ${className}`}
       />
     </div>
@@ -95,7 +95,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       ref={ref}
       {...props}
       className={`w-full px-3 py-2 text-xs rounded-lg border bg-white text-[var(--color-text-primary)] shadow-xs transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] focus:border-transparent disabled:opacity-50 disabled:bg-[var(--color-surface-2)] disabled:cursor-not-allowed ${
-        error ? 'border-red-500 focus:ring-red-500' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
+        error ? 'border-[var(--color-text-primary)] ring-1 ring-[var(--color-text-primary)]' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
       } ${className}`}
     >
       {children}
@@ -115,7 +115,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       ref={ref}
       {...props}
       className={`w-full px-3 py-2 text-xs rounded-lg border bg-white text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] shadow-xs transition-all resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] focus:border-transparent disabled:opacity-50 disabled:bg-[var(--color-surface-2)] disabled:cursor-not-allowed ${
-        error ? 'border-red-500 focus:ring-red-500' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
+        error ? 'border-[var(--color-text-primary)] ring-1 ring-[var(--color-text-primary)]' : 'border-[var(--color-border)] hover:border-[var(--color-primary-300)]'
       } ${className}`}
     />
   )

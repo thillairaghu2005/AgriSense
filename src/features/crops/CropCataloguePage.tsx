@@ -33,7 +33,7 @@ export default function CropCataloguePage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-0.5 rounded border border-[var(--color-border)]">
                 Indian Council of Agricultural Research (ICAR) Reference
               </span>
             </div>
@@ -166,20 +166,20 @@ export default function CropCataloguePage() {
                         ))}
                       </div>
                     </td>
-                    <td className="text-right font-mono font-medium">
+                    <td className="text-right font-medium">
                       {crop.durationDays[0]}–{crop.durationDays[1]}
                     </td>
-                    <td className="text-right font-mono">
+                    <td className="text-right">
                       pH {crop.idealPhRange[0]}–{crop.idealPhRange[1]}
                     </td>
-                    <td className="text-right font-mono text-[var(--color-text-secondary)]">
+                    <td className="text-right text-[var(--color-text-secondary)]">
                       {crop.waterNeedsMmPerSeason[0]}–{crop.waterNeedsMmPerSeason[1]} mm
                     </td>
                     <td className="text-xs text-[var(--color-text-muted)] max-w-xs truncate">
                       {crop.suitableSoils.join(', ')}
                     </td>
                     <td className="text-right">
-                      <span className="text-xs font-semibold text-emerald-800 hover:underline inline-flex items-center gap-1">
+                      <span className="text-xs font-semibold text-[var(--color-text-primary)] hover:underline inline-flex items-center gap-1">
                         Profile <ArrowRight className="w-3 h-3" />
                       </span>
                     </td>
@@ -205,12 +205,12 @@ export default function CropCataloguePage() {
                       {CATEGORY_LABELS[crop.category]}
                     </span>
                     {crop.seasons.map(s => (
-                      <span key={s} className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      <span key={s} className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                         {SEASON_LABELS[s]}
                       </span>
                     ))}
                   </div>
-                  <h2 className="text-sm font-bold text-[var(--color-text-primary)] group-hover:text-emerald-800 transition-colors">
+                  <h2 className="text-sm font-bold text-[var(--color-text-primary)] group-hover:underline transition-colors">
                     {crop.name}
                   </h2>
                   <p className="text-xs text-[var(--color-text-muted)] mt-1">
@@ -220,12 +220,10 @@ export default function CropCataloguePage() {
                     Soils: {crop.suitableSoils.join(', ')}
                   </p>
                 </div>
-                <div className="w-6 h-6 rounded bg-[var(--color-surface-2)] flex items-center justify-center shrink-0 group-hover:bg-emerald-50 text-[var(--color-text-muted)] group-hover:text-emerald-800 transition-colors mt-1">
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </div>
+                <ChevronRight className="w-4 h-4 text-[var(--color-text-muted)] group-hover:text-[var(--color-text-primary)] shrink-0 transition-colors mt-1" />
               </div>
 
-              <div className="mt-3 pt-2.5 border-t border-[var(--color-border)]">
+              <div className="mt-3 pt-2.5">
                 <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
                   {crop.sowingGuidance.slice(0, 110)}…
                 </p>

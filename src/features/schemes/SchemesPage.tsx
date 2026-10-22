@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchSchemes } from '@/data/schemes';
 import { Card, Badge, PageHeader, InfoBanner } from '@/components/ui/Card';
@@ -58,20 +58,16 @@ function SchemeCard({
   isInitialExpanded?: boolean;
 }) {
   const [expanded, setExpanded] = useState(isInitialExpanded);
-
-  useEffect(() => {
+  const [prevInitialExpanded, setPrevInitialExpanded] = useState(isInitialExpanded);
+  if (isInitialExpanded !== prevInitialExpanded) {
+    setPrevInitialExpanded(isInitialExpanded);
     if (isInitialExpanded) setExpanded(true);
-  }, [isInitialExpanded]);
+  }
 
   const levelLabel = scheme.level === 'central' ? 'Central Scheme' : 'State Scheme';
   const catLabel = scheme.category.replace(/_/g, ' ');
 
-  const matchColor =
-    eligibility.matchScore >= 80
-      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-      : eligibility.matchScore >= 50
-      ? 'bg-amber-50 text-amber-800 border-amber-300'
-      : 'bg-gray-100 text-gray-700 border-gray-300';
+  const matchColor = 'bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border-[var(--color-border)]';
 
   return (
     <Card className="hover:border-[var(--color-primary-400)] transition-all">
@@ -79,23 +75,23 @@ function SchemeCard({
         <div className="flex-1 min-w-0">
           {/* Badge Strip */}
           <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <Badge variant={scheme.level === 'central' ? 'blue' : 'green'}>
+            <Badge variant="neutral">
               {levelLabel}
             </Badge>
             <Badge variant="neutral">
               {catLabel}
             </Badge>
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border flex items-center gap-1 ${matchColor}`}>
-              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+              <CheckCircle2 className="w-3 h-3 text-[var(--color-text-secondary)]" />
               {eligibility.matchScore}% Match
             </span>
             {scheme.isVerified ? (
-              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" />
+              <span className="text-[10px] font-semibold text-[var(--color-text-primary)] bg-[var(--color-surface-2)] border border-[var(--color-border)] px-2 py-0.5 rounded-md flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-[var(--color-text-secondary)]" />
                 Verified MoA&FW
               </span>
             ) : (
-              <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-semibold text-[var(--color-text-primary)] bg-[var(--color-surface-2)] border border-[var(--color-border)] px-2 py-0.5 rounded-md">
                 Sample
               </span>
             )}
@@ -123,7 +119,7 @@ function SchemeCard({
       <div className="mt-3.5 grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] text-xs">
         <div>
           <span className="text-[10px] text-[var(--color-text-muted)] font-medium block">Assistance / Subsidy</span>
-          <span className="font-bold text-emerald-700">{scheme.subsidyPercentage || scheme.maxBenefitAmount || 'Direct Grant'}</span>
+          <span className="font-bold text-[var(--color-text-primary)]">{scheme.subsidyPercentage || scheme.maxBenefitAmount || 'Direct Grant'}</span>
         </div>
         <div>
           <span className="text-[10px] text-[var(--color-text-muted)] font-medium block">Max Benefit</span>
@@ -143,9 +139,9 @@ function SchemeCard({
       <div className="mt-3 flex items-center justify-between text-xs pt-1">
         <div className="flex items-center gap-1.5">
           {eligibility.isEligible ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+            <AlertCircle className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0" />
           )}
           <span className="text-[11px] font-medium text-[var(--color-text-secondary)]">
             {eligibility.isEligible
@@ -168,7 +164,7 @@ function SchemeCard({
 
       {/* Expandable Comprehensive Details */}
       {expanded && (
-        <div className="mt-4 pt-4 border-t border-[var(--color-border)] animate-fade-in space-y-4 text-xs">
+        <div className="mt-4 pt-4 animate-fade-in space-y-4 text-xs">
           {/* Objectives */}
           {scheme.objectives && scheme.objectives.length > 0 && (
             <div>
@@ -187,20 +183,20 @@ function SchemeCard({
             <p className="text-[var(--color-text-secondary)] mb-2">{scheme.eligibilitySummary}</p>
             <div className="p-3 bg-[var(--color-surface-2)] rounded-lg space-y-1.5 border border-[var(--color-border)]">
               {eligibility.passedCriteria.map((c, i) => (
-                <div key={i} className="flex items-start gap-1.5 text-emerald-800 text-[11px]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-primary)] text-[11px]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                   <span>{c}</span>
                 </div>
               ))}
               {eligibility.warnings.map((w, i) => (
-                <div key={i} className="flex items-start gap-1.5 text-amber-800 text-[11px]">
-                  <AlertCircle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-secondary)] text-[11px]">
+                  <AlertCircle className="w-3.5 h-3.5 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                   <span>{w}</span>
                 </div>
               ))}
               {eligibility.failedCriteria.map((f, i) => (
-                <div key={i} className="flex items-start gap-1.5 text-red-800 text-[11px]">
-                  <AlertCircle className="w-3.5 h-3.5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-primary)] text-[11px]">
+                  <AlertCircle className="w-3.5 h-3.5 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                   <span>{f}</span>
                 </div>
               ))}
@@ -225,7 +221,7 @@ function SchemeCard({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {scheme.keyFeatures.map((f, i) => (
                   <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-secondary)]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 flex-shrink-0" />
+                    <span>•</span>
                     <span>{f}</span>
                   </div>
                 ))}
@@ -240,12 +236,12 @@ function SchemeCard({
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-[var(--color-border)]">
+                    <tr>
                       <th className="text-left text-[var(--color-text-muted)] font-semibold pb-1.5 w-40">Period / Month</th>
                       <th className="text-left text-[var(--color-text-muted)] font-semibold pb-1.5">Scheduled Activity</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[var(--color-border)]">
+                  <tbody className="space-y-1">
                     {scheme.timeline.map((tItem, i) => (
                       <tr key={i}>
                         <td className="py-1.5 font-medium text-[var(--color-text-primary)] align-top">{tItem.activityMonth}</td>
@@ -284,7 +280,7 @@ function SchemeCard({
                   className="w-full flex items-center gap-2 text-xs text-left text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
                 >
                   {checklist.includes(doc) ? (
-                    <CheckSquare className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                    <CheckSquare className="w-4 h-4 text-[var(--color-text-primary)] flex-shrink-0" />
                   ) : (
                     <Square className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0" />
                   )}
@@ -296,7 +292,7 @@ function SchemeCard({
           </div>
 
           {/* Implementing Department & Authoritative Source */}
-          <div className="pt-3 border-t border-[var(--color-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[11px] text-[var(--color-text-muted)]">
+          <div className="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[11px] text-[var(--color-text-muted)]">
             <div>
               <span className="block font-medium text-[var(--color-text-secondary)]">
                 Department: {scheme.implementingDepartment}
@@ -308,7 +304,7 @@ function SchemeCard({
                 href={scheme.officialUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 font-bold text-emerald-700 hover:text-emerald-900 transition-colors"
+                className="inline-flex items-center gap-1 font-bold text-[var(--color-text-primary)] hover:underline transition-colors"
               >
                 Official Scheme Portal <ExternalLink className="w-3.5 h-3.5" />
               </a>
@@ -420,11 +416,11 @@ export default function SchemesPage() {
           onClick={() => setOnlyEligible(v => !v)}
           className={`px-3 py-2 text-xs font-semibold rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
             onlyEligible
-              ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+              ? 'bg-[var(--color-surface-3)] text-[var(--color-text-primary)] border-[var(--color-border)] shadow-sm'
               : 'bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] shadow-xs hover:bg-[var(--color-surface-2)] hover:border-[var(--color-primary-300)]'
           }`}
         >
-          <ShieldCheck className={`w-3.5 h-3.5 ${onlyEligible ? 'text-white' : 'text-emerald-700'}`} />
+          <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />
           My Eligible Schemes Only
         </button>
       </div>

@@ -55,7 +55,7 @@ export default function ConfirmDialog({
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-start gap-3">
-          <AlertTriangle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${variant === 'danger' ? 'text-red-600' : variant === 'warning' ? 'text-amber-600' : 'text-[var(--color-text-primary)]'}`} />
+          <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-[var(--color-text-primary)]" />
           <div className="flex-1 min-w-0">
             <h3 id="confirm-dialog-title" className="text-sm font-semibold text-[var(--color-text-primary)]">
               {title}

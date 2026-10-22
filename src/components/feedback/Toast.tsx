@@ -1,22 +1,9 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback, type ReactNode } from 'react';
 import { CheckCircle2, AlertTriangle, AlertCircle, Info, X } from 'lucide-react';
+import { ToastContext, useToast, type ToastType, type ToastItem } from './ToastContext';
 
-export type ToastType = 'success' | 'error' | 'warning' | 'info';
-
-export interface ToastItem {
-  id: string;
-  type: ToastType;
-  title: string;
-  message?: string;
-  durationMs?: number;
-}
-
-interface ToastContextValue {
-  showToast: (title: string, options?: { type?: ToastType; message?: string; durationMs?: number }) => void;
-  dismissToast: (id: string) => void;
-}
-
-const ToastContext = createContext<ToastContextValue | null>(null);
+export { useToast };
+export type { ToastType, ToastItem };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -57,14 +44,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useToast(): ToastContextValue {
-  const ctx = useContext(ToastContext);
-  if (!ctx) {
-    throw new Error('useToast must be used within a ToastProvider');
-  }
-  return ctx;
-}
-
 function ToastContainer({
   toasts,
   onDismiss,
@@ -82,10 +61,10 @@ function ToastContainer({
     >
       {toasts.map(toast => {
         const icons = {
-          success: <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />,
-          error: <AlertCircle className="w-4 h-4 text-neutral-900 flex-shrink-0" />,
-          warning: <AlertTriangle className="w-4 h-4 text-neutral-900 flex-shrink-0" />,
-          info: <Info className="w-4 h-4 text-[var(--color-primary-600)] flex-shrink-0" />,
+          success: <CheckCircle2 className="w-4 h-4 text-[var(--color-text-primary)] flex-shrink-0" />,
+          error: <AlertCircle className="w-4 h-4 text-[var(--color-text-primary)] flex-shrink-0" />,
+          warning: <AlertTriangle className="w-4 h-4 text-[var(--color-text-primary)] flex-shrink-0" />,
+          info: <Info className="w-4 h-4 text-[var(--color-text-primary)] flex-shrink-0" />,
         };
 
         return (

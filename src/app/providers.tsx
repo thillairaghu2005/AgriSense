@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import type { FarmerProfile, AppContextValue, UserRole } from '@/types';
+import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import type { FarmerProfile, UserRole } from '@/types';
 import { storageGet, storageSet, storageClearAll, STORAGE_KEYS } from '@/lib/storage';
 import { translate } from '@/data/translations';
 import { ToastProvider } from '@/components/feedback/Toast';
@@ -36,7 +36,8 @@ const DEFAULT_PROFILE: FarmerProfile = {
   },
 };
 
-const AppContext = createContext<AppContextValue | null>(null);
+import { AppContext, useApp } from './AppContext';
+export { useApp };
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<FarmerProfile>(() =>
@@ -138,11 +139,5 @@ export function AppProvider({ children }: { children: ReactNode }) {
       </ToastProvider>
     </AppContext.Provider>
   );
-}
-
-export function useApp(): AppContextValue {
-  const ctx = useContext(AppContext);
-  if (!ctx) throw new Error('useApp must be used inside AppProvider');
-  return ctx;
 }
 

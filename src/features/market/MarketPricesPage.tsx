@@ -57,10 +57,26 @@ export default function MarketPricesPage() {
   }, [isLive, apiKey, stateFilter]);
 
   useEffect(() => {
-    if (isLive && apiKey) {
-      loadLivePrices();
-    }
-  }, [isLive, apiKey, loadLivePrices]);
+    if (!isLive || !apiKey) return;
+    let ignore = false;
+    fetchLiveMandiPrices({
+      apiKey,
+      state: stateFilter || undefined,
+      limit: 100,
+    })
+      .then(res => {
+        if (!ignore) {
+          setLivePrices(res.prices);
+          setLastUpdated(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
+        }
+      })
+      .catch((err: any) => {
+        if (!ignore) setApiError(err.message || 'Failed to fetch live prices from Agmarknet API');
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [isLive, apiKey, stateFilter]);
 
   function handleSaveKey(e: React.FormEvent) {
     e.preventDefault();
@@ -126,13 +142,11 @@ export default function MarketPricesPage() {
           }
           badge={
             isLive && apiKey ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                 LIVE AGMARKNET
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-neutral-100 text-neutral-700 border border-neutral-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
                 Cached Mandi Benchmark
               </span>
             )
@@ -146,18 +160,18 @@ export default function MarketPricesPage() {
               onClick={() => toggleLiveMode(true)}
               className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer ${
                 isLive
-                  ? 'bg-white text-[var(--color-primary-700)] font-semibold shadow-xs'
+                  ? 'bg-white text-[var(--color-text-primary)] font-semibold shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
-              <Wifi className="w-3.5 h-3.5 text-emerald-600" />
+              <Wifi className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />
               Live Mandi Feed
             </button>
             <button
               onClick={() => toggleLiveMode(false)}
               className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer ${
                 !isLive
-                  ? 'bg-white text-[var(--color-primary-700)] font-semibold shadow-xs'
+                  ? 'bg-white text-[var(--color-text-primary)] font-semibold shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
@@ -261,7 +275,7 @@ export default function MarketPricesPage() {
       ) : isLive && apiError ? (
         <InfoBanner variant="warning">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-700 flex-shrink-0" />
+            <AlertCircle className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0" />
             <span>{apiError}. Falling back to sample reference dataset.</span>
           </div>
         </InfoBanner>
@@ -284,7 +298,7 @@ export default function MarketPricesPage() {
         <select
           value={cropFilter}
           onChange={e => setCropFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-border-strong)] focus:outline-none focus:ring-1 focus:ring-neutral-400 cursor-pointer transition-all"
         >
           <option value="">All Crops</option>
           {CROPS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -292,7 +306,7 @@ export default function MarketPricesPage() {
         <select
           value={stateFilter}
           onChange={e => setStateFilter(e.target.value)}
-          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-primary-300)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] cursor-pointer transition-all"
+          className="px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] shadow-xs hover:border-[var(--color-border-strong)] focus:outline-none focus:ring-1 focus:ring-neutral-400 cursor-pointer transition-all"
         >
           <option value="">All States</option>
           {STATES.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
@@ -304,11 +318,11 @@ export default function MarketPricesPage() {
         <Card>
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-sm font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[var(--color-primary-600)]" />
+              <TrendingUp className="w-4 h-4 text-[var(--color-text-secondary)]" />
               {isLive && apiKey ? 'Live Mandi Price Comparison' : 'Sample Price Comparison'}
             </h2>
             {isLive && apiKey && (
-              <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">
+              <span className="text-[11px] font-medium text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-0.5 rounded-md border border-[var(--color-border)]">
                 Agmarknet Live
               </span>
             )}
@@ -332,37 +346,37 @@ export default function MarketPricesPage() {
 
       {/* Prices table */}
       <Card className="p-0 overflow-hidden shadow-xs border border-[var(--color-border)]">
-        <div className="p-4 border-b border-[var(--color-border)] flex items-center justify-between">
+        <div className="p-4 flex items-center justify-between">
           <div>
             <h2 className="text-sm font-bold text-[var(--color-text-primary)]">Mandi Wholesale Modal & Arrival Prices</h2>
             <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Showing {filtered.length} commodity price records</p>
           </div>
           {isLive && apiKey && (
-            <span className="text-[11px] text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+            <span className="text-[11px] text-[var(--color-text-primary)] font-medium bg-[var(--color-surface-2)] px-2 py-0.5 rounded-md border border-[var(--color-border)]">
               Live Feed
             </span>
           )}
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs" aria-label="Market prices">
-            <thead className="bg-[var(--color-surface-2)] border-b border-[var(--color-border)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold">
+            <thead className="bg-[var(--color-surface-2)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold">
               <tr>
                 {['Crop', 'State', 'Market', 'Date', 'Unit', 'Min ₹', 'Max ₹', 'Modal ₹', 'Source'].map(h => (
                   <th key={h} className="text-left py-2.5 px-3 whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--color-border)]">
+            <tbody>
               {filtered.map(price => (
                 <tr key={price.id} className="hover:bg-[var(--color-surface-1)] transition-colors">
                   <td className="py-2.5 px-3 font-semibold text-[var(--color-text-primary)] whitespace-nowrap">{price.cropName}</td>
                   <td className="py-2.5 px-3 text-[var(--color-text-muted)]">{price.state}</td>
                   <td className="py-2.5 px-3 text-[var(--color-text-muted)] whitespace-nowrap">{price.market}</td>
-                  <td className="py-2.5 px-3 text-[var(--color-text-muted)] font-mono">{price.date}</td>
+                  <td className="py-2.5 px-3 text-[var(--color-text-muted)]">{price.date}</td>
                   <td className="py-2.5 px-3 text-[var(--color-text-muted)]">{price.unit}</td>
                   <td className="py-2.5 px-3 text-[var(--color-text-secondary)]">₹{price.minPrice.toLocaleString('en-IN')}</td>
                   <td className="py-2.5 px-3 text-[var(--color-text-secondary)]">₹{price.maxPrice.toLocaleString('en-IN')}</td>
-                  <td className="py-2.5 px-3 font-bold text-emerald-800">₹{price.modalPrice.toLocaleString('en-IN')}</td>
+                  <td className="py-2.5 px-3 font-bold text-[var(--color-text-primary)]">₹{price.modalPrice.toLocaleString('en-IN')}</td>
                   <td className="py-2.5 px-3 text-[10px] text-[var(--color-text-muted)] whitespace-nowrap">
                     <span className="px-2 py-0.5 rounded bg-[var(--color-surface-2)] border border-[var(--color-border)]">
                       {price.sourceLabel}
@@ -400,7 +414,7 @@ export default function MarketPricesPage() {
               id="rev-crop"
               value={selectedPriceId}
               onChange={e => setSelectedPriceId(e.target.value)}
-              className="w-full px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg shadow-xs focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] bg-white cursor-pointer"
+              className="w-full px-3 py-2 text-xs border border-[var(--color-border)] rounded-lg shadow-xs focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white cursor-pointer"
             >
               {activeDataset.map(p => (
                 <option key={p.id} value={p.id}>
@@ -409,10 +423,10 @@ export default function MarketPricesPage() {
               ))}
             </select>
           </div>
-          <div className="flex-shrink-0 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-right shadow-xs min-w-[200px]">
-            <p className="text-xs font-medium text-emerald-800">Estimated Gross Revenue</p>
-            <p className="text-xl font-bold text-emerald-700 mt-0.5">₹{estimatedRevenue.toLocaleString('en-IN')}</p>
-            <p className="text-[10px] text-emerald-600 mt-0.5">
+          <div className="flex-shrink-0 p-3 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-lg text-right shadow-xs min-w-[200px]">
+            <p className="text-xs font-medium text-[var(--color-text-muted)]">Estimated Gross Revenue</p>
+            <p className="text-xl font-bold text-[var(--color-text-primary)] mt-0.5">₹{estimatedRevenue.toLocaleString('en-IN')}</p>
+            <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">
               {isLive && apiKey ? 'Based on live modal price' : 'Estimate only — sample data'}
             </p>
           </div>
@@ -421,10 +435,10 @@ export default function MarketPricesPage() {
 
       {/* MSP Info */}
       <Card className="p-0 overflow-hidden shadow-xs border border-[var(--color-border)]">
-        <div className="p-4 border-b border-[var(--color-border)]">
+        <div className="p-4">
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Minimum Support Price (MSP) Benchmark</h2>
-            <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+            <span className="text-[10px] font-semibold text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2 py-0.5 rounded-md border border-[var(--color-border)]">
               CACP / CCEA Statutory Reference
             </span>
           </div>
@@ -432,20 +446,20 @@ export default function MarketPricesPage() {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
-            <thead className="bg-[var(--color-surface-2)] border-b border-[var(--color-border)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold">
+            <thead className="bg-[var(--color-surface-2)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold">
               <tr>
                 {['Crop', 'Season', 'Year', 'MSP ₹/qtl', 'Announced By'].map(h => (
                   <th key={h} className="text-left py-2.5 px-3 whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--color-border)]">
+            <tbody>
               {MSP_PRICES.map(p => (
                 <tr key={`${p.cropId}-${p.season}`} className="hover:bg-[var(--color-surface-1)] transition-colors">
                   <td className="py-2.5 px-3 font-semibold text-[var(--color-text-primary)]">{p.cropName}</td>
                   <td className="py-2.5 px-3 text-[var(--color-text-muted)] capitalize">{p.season}</td>
-                  <td className="py-2.5 px-3 text-[var(--color-text-muted)] font-mono">{p.year}</td>
-                  <td className="py-2.5 px-3 font-bold text-emerald-700">₹{p.pricePerQuintal.toLocaleString('en-IN')}</td>
+                  <td className="py-2.5 px-3 text-[var(--color-text-muted)]">{p.year}</td>
+                  <td className="py-2.5 px-3 font-bold text-[var(--color-text-primary)]">₹{p.pricePerQuintal.toLocaleString('en-IN')}</td>
                   <td className="py-2.5 px-3 text-[var(--color-text-muted)]">{p.announcedBy}</td>
                 </tr>
               ))}

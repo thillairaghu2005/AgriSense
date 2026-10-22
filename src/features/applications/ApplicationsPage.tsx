@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getApplications, createApplication } from '@/data/applications';
 import { SCHEMES } from '@/data/schemes';
@@ -44,13 +44,15 @@ export default function ApplicationsPage() {
   ]);
   const [applicationCreated, setApplicationCreated] = useState<SchemeApplication | null>(null);
 
-  // Sync with URL query parameter
-  useEffect(() => {
+  // Sync with URL query parameter during render if search param changes
+  const [prevApplyParam, setPrevApplyParam] = useState(applyParam);
+  if (applyParam !== prevApplyParam) {
+    setPrevApplyParam(applyParam);
     if (applyParam && SCHEMES.some(s => s.id === applyParam)) {
-      setSelectedSchemeId(prev => (prev === applyParam ? prev : applyParam));
-      setIsApplying(prev => (prev ? prev : true));
+      setSelectedSchemeId(applyParam);
+      setIsApplying(true);
     }
-  }, [applyParam]);
+  }
 
   const selectedApp = applications.find(a => a.id === selectedAppId) || applications[0];
 
@@ -142,13 +144,13 @@ export default function ApplicationsPage() {
   }
 
   const statusColors: Record<ApplicationStatus, { bg: string; text: string; border: string }> = {
-    submitted: { bg: 'bg-sky-50', text: 'text-sky-800', border: 'border-sky-200' },
-    under_verification: { bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200' },
-    field_inspected: { bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-200' },
-    district_approved: { bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200' },
-    sanctioned: { bg: 'bg-purple-50', text: 'text-purple-800', border: 'border-purple-200' },
-    dbt_disbursed: { bg: 'bg-emerald-100', text: 'text-emerald-900', border: 'border-emerald-300' },
-    rejected: { bg: 'bg-red-50', text: 'text-red-800', border: 'border-red-200' },
+    submitted: { bg: 'bg-[var(--color-surface-2)]', text: 'text-[var(--color-text-primary)]', border: 'border-[var(--color-border)]' },
+    under_verification: { bg: 'bg-[var(--color-surface-2)]', text: 'text-[var(--color-text-primary)]', border: 'border-[var(--color-border)]' },
+    field_inspected: { bg: 'bg-[var(--color-surface-2)]', text: 'text-[var(--color-text-primary)]', border: 'border-[var(--color-border)]' },
+    district_approved: { bg: 'bg-[var(--color-surface-2)]', text: 'text-[var(--color-text-primary)]', border: 'border-[var(--color-border)]' },
+    sanctioned: { bg: 'bg-[var(--color-surface-2)]', text: 'text-[var(--color-text-primary)]', border: 'border-[var(--color-border)]' },
+    dbt_disbursed: { bg: 'bg-[var(--color-surface-2)]', text: 'text-[var(--color-text-primary)]', border: 'border-[var(--color-border)]' },
+    rejected: { bg: 'bg-[var(--color-surface-2)]', text: 'text-[var(--color-text-primary)]', border: 'border-[var(--color-border)]' },
   };
 
   return (
@@ -224,15 +226,15 @@ export default function ApplicationsPage() {
                     onClick={() => setSelectedAppId(app.id)}
                     className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-emerald-500 bg-emerald-50/50 shadow-xs ring-1 ring-emerald-500'
+                        ? 'border-[var(--color-primary-800)] bg-[var(--color-surface-2)] shadow-xs'
                         : 'border-[var(--color-border)] bg-white hover:bg-[var(--color-surface-1)] hover:border-[var(--color-primary-300)] shadow-xs'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <span className="font-mono text-xs font-bold text-[var(--color-text-primary)]">
+                      <span className="text-xs font-bold text-[var(--color-text-primary)]">
                         {app.id}
                       </span>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
                         {app.status.replace(/_/g, ' ').toUpperCase()}
                       </span>
                     </div>
@@ -243,7 +245,7 @@ export default function ApplicationsPage() {
 
                     <div className="flex items-center justify-between text-[11px] text-[var(--color-text-muted)] mt-2">
                       <span>{app.farmerName} • Survey {app.surveyNumber}</span>
-                      <span className="font-semibold text-emerald-800">₹{app.subsidyRequestedAmount.toLocaleString()}</span>
+                      <span className="font-semibold text-[var(--color-text-primary)]">₹{app.subsidyRequestedAmount.toLocaleString()}</span>
                     </div>
                   </div>
                 );
@@ -256,10 +258,10 @@ export default function ApplicationsPage() {
             {selectedApp ? (
               <Card className="space-y-6">
                 {/* Header Summary */}
-                <div className="border-b border-[var(--color-border)] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-[var(--color-primary-800)] bg-[var(--color-primary-50)] px-2 py-0.5 rounded border border-[var(--color-primary-200)]">
+                      <span className="text-xs font-bold text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2 py-0.5 rounded border border-[var(--color-border)]">
                         {selectedApp.id}
                       </span>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${statusColors[selectedApp.status].bg} ${statusColors[selectedApp.status].text} ${statusColors[selectedApp.status].border}`}>
@@ -296,11 +298,11 @@ export default function ApplicationsPage() {
                   </div>
                   <div>
                     <span className="text-[10px] text-[var(--color-text-muted)] block">Subsidy Sanctioned</span>
-                    <span className="font-bold text-emerald-700">₹{selectedApp.subsidyRequestedAmount.toLocaleString()}</span>
+                    <span className="font-bold text-[var(--color-text-primary)]">₹{selectedApp.subsidyRequestedAmount.toLocaleString()}</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-[var(--color-text-muted)] block">DBT UTR Reference</span>
-                    <span className="font-mono text-[11px] font-bold text-gray-800 truncate block">
+                    <span className="text-[11px] font-bold text-[var(--color-text-primary)] truncate block">
                       {selectedApp.dbtUtrNumber || 'In Pipeline'}
                     </span>
                   </div>
@@ -311,27 +313,25 @@ export default function ApplicationsPage() {
                   <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)] mb-3">
                     Multi-Tier Verification & Sanction Timeline
                   </h3>
-                  <div className="space-y-4 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-[var(--color-border)]">
+                  <div className="space-y-4">
                     {selectedApp.timeline.map((event, idx) => (
-                      <div key={idx} className="relative flex items-start gap-3">
-                        <div className={`absolute -left-6 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-xs ${
-                          event.completed
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-gray-200 text-gray-500'
-                        }`}>
-                          {event.completed ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
-                        </div>
+                      <div key={idx} className="flex items-start gap-2.5">
+                        {event.completed ? (
+                          <CheckCircle2 className="w-4 h-4 text-[var(--color-text-primary)] mt-0.5 flex-shrink-0" />
+                        ) : (
+                          <Clock className="w-4 h-4 text-[var(--color-text-muted)] mt-0.5 flex-shrink-0" />
+                        )}
                         <div className="flex-1 text-xs">
                           <div className="flex items-center justify-between">
                             <span className={`font-bold ${event.completed ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-muted)]'}`}>
                               {event.stage}
                             </span>
-                            <span className="text-[10px] text-[var(--color-text-muted)] font-mono">
+                            <span className="text-[10px] text-[var(--color-text-muted)]">
                               {event.timestamp}
                             </span>
                           </div>
                           {event.officerName && (
-                            <p className="text-[11px] text-[var(--color-primary-800)] font-medium mt-0.5">
+                            <p className="text-[11px] text-[var(--color-text-secondary)] font-medium mt-0.5">
                               {event.officerName} {event.officerDesignation ? `(${event.officerDesignation})` : ''}
                             </p>
                           )}
@@ -345,7 +345,7 @@ export default function ApplicationsPage() {
                 </div>
 
                 {/* Uploaded Documents */}
-                <div className="pt-3 border-t border-[var(--color-border)]">
+                <div className="pt-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)] mb-2.5">
                     Supporting Documents Verified
                   </h3>
@@ -353,13 +353,13 @@ export default function ApplicationsPage() {
                     {selectedApp.documentsUploaded.map((doc, idx) => (
                       <div key={idx} className="p-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
-                          <FileCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                          <FileCheck className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0" />
                           <div>
                             <span className="font-semibold text-[var(--color-text-primary)] block text-[11px]">{doc.docType}</span>
-                            <span className="text-[10px] text-[var(--color-text-muted)] font-mono">{doc.fileName}</span>
+                            <span className="text-[10px] text-[var(--color-text-muted)]">{doc.fileName}</span>
                           </div>
                         </div>
-                        <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        <span className="text-[10px] font-semibold text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2 py-0.5 rounded border border-[var(--color-border)]">
                           Verified
                         </span>
                       </div>
@@ -378,18 +378,16 @@ export default function ApplicationsPage() {
         /* Multi-Step New Application Wizard */
         <Card className="max-w-3xl mx-auto space-y-6">
           {/* Progress Indicator */}
-          <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-4">
+          <div className="flex items-center justify-between pb-4">
             {[1, 2, 3, 4].map(s => (
               <div key={s} className="flex items-center gap-2">
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                <span className={`text-xs font-bold px-2 py-0.5 rounded border ${
                   step === s
-                    ? 'bg-emerald-600 text-white'
-                    : step > s
-                    ? 'bg-emerald-100 text-emerald-800'
-                    : 'bg-gray-100 text-gray-500'
+                    ? 'bg-[var(--color-surface-3)] text-[var(--color-text-primary)] border-[var(--color-border)]'
+                    : 'text-[var(--color-text-muted)] border-transparent'
                 }`}>
-                  {step > s ? <CheckCircle2 className="w-4 h-4" /> : s}
-                </div>
+                  Step {s}
+                </span>
                 <span className={`text-xs font-medium hidden sm:inline ${step === s ? 'text-[var(--color-text-primary)] font-bold' : 'text-[var(--color-text-muted)]'}`}>
                   {s === 1 ? 'Scheme' : s === 2 ? 'Land & Identity' : s === 3 ? 'Documents' : 'Confirm'}
                 </span>
@@ -431,14 +429,14 @@ export default function ApplicationsPage() {
                       {selectedSchemeObj.implementingDepartment}
                     </span>
                   </div>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                     {selectedSchemeObj.subsidyPercentage || 'Direct Grant'}
                   </span>
                 </div>
                 <p className="text-xs text-[var(--color-text-secondary)]">
                   {selectedSchemeObj.benefits}
                 </p>
-                <div className="pt-2 border-t border-[var(--color-border)] flex justify-between font-bold text-emerald-900">
+                <div className="pt-2 flex justify-between font-bold text-[var(--color-text-primary)]">
                   <span>Maximum Benefit / Cap:</span>
                   <span>{selectedSchemeObj.maxBenefitAmount || 'Standard Norm'}</span>
                 </div>
@@ -461,7 +459,7 @@ export default function ApplicationsPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Applicant Full Name <span className="text-red-500">*</span>
+                    Applicant Full Name *
                   </label>
                   <input
                     type="text"
@@ -470,15 +468,15 @@ export default function ApplicationsPage() {
                       setApplicantName(e.target.value);
                       if (formErrors.applicantName) setFormErrors(prev => ({ ...prev, applicantName: '' }));
                     }}
-                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.applicantName ? 'border-red-500 bg-red-50/30' : 'border-[var(--color-border)]'}`}
+                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.applicantName ? 'border-[var(--color-border)] bg-[var(--color-surface-2)]' : 'border-[var(--color-border)]'}`}
                   />
                   {formErrors.applicantName && (
-                    <p className="text-[11px] text-red-600 mt-1">{formErrors.applicantName}</p>
+                    <p className="text-[11px] text-[var(--color-text-secondary)] mt-1">{formErrors.applicantName}</p>
                   )}
                 </div>
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Mobile Number (Aadhaar Linked) <span className="text-red-500">*</span>
+                    Mobile Number (Aadhaar Linked) *
                   </label>
                   <input
                     type="text"
@@ -488,15 +486,15 @@ export default function ApplicationsPage() {
                       if (formErrors.mobile) setFormErrors(prev => ({ ...prev, mobile: '' }));
                     }}
                     placeholder="e.g. 9842155820"
-                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.mobile ? 'border-red-500 bg-red-50/30' : 'border-[var(--color-border)]'}`}
+                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.mobile ? 'border-[var(--color-border)] bg-[var(--color-surface-2)]' : 'border-[var(--color-border)]'}`}
                   />
                   {formErrors.mobile && (
-                    <p className="text-[11px] text-red-600 mt-1">{formErrors.mobile}</p>
+                    <p className="text-[11px] text-[var(--color-text-secondary)] mt-1">{formErrors.mobile}</p>
                   )}
                 </div>
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Survey / Khasra / Patta Number <span className="text-red-500">*</span>
+                    Survey / Khasra / Patta Number *
                   </label>
                   <input
                     type="text"
@@ -506,15 +504,15 @@ export default function ApplicationsPage() {
                       if (formErrors.surveyNumber) setFormErrors(prev => ({ ...prev, surveyNumber: '' }));
                     }}
                     placeholder="e.g. 142/3A"
-                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.surveyNumber ? 'border-red-500 bg-red-50/30' : 'border-[var(--color-border)]'}`}
+                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.surveyNumber ? 'border-[var(--color-border)] bg-[var(--color-surface-2)]' : 'border-[var(--color-border)]'}`}
                   />
                   {formErrors.surveyNumber && (
-                    <p className="text-[11px] text-red-600 mt-1">{formErrors.surveyNumber}</p>
+                    <p className="text-[11px] text-[var(--color-text-secondary)] mt-1">{formErrors.surveyNumber}</p>
                   )}
                 </div>
                 <div>
                   <label className="font-semibold text-[var(--color-text-primary)] block mb-1">
-                    Land Area for Scheme (Acres) <span className="text-red-500">*</span>
+                    Land Area for Scheme (Acres) *
                   </label>
                   <input
                     type="number"
@@ -525,10 +523,10 @@ export default function ApplicationsPage() {
                       setLandArea(parseFloat(e.target.value) || 0);
                       if (formErrors.landArea) setFormErrors(prev => ({ ...prev, landArea: '' }));
                     }}
-                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.landArea ? 'border-red-500 bg-red-50/30' : 'border-[var(--color-border)]'}`}
+                    className={`w-full px-3 py-2 border rounded-lg ${formErrors.landArea ? 'border-[var(--color-border)] bg-[var(--color-surface-2)]' : 'border-[var(--color-border)]'}`}
                   />
                   {formErrors.landArea && (
-                    <p className="text-[11px] text-red-600 mt-1">{formErrors.landArea}</p>
+                    <p className="text-[11px] text-[var(--color-text-secondary)] mt-1">{formErrors.landArea}</p>
                   )}
                 </div>
                 <div>
@@ -599,20 +597,20 @@ export default function ApplicationsPage() {
                 {uploadedFiles.map((doc, idx) => (
                   <div key={idx} className="p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] flex items-center justify-between text-xs">
                     <div className="flex items-center gap-3 min-w-0">
-                      <FileCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                      <FileCheck className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0" />
                       <div className="min-w-0 truncate">
                         <span className="font-semibold text-[var(--color-text-primary)] block truncate">{doc.docType}</span>
-                        <span className="text-[10px] text-[var(--color-text-muted)] font-mono">{doc.fileName} ({doc.fileSizeMb} MB)</span>
+                        <span className="text-[10px] text-[var(--color-text-muted)]">{doc.fileName} ({doc.fileSizeMb} MB)</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                         Attached
                       </span>
                       <button
                         type="button"
                         onClick={() => handleRemoveFile(idx)}
-                        className="text-[var(--color-text-muted)] hover:text-red-600 p-1 rounded transition-colors"
+                        className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-1 rounded transition-colors"
                         title="Remove document"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -642,9 +640,9 @@ export default function ApplicationsPage() {
                     setUploadedFiles(prev => [...prev, ...newDocs]);
                   }
                 }}
-                className="p-5 border-2 border-dashed border-[var(--color-border)] rounded-xl text-center text-xs text-[var(--color-text-muted)] hover:border-emerald-600 hover:bg-emerald-50/20 cursor-pointer transition-all"
+                className="p-5 border-2 border-dashed border-[var(--color-border)] rounded-xl text-center text-xs text-[var(--color-text-muted)] hover:border-[var(--color-primary-600)] hover:bg-[var(--color-surface-2)] cursor-pointer transition-all"
               >
-                <Upload className="w-5 h-5 mx-auto mb-1 text-emerald-600" />
+                <Upload className="w-5 h-5 mx-auto mb-1 text-[var(--color-text-secondary)]" />
                 <span className="font-semibold text-[var(--color-text-primary)] block">Click or Drag & Drop to attach documents</span>
                 <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">Supports PDF, JPG, PNG up to 5MB</p>
               </div>
@@ -668,18 +666,18 @@ export default function ApplicationsPage() {
               </h3>
 
               {applicationCreated ? (
-                <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-3 text-xs">
-                  <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
-                  <h4 className="text-base font-bold text-emerald-950">
+                <div className="p-6 rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-border)] text-center space-y-3 text-xs">
+                  <CheckCircle2 className="w-10 h-10 text-[var(--color-text-primary)] mx-auto" />
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
                     Application Submitted Successfully!
                   </h4>
-                  <p className="text-emerald-800">
+                  <p className="text-[var(--color-text-secondary)]">
                     Your official application reference number is:
                   </p>
-                  <div className="inline-block px-4 py-2 bg-white rounded-lg font-mono text-base font-bold text-emerald-900 border border-emerald-300 shadow-xs">
+                  <div className="inline-block px-4 py-2 bg-white rounded-lg text-base font-bold text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs">
                     {applicationCreated.id}
                   </div>
-                  <p className="text-[11px] text-emerald-700 max-w-md mx-auto">
+                  <p className="text-[11px] text-[var(--color-text-muted)] max-w-md mx-auto">
                     An automated confirmation SMS has been dispatched to {mobile}. Field verification by the Village Administrative Officer (VAO) and Agricultural Officer is scheduled within 7 working days.
                   </p>
                   <div className="pt-2 flex justify-center gap-3">
@@ -704,30 +702,30 @@ export default function ApplicationsPage() {
               ) : (
                 <>
                   <div className="p-4 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] text-xs space-y-2">
-                    <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
+                    <div className="flex justify-between py-1">
                       <span className="text-[var(--color-text-muted)]">Selected Scheme:</span>
                       <span className="font-bold text-[var(--color-text-primary)]">{selectedSchemeObj.name}</span>
                     </div>
-                    <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
+                    <div className="flex justify-between py-1">
                       <span className="text-[var(--color-text-muted)]">Beneficiary Applicant:</span>
                       <span className="font-bold text-[var(--color-text-primary)]">{applicantName}</span>
                     </div>
-                    <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
+                    <div className="flex justify-between py-1">
                       <span className="text-[var(--color-text-muted)]">Survey Number & Land Area:</span>
                       <span className="font-bold text-[var(--color-text-primary)]">{surveyNumber} ({landArea} Acres)</span>
                     </div>
-                    <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
+                    <div className="flex justify-between py-1">
                       <span className="text-[var(--color-text-muted)]">Aadhaar Linked Bank Account:</span>
-                      <span className="font-mono text-[var(--color-text-primary)]">{profile.bankName} ({profile.bankAccountMasked})</span>
+                      <span className="text-[var(--color-text-primary)]">{profile.bankName} ({profile.bankAccountMasked})</span>
                     </div>
                     <div className="flex justify-between py-1">
                       <span className="text-[var(--color-text-muted)]">Attached Documents:</span>
-                      <span className="font-semibold text-emerald-700">{uploadedFiles.length} files verified</span>
+                      <span className="font-semibold text-[var(--color-text-primary)]">{uploadedFiles.length} files verified</span>
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs flex gap-2">
-                    <AlertCircle className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
+                  <div className="p-3 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)] text-xs flex gap-2">
+                    <AlertCircle className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                     <span>
                       I hereby declare that all information furnished is true to the best of my knowledge and complies with the operational guidelines of {selectedSchemeObj.name}.
                     </span>

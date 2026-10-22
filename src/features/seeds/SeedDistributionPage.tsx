@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SEED_VARIETIES, SEED_FARMS, searchSeedVarieties } from '@/data/seeds';
 import { Card, PageHeader } from '@/components/ui/Card';
@@ -61,12 +61,14 @@ export default function SeedDistributionPage() {
     storageGet('agrisense_seed_requisitions', DEFAULT_REQUISITIONS)
   );
 
-  useEffect(() => {
+  const [prevCropParam, setPrevCropParam] = useState(cropParam);
+  if (cropParam !== prevCropParam) {
+    setPrevCropParam(cropParam);
     if (cropParam) {
       setCropFilter(cropParam);
       setActiveTab('catalog');
     }
-  }, [cropParam]);
+  }
 
   // Booking Modal State
   const [bookingVariety, setBookingVariety] = useState<SeedVariety | null>(null);
@@ -136,17 +138,17 @@ export default function SeedDistributionPage() {
       />
 
       {/* Official Government Mission Banner */}
-      <div className="bg-emerald-50/90 text-[var(--color-text-primary)] rounded-xl p-5 shadow-xs border border-emerald-200">
+      <div className="bg-white text-[var(--color-text-primary)] rounded-xl p-5 shadow-xs border border-[var(--color-border)]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-text-primary)]" />
               National Food Security Mission (NFSM) & Certified Seed Hubs
             </div>
-            <h2 className="text-lg font-bold tracking-tight text-emerald-950">
+            <h2 className="text-lg font-bold tracking-tight text-[var(--color-text-primary)]">
               Direct Certified Seed Requisition & 50% DBT Subsidy
             </h2>
-            <p className="text-xs text-emerald-800/90 max-w-3xl leading-relaxed">
+            <p className="text-xs text-[var(--color-text-secondary)] max-w-3xl leading-relaxed">
               Procure genetically pure Foundation and Certified seeds directly from State Agricultural Seed Farms,
               National Seeds Corporation (NSC), and Agricultural University centres with authentic seed tags.
             </p>
@@ -156,8 +158,8 @@ export default function SeedDistributionPage() {
               onClick={() => setActiveTab('catalog')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'catalog'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
+                  ? 'bg-[var(--color-surface-3)] text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs'
+                  : 'bg-white text-[var(--color-text-secondary)] border border-[var(--color-border)] hover:bg-[var(--color-surface-2)]'
               }`}
             >
               Certified Seed Catalog ({SEED_VARIETIES.length})
@@ -166,8 +168,8 @@ export default function SeedDistributionPage() {
               onClick={() => setActiveTab('farms')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'farms'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
+                  ? 'bg-[var(--color-surface-3)] text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs'
+                  : 'bg-white text-[var(--color-text-secondary)] border border-[var(--color-border)] hover:bg-[var(--color-surface-2)]'
               }`}
             >
               Government Farms ({SEED_FARMS.length})
@@ -176,8 +178,8 @@ export default function SeedDistributionPage() {
               onClick={() => setActiveTab('requisitions')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'requisitions'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-100/60'
+                  ? 'bg-[var(--color-surface-3)] text-[var(--color-text-primary)] border border-[var(--color-border)] shadow-xs'
+                  : 'bg-white text-[var(--color-text-secondary)] border border-[var(--color-border)] hover:bg-[var(--color-surface-2)]'
               }`}
             >
               My Requisitions ({requisitions.length})
@@ -236,18 +238,18 @@ export default function SeedDistributionPage() {
                     {/* Top Tag Row */}
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                        <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                           {variety.seedType} Seed
                         </span>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
+                        <span className="px-2.5 py-0.5 rounded text-[10px] font-medium bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
                           {variety.recommendedSeason.map(s => s.toUpperCase()).join(' / ')}
                         </span>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                           {variety.subsidyPercentage}% NFSM Subsidy
                         </span>
                       </div>
-                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 flex-shrink-0">
-                        ₹{subsidizedRate}/kg <span className="text-[10px] text-gray-500 line-through">₹{variety.pricePerKg}</span>
+                      <span className="text-xs font-bold text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-1 rounded border border-[var(--color-border)] flex-shrink-0">
+                        ₹{subsidizedRate}/kg <span className="text-[10px] text-[var(--color-text-muted)] line-through">₹{variety.pricePerKg}</span>
                       </span>
                     </div>
 
@@ -292,7 +294,7 @@ export default function SeedDistributionPage() {
                       </div>
                       <div>
                         <span className="text-[10px] text-[var(--color-text-muted)] block">Live Stock</span>
-                        <span className="font-semibold text-emerald-700">
+                        <span className="font-semibold text-[var(--color-text-primary)]">
                           {totalStockKg.toLocaleString()} kg in Govt Farms
                         </span>
                       </div>
@@ -301,28 +303,28 @@ export default function SeedDistributionPage() {
                     {/* Agronomy Guidance Details */}
                     <div className="space-y-2 text-xs text-[var(--color-text-secondary)]">
                       <div className="flex gap-2">
-                        <Sprout className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <Sprout className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                         <div>
                           <strong className="text-[var(--color-text-primary)]">Nursery & Sowing: </strong>
                           {variety.nurseryPreparation}
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Layers className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <Layers className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                         <div>
                           <strong className="text-[var(--color-text-primary)]">Fertilizer Schedule: </strong>
                           {variety.fertilizerSchedule.basal} {variety.fertilizerSchedule.topDressing1}
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Droplets className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <Droplets className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                         <div>
                           <strong className="text-[var(--color-text-primary)]">Irrigation: </strong>
                           {variety.irrigationRequirements}
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <ShieldCheck className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                         <div>
                           <strong className="text-[var(--color-text-primary)]">Resistance: </strong>
                           {variety.pestDiseaseResistance.join(', ')}
@@ -332,7 +334,7 @@ export default function SeedDistributionPage() {
                   </div>
 
                   {/* Booking Action Footer */}
-                  <div className="mt-4 pt-3 border-t border-[var(--color-border)] flex items-center justify-between gap-3">
+                  <div className="mt-4 pt-3 flex items-center justify-between gap-3">
                     <span className="text-[11px] text-[var(--color-text-muted)]">
                       Available at {variety.stockAvailability.length} Govt Seed Farms
                     </span>
@@ -366,11 +368,9 @@ export default function SeedDistributionPage() {
               <Card key={farm.id} className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <div className="p-2 rounded-lg bg-[var(--color-primary-50)] text-[var(--color-primary-700)]">
-                      <Building2 className="w-5 h-5" />
-                    </div>
+                    <Building2 className="w-5 h-5 text-[var(--color-text-secondary)] flex-shrink-0" />
                     <div>
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-primary-800)] bg-[var(--color-primary-50)] px-2 py-0.5 rounded">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-primary)] bg-[var(--color-surface-2)] border border-[var(--color-border)] px-2 py-0.5 rounded">
                         {farm.type}
                       </span>
                       <h3 className="text-sm font-bold text-[var(--color-text-primary)] mt-1">
@@ -395,7 +395,7 @@ export default function SeedDistributionPage() {
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-[var(--color-border)]">
+                <div className="pt-2">
                   <span className="text-[10px] text-[var(--color-text-muted)] font-semibold block mb-1">
                     Crops in Seed Stock:
                   </span>
@@ -431,7 +431,7 @@ export default function SeedDistributionPage() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-[var(--color-border)] overflow-hidden shadow-xs">
-              <div className="p-4 border-b border-[var(--color-border)] flex flex-wrap items-center justify-between gap-3 bg-[var(--color-surface-1)]">
+              <div className="p-4 flex flex-wrap items-center justify-between gap-3 bg-[var(--color-surface-1)]">
                 <div>
                   <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
                     Active Seed Quotas & Counter Requisitions ({requisitions.length})
@@ -465,8 +465,8 @@ export default function SeedDistributionPage() {
                   </thead>
                   <tbody>
                     {requisitions.map(req => (
-                      <tr key={req.id} className="border-t border-[var(--color-border)] hover:bg-[var(--color-surface-1)] transition-colors">
-                        <td className="py-3 px-4 font-mono font-semibold text-[var(--color-text-primary)]">
+                      <tr key={req.id} className="hover:bg-[var(--color-surface-1)] transition-colors">
+                        <td className="py-3 px-4 font-semibold text-[var(--color-text-primary)]">
                           {req.id}
                           <span className="block text-[10px] font-normal text-[var(--color-text-muted)]">
                             Booked: {req.bookedDate}
@@ -493,7 +493,7 @@ export default function SeedDistributionPage() {
                           {req.quantityKg} kg
                         </td>
                         <td className="py-3 px-4">
-                          <span className="font-bold text-emerald-700 block">
+                          <span className="font-bold text-[var(--color-text-primary)] block">
                             ₹{req.farmerPayable.toLocaleString()}
                           </span>
                           <span className="text-[10px] text-[var(--color-text-muted)]">
@@ -501,8 +501,8 @@ export default function SeedDistributionPage() {
                           </span>
                         </td>
                         <td className="py-3 px-4">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
+                            <CheckCircle2 className="w-3 h-3 text-[var(--color-text-secondary)]" />
                             Ready for Pickup
                           </span>
                         </td>
@@ -510,14 +510,14 @@ export default function SeedDistributionPage() {
                           <div className="flex items-center justify-end gap-1.5">
                             <button
                               onClick={() => window.print()}
-                              className="p-1.5 rounded-md hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
+                              className="p-1.5 rounded-md hover:bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] transition-colors"
                               title="Print Voucher"
                             >
                               <Printer className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleCancelRequisition(req.id)}
-                              className="p-1.5 rounded-md hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
+                              className="p-1.5 rounded-md hover:bg-[var(--color-surface-2)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
                               title="Cancel Requisition"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -547,9 +547,7 @@ export default function SeedDistributionPage() {
             </button>
 
             <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 rounded-lg bg-[var(--color-primary-50)] text-[var(--color-primary-700)]">
-                <Sprout className="w-5 h-5" />
-              </div>
+              <Sprout className="w-5 h-5 text-[var(--color-text-secondary)]" />
               <div>
                 <h3 className="text-base font-bold text-[var(--color-text-primary)]">
                   Seed Quota Requisition
@@ -562,13 +560,13 @@ export default function SeedDistributionPage() {
 
             {bookingSuccess ? (
               <div className="space-y-4 py-2">
-                <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs leading-relaxed space-y-2">
-                  <div className="flex items-center gap-2 text-sm font-bold text-emerald-800">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                <div className="p-4 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)] text-xs leading-relaxed space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-bold text-[var(--color-text-primary)]">
+                    <CheckCircle2 className="w-5 h-5 text-[var(--color-text-secondary)]" />
                     Requisition Confirmed!
                   </div>
                   <p>{bookingSuccess}</p>
-                  <p className="text-[11px] text-emerald-700 font-medium">
+                  <p className="text-[11px] text-[var(--color-text-muted)] font-medium">
                     Please present your Aadhaar Card and this reference at the chosen seed farm counter.
                     Government subsidy is deducted at the counter automatically.
                   </p>
@@ -639,15 +637,15 @@ export default function SeedDistributionPage() {
                       ₹{(Math.ceil(bookingVariety.seedRateKgPerAcre * acreage) * bookingVariety.pricePerKg).toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between text-emerald-700">
+                  <div className="flex justify-between text-[var(--color-text-secondary)]">
                     <span>Govt NFSM Subsidy ({bookingVariety.subsidyPercentage}%):</span>
                     <span className="font-bold">
                       - ₹{((Math.ceil(bookingVariety.seedRateKgPerAcre * acreage) * bookingVariety.pricePerKg * bookingVariety.subsidyPercentage) / 100).toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm font-bold text-[var(--color-text-primary)] pt-1 border-t border-[var(--color-border)]">
+                  <div className="flex justify-between text-sm font-bold text-[var(--color-text-primary)] pt-1">
                     <span>Farmer Payable at Farm:</span>
-                    <span className="text-emerald-700">
+                    <span className="text-[var(--color-text-primary)]">
                       ₹{(
                         Math.ceil(bookingVariety.seedRateKgPerAcre * acreage) *
                         ((bookingVariety.pricePerKg * (100 - bookingVariety.subsidyPercentage)) / 100)

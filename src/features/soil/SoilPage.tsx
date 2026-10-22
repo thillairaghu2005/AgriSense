@@ -33,7 +33,7 @@ const SOIL_PROFILES: {
   {
     type: 'alluvial',
     name: 'Alluvial Soil',
-    color: 'bg-amber-50 border-amber-300 text-amber-900',
+    color: 'bg-[var(--color-surface-2)] border-[var(--color-border)] text-[var(--color-text-primary)]',
     description: 'Deposition soil rich in potash and humus. Extremely fertile with balanced loam texture.',
     drainage: 'Moderate to well-drained',
     idealCrops: ['Rice', 'Wheat', 'Sugarcane', 'Maize', 'Pulses'],
@@ -42,7 +42,7 @@ const SOIL_PROFILES: {
   {
     type: 'black',
     name: 'Black Soil (Regur / Vertisol)',
-    color: 'bg-slate-100 border-slate-300 text-slate-800',
+    color: 'bg-[var(--color-surface-2)] border-[var(--color-border)] text-[var(--color-text-primary)]',
     description: 'High clay content with high moisture retention and swelling properties. Rich in calcium and magnesium.',
     drainage: 'Slow drainage; prone to waterlogging in heavy rains',
     idealCrops: ['Cotton', 'Soyabean', 'Gram (Chickpea)', 'Millets', 'Sugarcane'],
@@ -51,7 +51,7 @@ const SOIL_PROFILES: {
   {
     type: 'red',
     name: 'Red Soil',
-    color: 'bg-rose-50 border-rose-300 text-rose-900',
+    color: 'bg-[var(--color-surface-2)] border-[var(--color-border)] text-[var(--color-text-primary)]',
     description: 'Porous and friable texture with iron oxide richness. Naturally low in nitrogen and phosphorus.',
     drainage: 'Rapid drainage; low water retention',
     idealCrops: ['Groundnut', 'Millets', 'Pulses', 'Oilseeds', 'Potato'],
@@ -60,7 +60,7 @@ const SOIL_PROFILES: {
   {
     type: 'loamy',
     name: 'Loamy Soil',
-    color: 'bg-emerald-50 border-emerald-300 text-emerald-900',
+    color: 'bg-[var(--color-surface-2)] border-[var(--color-border)] text-[var(--color-text-primary)]',
     description: 'The agricultural standard mixture of sand, silt, and clay. Excellent tilth and aeration.',
     drainage: 'Ideal balanced drainage and aeration',
     idealCrops: ['Vegetables', 'Wheat', 'Cotton', 'Fruits', 'Maize'],
@@ -69,7 +69,7 @@ const SOIL_PROFILES: {
   {
     type: 'sandy',
     name: 'Sandy Soil',
-    color: 'bg-yellow-50 border-yellow-300 text-yellow-900',
+    color: 'bg-[var(--color-surface-2)] border-[var(--color-border)] text-[var(--color-text-primary)]',
     description: 'Coarse particles with high permeability. Highly prone to nutrient leaching.',
     drainage: 'Excessive drainage; dry surface',
     idealCrops: ['Groundnut', 'Watermelon', 'Millets', 'Root vegetables'],
@@ -78,7 +78,7 @@ const SOIL_PROFILES: {
   {
     type: 'clay',
     name: 'Clay Soil',
-    color: 'bg-stone-100 border-stone-300 text-stone-800',
+    color: 'bg-[var(--color-surface-2)] border-[var(--color-border)] text-[var(--color-text-primary)]',
     description: 'Fine particles with high water-holding capacity and plasticity. Very slow drying.',
     drainage: 'Poor drainage; high compaction risk',
     idealCrops: ['Rice (Paddy)', 'Broccoli', 'Cabbage'],
@@ -87,7 +87,7 @@ const SOIL_PROFILES: {
   {
     type: 'laterite',
     name: 'Laterite Soil',
-    color: 'bg-orange-50 border-orange-300 text-orange-900',
+    color: 'bg-[var(--color-surface-2)] border-[var(--color-border)] text-[var(--color-text-primary)]',
     description: 'Formed by intense tropical leaching. Acidic with low organic matter, lime, and nitrogen.',
     drainage: 'Rapid drainage',
     idealCrops: ['Tea', 'Coffee', 'Cashew', 'Rubber', 'Coconut'],
@@ -911,8 +911,8 @@ export default function SoilPage() {
             </div>
 
             {/* Soil Amendment Note */}
-            <div className="p-3 bg-emerald-50/80 rounded-xl text-xs text-emerald-950 border border-emerald-200 shadow-xs">
-              <strong className="text-emerald-900">Soil Conditioning Advice:</strong> {fertilizerPlan.soilAmendment}
+            <div className="p-3 bg-[var(--color-surface-2)] rounded-xl text-xs text-[var(--color-text-primary)] border border-[var(--color-border)]">
+              <strong className="text-[var(--color-text-primary)] font-semibold">Soil Conditioning Advice:</strong> {fertilizerPlan.soilAmendment}
             </div>
           </Card>
         </div>
@@ -929,17 +929,17 @@ export default function SoilPage() {
               Soil pH measures the acidity or alkalinity of the soil solution. Most nutrients are most readily available to crops between pH 6.0 and 7.5.
             </p>
             <div className="space-y-2 text-xs">
-              <div className="p-2.5 rounded-lg bg-rose-50/80 border border-rose-200 text-rose-950 shadow-xs">
-                <span className="font-semibold text-rose-900">pH &lt; 5.5 (Strongly Acidic):</span>
-                <p className="text-[11px] text-rose-800 mt-0.5">Aluminum & manganese toxicity risk; phosphorus and calcium become locked.</p>
+              <div className="p-2.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)]">
+                <span className="font-semibold text-[var(--color-text-primary)]">pH &lt; 5.5 (Strongly Acidic):</span>
+                <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">Aluminum & manganese toxicity risk; phosphorus and calcium become locked.</p>
               </div>
-              <div className="p-2.5 rounded-lg bg-emerald-50/80 border border-emerald-200 text-emerald-950 shadow-xs">
-                <span className="font-semibold text-emerald-900">pH 6.2 – 7.5 (Optimal Neutral):</span>
-                <p className="text-[11px] text-emerald-800 mt-0.5">Maximum microbial activity and balanced uptake of N, P, K, and micronutrients.</p>
+              <div className="p-2.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)]">
+                <span className="font-semibold text-[var(--color-text-primary)]">pH 6.2 – 7.5 (Optimal Neutral):</span>
+                <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">Maximum microbial activity and balanced uptake of N, P, K, and micronutrients.</p>
               </div>
-              <div className="p-2.5 rounded-lg bg-purple-50/80 border border-purple-200 text-purple-950 shadow-xs">
-                <span className="font-semibold text-purple-900">pH &gt; 8.0 (Alkaline / Calcareous):</span>
-                <p className="text-[11px] text-purple-800 mt-0.5">Zinc, iron, and boron deficiencies common; phosphorus fixes as insoluble calcium phosphate.</p>
+              <div className="p-2.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)]">
+                <span className="font-semibold text-[var(--color-text-primary)]">pH &gt; 8.0 (Alkaline / Calcareous):</span>
+                <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">Zinc, iron, and boron deficiencies common; phosphorus fixes as insoluble calcium phosphate.</p>
               </div>
             </div>
           </Card>

@@ -96,10 +96,10 @@ export default function RecommendationsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-0.5 rounded border border-[var(--color-border)]">
                 ICAR Regional Agronomic Rule Engine
               </span>
-              <span className="text-xs text-[var(--color-text-muted)] font-mono">Model v2.4</span>
+              <span className="text-xs text-[var(--color-text-muted)]">Model v2.4</span>
             </div>
             <h1 className="text-xl font-bold text-[var(--color-text-primary)] mt-1.5 tracking-tight">
               Agronomic Suitability & Seasonal Crop Diagnostics
@@ -124,7 +124,7 @@ export default function RecommendationsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Farm Diagnostic Input Parameters */}
         <div className="lg:col-span-5 bg-white border border-[var(--color-border)] rounded-lg p-5">
-          <div className="pb-3 border-b border-[var(--color-border)] mb-4">
+          <div className="pb-3 mb-4">
             <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
               Farm & Soil Parameters
             </h2>
@@ -207,7 +207,7 @@ export default function RecommendationsPage() {
               </Select>
             </FormField>
 
-            <div className="pt-2 border-t border-[var(--color-border)]">
+            <div className="pt-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] block mb-2">
                 Soil Health Card Metrics (Optional)
               </span>
@@ -250,7 +250,7 @@ export default function RecommendationsPage() {
                 variant="primary"
                 className="w-full"
                 disabled={isCalculating}
-                leftIcon={isCalculating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Leaf className="w-4 h-4" />}
+                leftIcon={isCalculating ? <Loader2 className="w-4 h-4 animate-spin text-[var(--color-text-primary)]" /> : <Leaf className="w-4 h-4" />}
               >
                 {isCalculating ? 'Computing Agronomic Suitability...' : 'Generate Agronomic Viability Report'}
               </Button>
@@ -274,7 +274,7 @@ export default function RecommendationsPage() {
 
           {isCalculating && (
             <div className="bg-white border border-[var(--color-border)] rounded-lg p-10 text-center flex flex-col items-center justify-center min-h-[360px]">
-              <Loader2 className="w-8 h-8 text-emerald-600 animate-spin mb-3" />
+              <Loader2 className="w-8 h-8 text-[var(--color-text-primary)] animate-spin mb-3" />
               <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
                 Evaluating Agro-Climatic Viability
               </h3>
@@ -286,7 +286,7 @@ export default function RecommendationsPage() {
 
           {submitted && results && results.length > 0 && (
             <div className="bg-white border border-[var(--color-border)] rounded-lg p-5 space-y-5">
-              <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+              <div className="flex items-center justify-between pb-3">
                 <div>
                   <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
                     Agronomic Suitability Summary Table
@@ -295,7 +295,7 @@ export default function RecommendationsPage() {
                     Ranked by agro-climatic match score for {form.season?.toUpperCase()} season
                   </p>
                 </div>
-                <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                <span className="text-xs font-semibold text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-0.5 rounded border border-[var(--color-border)]">
                   {results.length} Suitable Crops
                 </span>
               </div>
@@ -320,25 +320,25 @@ export default function RecommendationsPage() {
                       return (
                         <tr key={rec.cropId}>
                           <td className="font-bold">
-                            <span className="text-xs text-[var(--color-text-muted)] mr-1.5 font-mono">#{idx + 1}</span>
+                            <span className="text-xs text-[var(--color-text-muted)] mr-1.5">#{idx + 1}</span>
                             <span className="text-[var(--color-text-primary)]">{crop.name}</span>
                           </td>
                           <td className="capitalize text-[var(--color-text-muted)]">
                             {crop.category.replace('_', ' ')}
                           </td>
-                          <td className="text-right font-mono font-medium">
+                          <td className="text-right font-medium">
                             {rec.estimatedDurationDays[0]}–{rec.estimatedDurationDays[1]}
                           </td>
-                          <td className="text-right font-mono font-medium">
+                          <td className="text-right font-medium">
                             {rec.waterNeedsMmPerSeason[0]}–{rec.waterNeedsMmPerSeason[1]} mm
                           </td>
-                          <td className="text-right font-mono font-bold text-emerald-800">
+                          <td className="text-right font-bold text-[var(--color-text-primary)]">
                             {rec.score}/100
                           </td>
                           <td className="text-right">
                             <button
                               onClick={() => navigate(`/crops/${rec.cropId}`)}
-                              className="text-xs font-semibold text-emerald-800 hover:text-emerald-950 inline-flex items-center gap-1 cursor-pointer"
+                              className="text-xs font-semibold text-[var(--color-text-primary)] hover:underline inline-flex items-center gap-1 cursor-pointer"
                             >
                               Guide <ArrowRight className="w-3 h-3" />
                             </button>
@@ -350,25 +350,25 @@ export default function RecommendationsPage() {
                 </table>
               </div>
 
-              {/* Detailed Agronomic Justifications (Clean content section with dividers) */}
-              <div className="pt-4 border-t border-[var(--color-border)] space-y-4">
+              {/* Detailed Agronomic Justifications */}
+              <div className="pt-4 space-y-4">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
                   Agronomic Evaluation & Assumptions
                 </h3>
 
-                <div className="divide-y divide-[var(--color-border)]">
+                <div className="space-y-4">
                   {results.slice(0, 3).map((rec, idx) => {
                     const crop = CROPS.find(c => c.id === rec.cropId);
                     if (!crop) return null;
                     return (
-                      <div key={rec.cropId} className="py-3.5 space-y-2">
+                      <div key={rec.cropId} className="py-2 space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-xs text-[var(--color-text-primary)]">
                             #{idx + 1} {crop.name} — Suitability Analysis
                           </span>
                           <button
                             onClick={() => navigate('/seed-distribution')}
-                            className="text-xs text-emerald-800 hover:underline inline-flex items-center gap-1 font-medium"
+                            className="text-xs text-[var(--color-text-primary)] hover:underline inline-flex items-center gap-1 font-medium"
                           >
                             <PackageCheck className="w-3.5 h-3.5" /> Subsidized Seeds Available
                           </button>
@@ -377,7 +377,7 @@ export default function RecommendationsPage() {
                         <ul className="space-y-1 text-xs">
                           {rec.reasons.map((r, i) => (
                             <li key={i} className="flex items-start gap-1.5 text-[var(--color-text-secondary)]">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-text-primary)] shrink-0 mt-0.5" />
                               <span>{r}</span>
                             </li>
                           ))}
@@ -396,7 +396,7 @@ export default function RecommendationsPage() {
               </div>
 
               <div className="p-3 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded text-xs text-[var(--color-text-muted)] flex items-start gap-2">
-                <Info className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                <Info className="w-4 h-4 text-[var(--color-text-primary)] shrink-0 mt-0.5" />
                 <span>
                   <strong>Advisory Disclaimer:</strong> Results are generated through agronomic rules matching soil classification and seasonal rainfall models. Field-specific pest pressures or local micro-climates should be verified with your Block Agricultural Extension Officer.
                 </span>
@@ -406,7 +406,7 @@ export default function RecommendationsPage() {
 
           {submitted && results && results.length === 0 && (
             <div className="bg-white border border-[var(--color-border)] rounded-lg p-8 text-center">
-              <AlertCircle className="w-8 h-8 text-amber-600 mx-auto mb-2" />
+              <AlertCircle className="w-8 h-8 text-[var(--color-text-primary)] mx-auto mb-2" />
               <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
                 No Compatible Crops Found
               </h3>

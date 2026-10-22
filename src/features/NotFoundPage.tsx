@@ -7,9 +7,9 @@ export default function NotFoundPage() {
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 animate-fade-in">
-      <Sprout className="w-12 h-12 text-[var(--color-primary-600)] mb-4" />
+      <Sprout className="w-12 h-12 text-[var(--color-text-primary)] mb-4" />
 
-      <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-primary-800)] bg-[var(--color-primary-50)] px-2.5 py-1 rounded-md mb-3 border border-[var(--color-primary-200)]">
+      <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2.5 py-1 rounded-md mb-3 border border-[var(--color-border)]">
         Error 404 — Record Not Found
       </span>
 

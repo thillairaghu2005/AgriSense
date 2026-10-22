@@ -105,11 +105,11 @@ export default function KnowledgePage() {
             onClick={() => setBookmarksOnly(!bookmarksOnly)}
             className={`px-3 py-2 text-xs font-semibold rounded-lg border flex items-center gap-1.5 transition-all ${
               bookmarksOnly
-                ? 'bg-[var(--color-primary-600)] border-[var(--color-primary-600)] text-white'
+                ? 'bg-[var(--color-surface-3)] border-[var(--color-border)] text-[var(--color-text-primary)]'
                 : 'bg-white border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)]'
             }`}
           >
-            {bookmarksOnly ? <BookmarkCheck className="w-3.5 h-3.5 text-white" /> : <Bookmark className="w-3.5 h-3.5" />}
+            {bookmarksOnly ? <BookmarkCheck className="w-3.5 h-3.5 text-[var(--color-text-primary)]" /> : <Bookmark className="w-3.5 h-3.5" />}
             <span>Saved ({bookmarkedIds.length})</span>
           </button>
         </div>
@@ -157,7 +157,7 @@ export default function KnowledgePage() {
                       onClick={e => toggleBookmark(e, article.id)}
                       className={`p-1.5 rounded-lg transition-colors ${
                         isSaved
-                          ? 'text-[var(--color-primary-600)]'
+                          ? 'text-[var(--color-text-primary)]'
                           : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
                       }`}
                       aria-label={isSaved ? 'Remove bookmark' : 'Bookmark article'}
@@ -196,7 +196,7 @@ export default function KnowledgePage() {
                     <span>{formatDate(article.publishedDate)}</span>
                   </div>
 
-                  <span className="text-xs font-semibold text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] flex items-center gap-0.5">
+                  <span className="text-xs font-semibold text-[var(--color-text-primary)] hover:underline flex items-center gap-0.5">
                     Read guide <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>

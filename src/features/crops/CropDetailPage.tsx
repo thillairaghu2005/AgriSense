@@ -37,10 +37,10 @@ export default function CropDetailPage() {
             </button>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-primary)] bg-[var(--color-surface-2)] px-2 py-0.5 rounded border border-[var(--color-border)]">
                   {crop.category.replace('_', ' ')}
                 </span>
-                <span className="text-xs text-[var(--color-text-muted)] font-mono">
+                <span className="text-xs text-[var(--color-text-muted)]">
                   ID: {crop.id}
                 </span>
               </div>
@@ -71,35 +71,35 @@ export default function CropDetailPage() {
           </div>
         </div>
 
-        {/* Agronomic Telemetry Summary Strip (Dividers, not 4 separate bloated cards) */}
-        <div className="mt-5 pt-4 border-t border-[var(--color-border)] grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--color-border)]">
-          <div className="py-2 sm:py-0 sm:px-4 first:pl-0">
+        {/* Agronomic Telemetry Summary Strip */}
+        <div className="mt-5 pt-4 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="py-2 sm:py-0">
             <span className="text-xs font-medium text-[var(--color-text-muted)] block">Cultivation Period</span>
-            <span className="text-xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">
+            <span className="text-xl font-bold text-[var(--color-text-primary)] mt-1 block">
               {crop.durationDays[0]}–{crop.durationDays[1]} Days
             </span>
             <span className="text-xs text-[var(--color-text-muted)]">From sowing to physiological maturity</span>
           </div>
 
-          <div className="py-2 sm:py-0 sm:px-4">
+          <div className="py-2 sm:py-0">
             <span className="text-xs font-medium text-[var(--color-text-muted)] block">Seasonal Water Demand</span>
-            <span className="text-xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">
+            <span className="text-xl font-bold text-[var(--color-text-primary)] mt-1 block">
               {crop.waterNeedsMmPerSeason[0]}–{crop.waterNeedsMmPerSeason[1]} mm
             </span>
             <span className="text-xs text-[var(--color-text-muted)]">Cumulative consumptive water requirement</span>
           </div>
 
-          <div className="py-2 sm:py-0 sm:px-4">
+          <div className="py-2 sm:py-0">
             <span className="text-xs font-medium text-[var(--color-text-muted)] block">Optimal Thermal Range</span>
-            <span className="text-xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">
+            <span className="text-xl font-bold text-[var(--color-text-primary)] mt-1 block">
               {crop.idealTempCelsius[0]}–{crop.idealTempCelsius[1]}°C
             </span>
             <span className="text-xs text-[var(--color-text-muted)]">Critical vegetative & reproductive threshold</span>
           </div>
 
-          <div className="py-2 sm:py-0 sm:px-4 last:pr-0">
+          <div className="py-2 sm:py-0">
             <span className="text-xs font-medium text-[var(--color-text-muted)] block">Soil Reaction (pH)</span>
-            <span className="text-xl font-bold font-mono text-[var(--color-text-primary)] mt-1 block">
+            <span className="text-xl font-bold text-[var(--color-text-primary)] mt-1 block">
               pH {crop.idealPhRange[0]}–{crop.idealPhRange[1]}
             </span>
             <span className="text-xs text-[var(--color-text-muted)]">Optimal nutrient availability window</span>
@@ -107,12 +107,12 @@ export default function CropDetailPage() {
         </div>
       </div>
 
-      {/* Structured Content Sections (Replaces Card Overload) */}
+      {/* Structured Content Sections */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Growth Stages & Cultivation Calendar */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
-            <div className="pb-3 border-b border-[var(--color-border)] mb-4">
+            <div className="pb-3 mb-4">
               <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
                 Physiological Growth Stages & Field Interventions
               </h2>
@@ -121,30 +121,30 @@ export default function CropDetailPage() {
               </p>
             </div>
 
-            <div className="divide-y divide-[var(--color-border)]">
+            <div className="space-y-3">
               {crop.growthStages.map((stage, idx) => (
-                <div key={stage.name} className="py-3.5 first:pt-1 last:pb-1">
+                <div key={stage.name} className="py-2 space-y-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold flex items-center justify-center">
-                        {idx + 1}
+                      <span className="text-xs font-bold text-[var(--color-text-primary)]">
+                        {idx + 1}.
                       </span>
                       <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
                         {stage.name}
                       </h3>
                     </div>
-                    <span className="text-xs font-mono font-semibold text-[var(--color-text-muted)]">
+                    <span className="text-xs font-semibold text-[var(--color-text-muted)]">
                       Day {stage.daysFromSowing}+ DAS
                     </span>
                   </div>
-                  <p className="text-xs text-[var(--color-text-secondary)] mt-1 leading-relaxed pl-7">
+                  <p className="text-xs text-[var(--color-text-secondary)] mt-1 leading-relaxed pl-5">
                     {stage.description}
                   </p>
                   {stage.tasks.length > 0 && (
-                    <ul className="mt-2 pl-7 space-y-1">
+                    <ul className="mt-2 pl-5 space-y-1">
                       {stage.tasks.map((task, ti) => (
                         <li key={ti} className="flex items-start gap-1.5 text-xs text-[var(--color-text-secondary)]">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-text-secondary)] mt-0.5 shrink-0" />
                           <span>{task}</span>
                         </li>
                       ))}
@@ -159,7 +159,7 @@ export default function CropDetailPage() {
         {/* Right Column: Agronomic Practices & Soil Guidelines */}
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-white border border-[var(--color-border)] rounded-lg p-5 space-y-4">
-            <div className="pb-3 border-b border-[var(--color-border)]">
+            <div className="pb-1">
               <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
                 Agronomic Management Notes
               </h2>
@@ -175,7 +175,7 @@ export default function CropDetailPage() {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-[var(--color-border)]">
+              <div className="pt-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] block mb-1">
                   Irrigation & Moisture Management
                 </span>
@@ -184,7 +184,7 @@ export default function CropDetailPage() {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-[var(--color-border)]">
+              <div className="pt-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] block mb-1">
                   Balanced Fertilisation (NPK)
                 </span>
@@ -193,7 +193,7 @@ export default function CropDetailPage() {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-[var(--color-border)]">
+              <div className="pt-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] block mb-1">
                   Harvesting & Post-Harvest Handling
                 </span>
@@ -203,7 +203,7 @@ export default function CropDetailPage() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[var(--color-border)] space-y-2">
+            <div className="pt-3 space-y-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] block">
                 Compatible Soil Profiles
               </span>
@@ -216,13 +216,13 @@ export default function CropDetailPage() {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-[var(--color-border)]">
+            <div className="pt-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] block mb-1.5">
                 Cultivation Seasons
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {crop.seasons.map(s => (
-                  <span key={s} className="px-2 py-0.5 rounded text-xs bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200 uppercase">
+                  <span key={s} className="px-2 py-0.5 rounded text-xs bg-[var(--color-surface-2)] text-[var(--color-text-primary)] font-semibold border border-[var(--color-border)] uppercase">
                     {s} Season
                   </span>
                 ))}

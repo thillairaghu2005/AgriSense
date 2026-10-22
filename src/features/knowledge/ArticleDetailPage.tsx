@@ -91,7 +91,7 @@ export default function ArticleDetailPage() {
       <div className="flex items-center justify-between pb-4">
         <button
           onClick={() => navigate('/knowledge')}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-800 hover:text-[var(--color-primary-700)] transition-colors py-2 px-3 rounded-lg hover:bg-[var(--color-surface-2)]"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-800 hover:text-[var(--color-text-primary)] transition-colors py-2 px-3 rounded-lg hover:bg-[var(--color-surface-2)]"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Knowledge Centre</span>
@@ -102,11 +102,11 @@ export default function ArticleDetailPage() {
             onClick={toggleBookmark}
             className={`px-3 py-1.5 text-xs font-semibold rounded-md border flex items-center gap-2 transition-all cursor-pointer ${
               isSaved
-                ? 'bg-[var(--color-primary-600)] text-white border-[var(--color-primary-600)] shadow-xs'
+                ? 'bg-[var(--color-surface-3)] text-[var(--color-text-primary)] border-[var(--color-border)] shadow-xs'
                 : 'bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] hover:bg-[var(--color-surface-2)]'
             }`}
           >
-            {isSaved ? <BookmarkCheck className="w-4 h-4 text-white" /> : <Bookmark className="w-4 h-4" />}
+            {isSaved ? <BookmarkCheck className="w-4 h-4 text-[var(--color-text-primary)]" /> : <Bookmark className="w-4 h-4" />}
             <span>{isSaved ? 'Saved in My Library' : 'Save Article'}</span>
           </button>
 
@@ -119,7 +119,7 @@ export default function ArticleDetailPage() {
             <Share2 className="w-4 h-4" />
           </button>
           {copied && (
-            <span className="text-xs text-[var(--color-primary-700)] font-semibold animate-fade-in">
+            <span className="text-xs text-[var(--color-text-primary)] font-semibold animate-fade-in">
               Link copied!
             </span>
           )}
@@ -129,7 +129,7 @@ export default function ArticleDetailPage() {
       {/* Main Article Container */}
       <article className="card p-6 sm:p-8 shadow-xs rounded-lg">
         {/* Article Meta Header */}
-        <header className="space-y-4 pb-6 border-b border-[var(--color-border)]">
+        <header className="space-y-4 pb-6">
           <div className="flex items-center gap-3 flex-wrap">
             <Badge className="px-2.5 py-0.5 text-xs uppercase font-bold tracking-wider">
               {article.category.replace('_', ' ')}
@@ -159,7 +159,7 @@ export default function ArticleDetailPage() {
           {/* Key Summary Callout Box */}
           <div className="mt-4 p-4 sm:p-5 bg-[var(--color-surface-1)] rounded-lg border border-[var(--color-border)]">
             <p className="text-xs uppercase font-bold tracking-wider text-[var(--color-text-primary)] mb-1.5 flex items-center gap-2">
-              <Info className="w-4 h-4 text-[var(--color-primary-700)]" /> Executive Summary
+              <Info className="w-4 h-4 text-[var(--color-text-primary)]" /> Executive Summary
             </p>
             <p className="text-sm sm:text-base text-[var(--color-text-secondary)] font-medium leading-relaxed">
               {article.summary}
@@ -288,7 +288,7 @@ export default function ArticleDetailPage() {
           {article.tags.map(t => (
             <span
               key={t}
-              className="text-xs bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] px-3 py-1.5 rounded-full font-medium"
+              className="text-xs bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] px-3 py-1.5 rounded-md border border-[var(--color-border)] font-medium"
             >
               #{t}
             </span>

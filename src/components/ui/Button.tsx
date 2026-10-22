@@ -17,8 +17,8 @@ const VARIANT_STYLES: Record<Variant, string> = {
   primary: 'bg-[var(--color-primary-600)] text-white hover:bg-[var(--color-primary-700)] active:bg-[var(--color-primary-800)] shadow-xs font-semibold',
   secondary: 'bg-white border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)] hover:border-[var(--color-border-strong)] active:bg-[var(--color-surface-3)] shadow-xs font-semibold',
   outline: 'bg-transparent border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-white hover:border-[var(--color-primary-600)] active:bg-[var(--color-surface-2)] font-semibold',
-  ghost: 'bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-primary-800)] active:bg-[var(--color-surface-3)] font-medium',
-  danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-xs font-semibold',
+  ghost: 'bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text-primary)] active:bg-[var(--color-surface-3)] font-medium',
+  danger: 'bg-neutral-900 text-white hover:bg-neutral-800 active:bg-neutral-700 shadow-xs font-semibold',
 };
 
 const SIZE_STYLES: Record<Size, string> = {

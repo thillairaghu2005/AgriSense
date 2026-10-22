@@ -33,14 +33,14 @@ import {
 } from 'lucide-react';
 
 const TASK_TYPE_ICONS: Record<TaskType, React.ReactNode> = {
-  sowing: <Sprout className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
-  irrigation: <Droplets className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
-  fertiliser: <FlaskConical className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
-  pesticide: <ShieldAlert className="w-3.5 h-3.5 text-neutral-700" />,
-  weeding: <Scissors className="w-3.5 h-3.5 text-neutral-700" />,
-  harvest: <CalendarDays className="w-3.5 h-3.5 text-[var(--color-primary-600)]" />,
-  field_prep: <Tractor className="w-3.5 h-3.5 text-neutral-700" />,
-  other: <Clock className="w-3.5 h-3.5 text-neutral-700" />,
+  sowing: <Sprout className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />,
+  irrigation: <Droplets className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />,
+  fertiliser: <FlaskConical className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />,
+  pesticide: <ShieldAlert className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />,
+  weeding: <Scissors className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />,
+  harvest: <CalendarDays className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />,
+  field_prep: <Tractor className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />,
+  other: <Clock className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />,
 };
 
 const TASK_TYPE_LABELS: Record<TaskType, string> = {
@@ -390,9 +390,7 @@ export default function CalendarPage() {
       <Card className="p-4 bg-white border border-[var(--color-border)] shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center shrink-0">
-              <Sprout className="w-4 h-4 text-[var(--color-primary-700)]" />
-            </div>
+            <Sprout className="w-5 h-5 text-[var(--color-text-primary)] shrink-0" />
             <div>
               <h3 className="text-xs font-bold text-[var(--color-text-primary)] uppercase tracking-wide">
                 Populate Crop Stage Schedule
@@ -538,12 +536,12 @@ export default function CalendarPage() {
                     cell.isCurrentMonth
                       ? 'bg-white border-[var(--color-border)] hover:border-neutral-400 hover:shadow-xs'
                       : 'bg-gray-50/50 border-gray-100 opacity-40'
-                  } ${isToday ? 'ring-1 ring-[var(--color-primary-600)] bg-[var(--color-primary-50)]' : ''}`}
+                  } ${isToday ? 'ring-1 ring-[var(--color-border)] bg-[var(--color-surface-2)]' : ''}`}
                 >
                   <div className="flex items-center justify-between">
                     <span
                       className={`text-xs font-bold w-5 h-5 rounded flex items-center justify-center ${
-                        isToday ? 'bg-[var(--color-primary-600)] text-white' : 'text-[var(--color-text-primary)]'
+                        isToday ? 'bg-[var(--color-text-primary)] text-white' : 'text-[var(--color-text-primary)]'
                       }`}
                     >
                       {cell.dayNum}
@@ -633,9 +631,9 @@ export default function CalendarPage() {
                       aria-label={completed ? 'Mark incomplete' : 'Mark completed'}
                     >
                       {completed ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                        <CheckCircle2 className="w-5 h-5 text-[var(--color-text-primary)]" />
                       ) : (
-                        <Circle className="w-5 h-5 text-neutral-400 hover:text-[var(--color-primary-600)]" />
+                        <Circle className="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]" />
                       )}
                     </button>
 

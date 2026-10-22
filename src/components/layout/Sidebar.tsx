@@ -65,10 +65,8 @@ export default function Sidebar() {
       aria-label="Main navigation"
     >
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-[var(--color-border)]">
-        <div className="w-8 h-8 rounded-lg bg-[var(--color-primary-50)] border border-[var(--color-primary-200)] flex items-center justify-center text-[var(--color-primary-600)] shrink-0">
-          <Sprout className="w-5 h-5" strokeWidth={2.5} />
-        </div>
+      <div className="flex items-center gap-2.5 px-5 py-4">
+        <Sprout className="w-6 h-6 text-[var(--color-text-primary)] shrink-0" strokeWidth={2} />
         <div>
           <span className="text-sm font-bold text-[var(--color-text-primary)] tracking-tight">AgriSense</span>
           <p className="text-[10px] text-[var(--color-text-muted)] leading-none mt-0.5">Indian Farmers Platform</p>
@@ -103,7 +101,7 @@ export default function Sidebar() {
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-3 border-t border-[var(--color-border)] bg-[var(--color-surface-1)]">
+      <div className="px-5 py-3 bg-[var(--color-surface-1)]">
         <p className="text-[10px] text-[var(--color-text-muted)]">
           Demo prototype — verified MoA&FW guidelines
         </p>

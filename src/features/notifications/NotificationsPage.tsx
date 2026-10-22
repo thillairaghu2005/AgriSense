@@ -20,11 +20,11 @@ import {
 } from 'lucide-react';
 
 const NOTIFICATION_ICONS: Record<NotificationType, React.ReactNode> = {
-  weather: <CloudSun className="w-5 h-5 text-[var(--color-primary-600)]" />,
-  market: <TrendingUp className="w-5 h-5 text-[var(--color-primary-600)]" />,
-  crop_reminder: <Calendar className="w-5 h-5 text-[var(--color-primary-600)]" />,
-  scheme: <BookOpen className="w-5 h-5 text-[var(--color-primary-600)]" />,
-  system: <Bell className="w-5 h-5 text-[var(--color-primary-600)]" />,
+  weather: <CloudSun className="w-5 h-5 text-[var(--color-text-secondary)]" />,
+  market: <TrendingUp className="w-5 h-5 text-[var(--color-text-secondary)]" />,
+  crop_reminder: <Calendar className="w-5 h-5 text-[var(--color-text-secondary)]" />,
+  scheme: <BookOpen className="w-5 h-5 text-[var(--color-text-secondary)]" />,
+  system: <Bell className="w-5 h-5 text-[var(--color-text-secondary)]" />,
 };
 
 const DEFAULT_NOTIFICATIONS: AppNotification[] = [
@@ -162,7 +162,7 @@ export default function NotificationsPage() {
             onClick={() => setUnreadOnly(!unreadOnly)}
             className={`px-3 py-2 text-xs font-semibold rounded-lg border transition-all ${
               unreadOnly
-                ? 'bg-[var(--color-primary-600)] border-[var(--color-primary-600)] text-white'
+                ? 'bg-[var(--color-surface-3)] border-[var(--color-border)] text-[var(--color-text-primary)]'
                 : 'bg-white border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)]'
             }`}
           >
@@ -203,7 +203,7 @@ export default function NotificationsPage() {
                 key={notif.id}
                 className={`transition-all ${
                   !notif.isRead
-                    ? 'border-[var(--color-primary-300)] bg-[var(--color-primary-50)]/30 shadow-xs'
+                    ? 'border-[var(--color-border)] bg-[var(--color-surface-2)] shadow-xs'
                     : 'bg-white opacity-85'
                 }`}
               >
@@ -234,7 +234,7 @@ export default function NotificationsPage() {
                     </p>
 
                     {notif.destinationRoute && (
-                      <span className="text-[11px] font-semibold text-[var(--color-primary-700)] hover:text-[var(--color-primary-800)] hover:underline inline-flex items-center gap-1 mt-2">
+                      <span className="text-[11px] font-semibold text-[var(--color-text-primary)] hover:underline inline-flex items-center gap-1 mt-2">
                         View related page <ExternalLink className="w-3 h-3" />
                       </span>
                     )}

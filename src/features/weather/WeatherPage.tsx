@@ -62,8 +62,22 @@ export default function WeatherPage() {
   }, [isLive, activeCoord.lat, activeCoord.lon, activeCoord.label, selectedState]);
 
   useEffect(() => {
-    loadWeatherData();
-  }, [loadWeatherData]);
+    if (!isLive) return;
+    let ignore = false;
+    fetchLiveWeatherData(
+      activeCoord.lat,
+      activeCoord.lon,
+      activeCoord.label,
+      selectedState
+    )
+      .then(data => {
+        if (!ignore) setLiveWeather(data);
+      })
+      .catch(() => {});
+    return () => {
+      ignore = true;
+    };
+  }, [isLive, activeCoord.lat, activeCoord.lon, activeCoord.label, selectedState]);
 
   // Handle GPS location request
   function handleUseGps() {
@@ -109,23 +123,23 @@ export default function WeatherPage() {
   const sprayStyles = {
     ideal: {
       label: 'Ideal Spray Window',
-      icon: <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />,
-      bg: 'bg-emerald-50/80 border border-emerald-200 text-emerald-950',
+      icon: <ShieldCheck className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
+      bg: 'bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)]',
     },
     caution: {
       label: 'Use Caution for Spraying',
-      icon: <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />,
-      bg: 'bg-amber-50/80 border border-amber-200 text-amber-950',
+      icon: <AlertTriangle className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
+      bg: 'bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)]',
     },
     not_recommended: {
       label: 'Spraying Not Recommended',
-      icon: <ShieldAlert className="w-5 h-5 text-red-600 flex-shrink-0" />,
-      bg: 'bg-red-50/80 border border-red-200 text-red-950',
+      icon: <ShieldAlert className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
+      bg: 'bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)]',
     },
   }[weather.spraySuitability] || {
     label: 'Weather Evaluation',
-    icon: <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />,
-    bg: 'bg-amber-50/80 border border-amber-200 text-amber-950',
+    icon: <AlertTriangle className="w-5 h-5 text-[var(--color-text-primary)] flex-shrink-0" />,
+    bg: 'bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-primary)]',
   };
 
   return (
@@ -140,13 +154,11 @@ export default function WeatherPage() {
           }
           badge={
             isLive ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border)]">
                 LIVE OPEN-METEO
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-neutral-100 text-neutral-700 border border-neutral-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
                 {t('demo.notLive')}
               </span>
             )
@@ -160,18 +172,18 @@ export default function WeatherPage() {
               onClick={() => toggleLiveMode(true)}
               className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer ${
                 isLive
-                  ? 'bg-white text-[var(--color-primary-700)] font-semibold shadow-xs'
+                  ? 'bg-white text-[var(--color-text-primary)] font-semibold shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
-              <Wifi className="w-3.5 h-3.5 text-emerald-600" />
+              <Wifi className="w-3.5 h-3.5 text-[var(--color-text-secondary)]" />
               Live API
             </button>
             <button
               onClick={() => toggleLiveMode(false)}
               className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer ${
                 !isLive
-                  ? 'bg-white text-[var(--color-primary-700)] font-semibold shadow-xs'
+                  ? 'bg-white text-[var(--color-text-primary)] font-semibold shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
@@ -249,30 +261,22 @@ export default function WeatherPage() {
       {/* Current conditions cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card className="text-center p-4">
-          <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center mx-auto mb-2 shadow-xs">
-            <WeatherIcon condition={weather.forecast[0]?.condition || 'sunny'} className="w-6 h-6 text-[var(--color-primary-600)]" />
-          </div>
+          <WeatherIcon condition={weather.forecast[0]?.condition || 'sunny'} className="w-7 h-7 text-[var(--color-text-primary)] mx-auto mb-2" />
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.currentTempC}°C</p>
           <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{weather.currentCondition}</p>
         </Card>
         <Card className="text-center p-4">
-          <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center mx-auto mb-2 shadow-xs">
-            <Droplets className="w-5 h-5 text-sky-600" />
-          </div>
+          <Droplets className="w-7 h-7 text-[var(--color-text-primary)] mx-auto mb-2" />
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.humidity}%</p>
           <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{t('weather.humidity')}</p>
         </Card>
         <Card className="text-center p-4">
-          <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center mx-auto mb-2 shadow-xs">
-            <Wind className="w-5 h-5 text-teal-600" />
-          </div>
+          <Wind className="w-7 h-7 text-[var(--color-text-primary)] mx-auto mb-2" />
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">{weather.windSpeedKmh}</p>
           <p className="text-xs text-[var(--color-text-muted)] mt-0.5">km/h {t('weather.wind')}</p>
         </Card>
         <Card className="text-center p-4">
-          <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center mx-auto mb-2 shadow-xs">
-            <Thermometer className="w-5 h-5 text-amber-600" />
-          </div>
+          <Thermometer className="w-7 h-7 text-[var(--color-text-primary)] mx-auto mb-2" />
           <p className="text-2xl font-bold text-[var(--color-text-primary)]">
             {weather.forecast[0]?.maxTempC}° / {weather.forecast[0]?.minTempC}°C
           </p>
@@ -284,15 +288,15 @@ export default function WeatherPage() {
       {weather.hourly && weather.hourly.length > 0 && (
         <Card>
           <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)] mb-3 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[var(--color-primary-600)]" />
+            <Clock className="w-4 h-4 text-[var(--color-text-secondary)]" />
             Today&apos;s Operational Timeline (Hourly)
           </h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {weather.hourly.map(item => (
-              <div key={item.time} className="flex flex-col items-center p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] shadow-xs hover:border-[var(--color-primary-300)] transition-all text-center">
+              <div key={item.time} className="flex flex-col items-center p-2.5 rounded-lg bg-[var(--color-surface-1)] border border-[var(--color-border)] shadow-xs hover:border-[var(--color-border-strong)] transition-all text-center">
                 <span className="text-[11px] font-semibold text-[var(--color-text-muted)]">{item.time}</span>
                 <div className="my-1.5">
-                  <WeatherIcon condition={item.condition} className="w-5 h-5 text-[var(--color-primary-600)]" />
+                  <WeatherIcon condition={item.condition} className="w-5 h-5 text-[var(--color-text-secondary)]" />
                 </div>
                 <span className="text-xs font-bold text-[var(--color-text-primary)]">{item.tempC}°C</span>
                 <span className="text-[10px] text-[var(--color-text-muted)] font-medium mt-0.5">{item.rainProbability}% Rain</span>
@@ -305,7 +309,7 @@ export default function WeatherPage() {
       {/* 7-day forecast */}
       <Card>
         <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-4 flex items-center gap-2">
-          <CloudSun className="w-4 h-4 text-[var(--color-primary-600)]" />
+          <CloudSun className="w-4 h-4 text-[var(--color-text-secondary)]" />
           {t('weather.forecast')}
         </h2>
         <div className="flex gap-2 overflow-x-auto pb-2">
@@ -315,14 +319,14 @@ export default function WeatherPage() {
               onClick={() => setSelectedDay(idx)}
               className={`flex flex-col items-center gap-1.5 p-3 rounded-lg min-w-[84px] transition-all cursor-pointer ${
                 selectedDay === idx
-                  ? 'bg-emerald-50 text-[var(--color-primary-800)] font-semibold border border-emerald-300 shadow-xs ring-1 ring-emerald-300'
-                  : 'bg-white text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-1)] border border-[var(--color-border)] shadow-xs hover:border-[var(--color-primary-300)]'
+                  ? 'bg-[var(--color-surface-2)] text-[var(--color-text-primary)] font-semibold border border-[var(--color-border-strong)] shadow-xs'
+                  : 'bg-white text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-1)] border border-[var(--color-border)] shadow-xs'
               }`}
               aria-pressed={selectedDay === idx}
             >
               <span className="text-xs text-[var(--color-text-muted)]">{day.dateLabel}</span>
               <div className="my-1">
-                <WeatherIcon condition={day.condition} className="w-5 h-5 text-[var(--color-primary-600)]" />
+                <WeatherIcon condition={day.condition} className="w-5 h-5 text-[var(--color-text-secondary)]" />
               </div>
               <span className="text-xs font-bold text-[var(--color-text-primary)]">{day.maxTempC}°</span>
               <span className="text-xs text-[var(--color-text-muted)]">{day.minTempC}°</span>
@@ -345,7 +349,7 @@ export default function WeatherPage() {
               { label: t('weather.rainProb'), value: `${dayData.rainProbability}%` },
               { label: t('weather.rainfall'), value: `${dayData.expectedRainfallMm} mm` },
             ].map(row => (
-              <div key={row.label} className="flex justify-between text-xs py-1 border-b border-neutral-100 last:border-0">
+              <div key={row.label} className="flex justify-between text-xs py-1">
                 <span className="text-[var(--color-text-muted)]">{row.label}</span>
                 <span className="font-medium text-[var(--color-text-primary)]">{row.value}</span>
               </div>
@@ -366,12 +370,12 @@ export default function WeatherPage() {
       {weather.alerts.length > 0 && (
         <Card>
           <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-600" />
+            <AlertTriangle className="w-4 h-4 text-[var(--color-text-secondary)]" />
             {t('weather.alerts')}
           </h2>
           <div className="space-y-3">
             {weather.alerts.map(alert => (
-              <div key={alert.id} className="p-3.5 rounded-lg bg-[var(--color-surface-2)] border-l-4 border-amber-500">
+              <div key={alert.id} className="p-3.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)]">
                 <div className="flex items-center gap-2 mb-1.5">
                   <Badge>
                     {alert.severity.toUpperCase()}
