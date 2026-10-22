@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import type { FarmerProfile, UserRole } from '@/types';
 import { storageGet, storageSet, storageClearAll, STORAGE_KEYS } from '@/lib/storage';
 import { translate } from '@/data/translations';
@@ -139,29 +139,42 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setRoleState('farmer');
   }, []);
 
-  const activeProfile = {
+  const activeProfile = useMemo(() => ({
     ...profile,
     state,
     district,
-  };
+  }), [profile, state, district]);
+
+  const contextValue = useMemo(() => ({
+    profile: activeProfile,
+    updateProfile,
+    language,
+    setLanguage,
+    state,
+    setState,
+    district,
+    setDistrict,
+    role,
+    setRole,
+    t,
+    resetDemoData,
+  }), [
+    activeProfile,
+    updateProfile,
+    language,
+    setLanguage,
+    state,
+    setState,
+    district,
+    setDistrict,
+    role,
+    setRole,
+    t,
+    resetDemoData,
+  ]);
 
   return (
-    <AppContext.Provider
-      value={{
-        profile: activeProfile,
-        updateProfile,
-        language,
-        setLanguage,
-        state,
-        setState,
-        district,
-        setDistrict,
-        role,
-        setRole,
-        t,
-        resetDemoData,
-      }}
-    >
+    <AppContext.Provider value={contextValue}>
       <ToastProvider>
         {children}
       </ToastProvider>

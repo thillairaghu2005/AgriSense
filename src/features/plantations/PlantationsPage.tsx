@@ -435,8 +435,8 @@ export default function PlantationsPage() {
 
                   {/* Care Guidelines */}
                   <div className="space-y-1 text-xs text-[var(--color-text-secondary)]">
-                    {program.careGuidelines.map((g, i) => (
-                      <div key={i} className="flex items-start gap-1.5">
+                    {program.careGuidelines.map((g) => (
+                      <div key={g} className="flex items-start gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                         <span>{g}</span>
                       </div>

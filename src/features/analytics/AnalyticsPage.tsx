@@ -177,8 +177,8 @@ export default function AnalyticsPage() {
                   paddingAngle={4}
                   dataKey="value"
                 >
-                  {CATEGORY_DATA.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  {CATEGORY_DATA.map(entry => (
+                    <Cell key={entry.name} fill={entry.color} />
                   ))}
                 </Pie>
                 <Tooltip
@@ -235,8 +235,8 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="space-y-3.5 pt-1">
-            {BUDGET_DATA.map((item, idx) => (
-              <div key={idx} className="space-y-1">
+            {BUDGET_DATA.map(item => (
+              <div key={item.scheme} className="space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="font-bold text-[var(--color-text-primary)]">{item.scheme}</span>
                   <span className="font-semibold text-[var(--color-text-primary)]">

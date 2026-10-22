@@ -320,7 +320,7 @@ export default function WeatherPage() {
         <div className="flex gap-2 overflow-x-auto pb-2">
           {weather.forecast.map((day, idx) => (
             <button
-              key={`${day.dateLabel}-${idx}`}
+              key={day.dateLabel}
               onClick={() => setSelectedDay(idx)}
               className={`flex flex-col items-center gap-1.5 p-3 rounded-lg min-w-[84px] transition-all cursor-pointer ${
                 selectedDay === idx

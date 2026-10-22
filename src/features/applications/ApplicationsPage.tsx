@@ -37,10 +37,10 @@ export default function ApplicationsPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadedFiles, setUploadedFiles] = useState<{ docType: string; fileName: string; fileSizeMb: number; verified: boolean }[]>([
-    { docType: 'Land Records (Patta / Chitta / 7/12)', fileName: 'land_record.pdf', fileSizeMb: 1.2, verified: true },
-    { docType: 'Aadhaar Card (Masked)', fileName: 'aadhaar_card.pdf', fileSizeMb: 0.8, verified: true },
-    { docType: 'Bank Account Passbook / Cheque', fileName: 'bank_passbook.pdf', fileSizeMb: 1.4, verified: true },
+  const [uploadedFiles, setUploadedFiles] = useState<{ id: string; docType: string; fileName: string; fileSizeMb: number; verified: boolean }[]>([
+    { id: 'doc-land-record', docType: 'Land Records (Patta / Chitta / 7/12)', fileName: 'land_record.pdf', fileSizeMb: 1.2, verified: true },
+    { id: 'doc-aadhaar', docType: 'Aadhaar Card (Masked)', fileName: 'aadhaar_card.pdf', fileSizeMb: 0.8, verified: true },
+    { id: 'doc-bank-passbook', docType: 'Bank Account Passbook / Cheque', fileName: 'bank_passbook.pdf', fileSizeMb: 1.4, verified: true },
   ]);
   const [applicationCreated, setApplicationCreated] = useState<SchemeApplication | null>(null);
 
@@ -80,11 +80,12 @@ export default function ApplicationsPage() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const newDocs: { docType: string; fileName: string; fileSizeMb: number; verified: boolean }[] = [];
+    const newDocs: { id: string; docType: string; fileName: string; fileSizeMb: number; verified: boolean }[] = [];
     for (let i = 0; i < files.length; i++) {
       const f = files[i];
       const sizeMb = parseFloat((f.size / (1024 * 1024)).toFixed(2));
       newDocs.push({
+        id: `doc-${Date.now()}-${i}-${f.name}`,
         docType: `Supporting Document (${f.name.split('.').pop()?.toUpperCase() || 'DOC'})`,
         fileName: f.name,
         fileSizeMb: sizeMb,
@@ -96,8 +97,8 @@ export default function ApplicationsPage() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
 
-  function handleRemoveFile(index: number) {
-    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  function handleRemoveFile(id: string) {
+    setUploadedFiles(prev => prev.filter(f => f.id !== id));
   }
 
   function handleCreateApplicationSubmit() {
@@ -314,8 +315,8 @@ export default function ApplicationsPage() {
                     Multi-Tier Verification & Sanction Timeline
                   </h3>
                   <div className="space-y-4">
-                    {selectedApp.timeline.map((event, idx) => (
-                      <div key={idx} className="flex items-start gap-2.5">
+                    {selectedApp.timeline.map((event) => (
+                      <div key={`${event.stage}-${event.timestamp}`} className="flex items-start gap-2.5">
                         {event.completed ? (
                           <CheckCircle2 className="w-4 h-4 text-[var(--color-text-primary)] mt-0.5 flex-shrink-0" />
                         ) : (
@@ -350,8 +351,8 @@ export default function ApplicationsPage() {
                     Supporting Documents Verified
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {selectedApp.documentsUploaded.map((doc, idx) => (
-                      <div key={idx} className="p-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] flex items-center justify-between text-xs">
+                    {selectedApp.documentsUploaded.map((doc) => (
+                      <div key={`${doc.docType}-${doc.fileName}`} className="p-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
                           <FileCheck className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0" />
                           <div>
@@ -594,8 +595,8 @@ export default function ApplicationsPage() {
               />
 
               <div className="space-y-2.5">
-                {uploadedFiles.map((doc, idx) => (
-                  <div key={idx} className="p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] flex items-center justify-between text-xs">
+                {uploadedFiles.map((doc) => (
+                  <div key={doc.id} className="p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-1)] flex items-center justify-between text-xs">
                     <div className="flex items-center gap-3 min-w-0">
                       <FileCheck className="w-4 h-4 text-[var(--color-text-secondary)] flex-shrink-0" />
                       <div className="min-w-0 truncate">
@@ -609,7 +610,7 @@ export default function ApplicationsPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => handleRemoveFile(idx)}
+                        onClick={() => handleRemoveFile(doc.id)}
                         className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-1 rounded transition-colors"
                         title="Remove document"
                       >
@@ -627,10 +628,11 @@ export default function ApplicationsPage() {
                   e.preventDefault();
                   if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
                     const files = e.dataTransfer.files;
-                    const newDocs: { docType: string; fileName: string; fileSizeMb: number; verified: boolean }[] = [];
+                    const newDocs: { id: string; docType: string; fileName: string; fileSizeMb: number; verified: boolean }[] = [];
                     for (let i = 0; i < files.length; i++) {
                       const f = files[i];
                       newDocs.push({
+                        id: `doc-drop-${Date.now()}-${i}-${f.name}`,
                         docType: `Supporting Document (${f.name.split('.').pop()?.toUpperCase() || 'FILE'})`,
                         fileName: f.name,
                         fileSizeMb: parseFloat((f.size / (1024 * 1024)).toFixed(2)),

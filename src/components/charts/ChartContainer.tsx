@@ -65,8 +65,8 @@ export default function ChartContainer({
             <table className="w-full text-xs text-left">
               <thead className="bg-[var(--color-surface-2)] text-[var(--color-text-muted)] uppercase tracking-wider text-[10px]">
                 <tr>
-                  {tableData.headers.map((h, i) => (
-                    <th key={i} className="py-2.5 px-3 font-semibold">
+                  {tableData.headers.map(h => (
+                    <th key={h} className="py-2.5 px-3 font-semibold">
                       {h}
                     </th>
                   ))}

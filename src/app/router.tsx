@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import AppShell from '@/components/layout/AppShell';
+import RootErrorBoundary from '@/components/feedback/RootErrorBoundary';
 import { PageSkeleton } from '@/components/ui/Skeleton';
 
 // Lazy-load all page routes
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <AppShell />,
+    ErrorBoundary: RootErrorBoundary,
     children: [
       { index: true, element: <SuspenseWrapper><Dashboard /></SuspenseWrapper> },
       { path: 'schemes', element: <SuspenseWrapper><Schemes /></SuspenseWrapper> },

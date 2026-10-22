@@ -425,8 +425,8 @@ export default function SeedDistributionPage() {
                     Crops in Seed Stock:
                   </span>
                   <div className="flex flex-wrap gap-1">
-                    {farm.stockCrops.map((c, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded text-[10px] bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
+                    {farm.stockCrops.map((c) => (
+                      <span key={c} className="px-2 py-0.5 rounded text-[10px] bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
                         {c}
                       </span>
                     ))}

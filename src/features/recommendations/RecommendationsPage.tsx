@@ -390,8 +390,8 @@ export default function RecommendationsPage() {
                         </div>
 
                         <ul className="space-y-1 text-xs">
-                          {rec.reasons.map((r, i) => (
-                            <li key={i} className="flex items-start gap-1.5 text-[var(--color-text-secondary)]">
+                          {rec.reasons.map((r) => (
+                            <li key={r} className="flex items-start gap-1.5 text-[var(--color-text-secondary)]">
                               <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-text-primary)] shrink-0 mt-0.5" />
                               <span>{r}</span>
                             </li>

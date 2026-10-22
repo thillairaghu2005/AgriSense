@@ -170,8 +170,8 @@ function SchemeCard({
             <div>
               <SectionLabel>Objectives & Scope</SectionLabel>
               <ul className="space-y-1 list-disc pl-4 text-[var(--color-text-secondary)]">
-                {scheme.objectives.map((obj, i) => (
-                  <li key={i}>{obj}</li>
+                {scheme.objectives.map((obj) => (
+                  <li key={obj}>{obj}</li>
                 ))}
               </ul>
             </div>
@@ -182,20 +182,20 @@ function SchemeCard({
             <SectionLabel>Personalized Eligibility Evaluation</SectionLabel>
             <p className="text-[var(--color-text-secondary)] mb-2">{scheme.eligibilitySummary}</p>
             <div className="p-3 bg-[var(--color-surface-2)] rounded-lg space-y-1.5 border border-[var(--color-border)]">
-              {eligibility.passedCriteria.map((c, i) => (
-                <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-primary)] text-[11px]">
+              {eligibility.passedCriteria.map((c) => (
+                <div key={c} className="flex items-start gap-1.5 text-[var(--color-text-primary)] text-[11px]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                   <span>{c}</span>
                 </div>
               ))}
-              {eligibility.warnings.map((w, i) => (
-                <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-secondary)] text-[11px]">
+              {eligibility.warnings.map((w) => (
+                <div key={w} className="flex items-start gap-1.5 text-[var(--color-text-secondary)] text-[11px]">
                   <AlertCircle className="w-3.5 h-3.5 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                   <span>{w}</span>
                 </div>
               ))}
-              {eligibility.failedCriteria.map((f, i) => (
-                <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-primary)] text-[11px]">
+              {eligibility.failedCriteria.map((f) => (
+                <div key={f} className="flex items-start gap-1.5 text-[var(--color-text-primary)] text-[11px]">
                   <AlertCircle className="w-3.5 h-3.5 text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
                   <span>{f}</span>
                 </div>
@@ -219,8 +219,8 @@ function SchemeCard({
             <div>
               <SectionLabel>Key Highlights</SectionLabel>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                {scheme.keyFeatures.map((f, i) => (
-                  <div key={i} className="flex items-start gap-1.5 text-[var(--color-text-secondary)]">
+                {scheme.keyFeatures.map((f) => (
+                  <div key={f} className="flex items-start gap-1.5 text-[var(--color-text-secondary)]">
                     <span>•</span>
                     <span>{f}</span>
                   </div>
@@ -242,8 +242,8 @@ function SchemeCard({
                     </tr>
                   </thead>
                   <tbody className="space-y-1">
-                    {scheme.timeline.map((tItem, i) => (
-                      <tr key={i}>
+                    {scheme.timeline.map((tItem) => (
+                      <tr key={`${tItem.activityMonth}-${tItem.activity}`}>
                         <td className="py-1.5 font-medium text-[var(--color-text-primary)] align-top">{tItem.activityMonth}</td>
                         <td className="py-1.5 text-[var(--color-text-secondary)] align-top">{tItem.activity}</td>
                       </tr>
@@ -258,10 +258,10 @@ function SchemeCard({
           <div>
             <SectionLabel>Official Application Procedure</SectionLabel>
             <div className="space-y-1.5">
-              {scheme.applicationSteps.map((step, i) => (
-                <div key={i} className="flex items-start gap-2 text-[var(--color-text-secondary)]">
+              {scheme.applicationSteps.map((step, idx) => (
+                <div key={step} className="flex items-start gap-2 text-[var(--color-text-secondary)]">
                   <span className="font-bold text-[var(--color-primary-800)] w-4 flex-shrink-0">
-                    {i + 1}.
+                    {idx + 1}.
                   </span>
                   <span>{step}</span>
                 </div>
@@ -273,9 +273,9 @@ function SchemeCard({
           <div>
             <SectionLabel>Required Documents Checklist</SectionLabel>
             <div className="space-y-1.5">
-              {scheme.documents.map((doc, i) => (
+              {scheme.documents.map((doc) => (
                 <button
-                  key={i}
+                  key={doc}
                   onClick={() => onToggle(doc)}
                   className="w-full flex items-center gap-2 text-xs text-left text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
                 >

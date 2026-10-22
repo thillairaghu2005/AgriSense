@@ -19,10 +19,13 @@ import {
 // Helper to format inline markdown like **bold** text
 function formatInlineMarkdown(text: string): React.ReactNode[] {
   const parts = text.split(/(\*\*.*?\*\*)/g);
-  return parts.map((part, index) => {
+  let offset = 0;
+  return parts.map((part) => {
+    const key = `inline-${offset}-${part.length}`;
+    offset += part.length;
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
-        <strong key={index} className="font-semibold text-[var(--color-text-primary)]">
+        <strong key={key} className="font-semibold text-[var(--color-text-primary)]">
           {part.slice(2, -2)}
         </strong>
       );
@@ -227,8 +230,8 @@ export default function ArticleDetailPage() {
 
                       return (
                         <ul key={bIdx} className="my-6 space-y-3.5 pl-2">
-                          {listItems.map((item, i) => (
-                            <li key={i} className="flex items-start gap-3.5 text-base sm:text-[17px] text-[var(--color-text-secondary)] leading-relaxed sm:leading-8">
+                          {listItems.map((item) => (
+                            <li key={item} className="flex items-start gap-3.5 text-base sm:text-[17px] text-[var(--color-text-secondary)] leading-relaxed sm:leading-8">
                               <span className="text-neutral-500 mt-0.5 flex-shrink-0">—</span>
                               <span>{formatInlineMarkdown(item)}</span>
                             </li>
@@ -252,8 +255,8 @@ export default function ArticleDetailPage() {
 
                       return (
                         <ol key={bIdx} className="my-6 space-y-4 pl-2">
-                          {listItems.map((item, i) => (
-                            <li key={i} className="flex items-start gap-4 text-base sm:text-[17px] text-[var(--color-text-secondary)] leading-relaxed sm:leading-8">
+                          {listItems.map((item) => (
+                            <li key={`${item.num}-${item.text}`} className="flex items-start gap-4 text-base sm:text-[17px] text-[var(--color-text-secondary)] leading-relaxed sm:leading-8">
                               <span className="text-sm font-bold text-neutral-800 mt-1 flex-shrink-0 min-w-[20px]">
                                 {item.num}.
                               </span>

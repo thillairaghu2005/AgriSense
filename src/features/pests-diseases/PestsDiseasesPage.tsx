@@ -326,8 +326,8 @@ export default function PestsDiseasesPage() {
                 <div className="bg-[var(--color-surface-2)] p-3 rounded-xl border border-[var(--color-border)] text-xs text-[var(--color-text-primary)] space-y-1 shadow-xs">
                   <p className="font-semibold text-[var(--color-text-primary)]">Simulated Observations:</p>
                   <ul className="list-disc list-inside space-y-0.5 text-[11px] text-[var(--color-text-secondary)]">
-                    {simulatedResult.observations.map((obs, i) => (
-                      <li key={i}>{obs}</li>
+                    {simulatedResult.observations.map((obs) => (
+                      <li key={obs}>{obs}</li>
                     ))}
                   </ul>
                 </div>
@@ -464,8 +464,8 @@ export default function PestsDiseasesPage() {
                       Key Diagnostic Symptoms:
                     </p>
                     <ul className="text-xs text-[var(--color-text-secondary)] space-y-1">
-                      {item.symptoms.slice(0, 2).map((sym, idx) => (
-                        <li key={idx} className="flex items-start gap-1.5">
+                      {item.symptoms.slice(0, 2).map((sym) => (
+                        <li key={sym} className="flex items-start gap-1.5">
                           <span>{sym}</span>
                         </li>
                       ))}
@@ -532,8 +532,8 @@ export default function PestsDiseasesPage() {
                   Detailed Symptoms
                 </h4>
                 <ul className="space-y-1.5 list-disc list-inside bg-[var(--color-surface-1)] p-3 rounded-lg border border-[var(--color-border)]">
-                  {selectedItem.symptoms.map((sym, i) => (
-                    <li key={i}>{sym}</li>
+                  {selectedItem.symptoms.map((sym) => (
+                    <li key={sym}>{sym}</li>
                   ))}
                 </ul>
               </div>
@@ -544,8 +544,8 @@ export default function PestsDiseasesPage() {
                   Cultural & Preventive Measures
                 </h4>
                 <ul className="space-y-1.5 list-disc list-inside bg-neutral-50 p-3 rounded-lg border border-neutral-200 text-neutral-800">
-                  {selectedItem.prevention.map((prev, i) => (
-                    <li key={i}>{prev}</li>
+                  {selectedItem.prevention.map((prev) => (
+                    <li key={prev}>{prev}</li>
                   ))}
                 </ul>
               </div>

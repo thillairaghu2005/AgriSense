@@ -525,12 +525,12 @@ export default function CalendarPage() {
 
           {/* Days Grid */}
           <div className="grid grid-cols-7 gap-1.5">
-            {calendarDays.map((cell, idx) => {
+            {calendarDays.map((cell) => {
               const isToday = cell.dateStr === todayStr;
 
               return (
                 <div
-                  key={idx}
+                  key={cell.dateStr}
                   onClick={() => openCreateModal(cell.dateStr)}
                   className={`min-h-[85px] p-1.5 rounded-lg border transition-all cursor-pointer flex flex-col justify-between ${
                     cell.isCurrentMonth

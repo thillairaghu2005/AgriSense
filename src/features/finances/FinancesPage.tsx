@@ -469,8 +469,8 @@ export default function FinancesPage() {
                           innerRadius={40}
                           paddingAngle={3}
                         >
-                          {expenseBreakdown.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          {expenseBreakdown.map((entry) => (
+                            <Cell key={entry.name} fill={entry.color} />
                           ))}
                         </Pie>
                         <Tooltip formatter={(value: any) => formatCurrency(Number(value))} />
